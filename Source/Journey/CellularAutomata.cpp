@@ -39,17 +39,11 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 	for (int i = 0; i < Tilemax; ++i) {
 		for (int j = 0; j < Tilemax; ++j) {
 			width.push_back(FMath::RandRange(0, 1));
-			UE_LOG(LogTemp, Warning, TEXT("[%d][%d]'s num is %d"), i, j, width[j]);
 			if (width[j] == 1)
 				wall++;
 		}
 		height.push_back(width);
 		width.clear();
-	}
-	Original = true;
-	if ((Tilemax * Tilemax) * (45.0f / 100.0f) <= wall) {
-		UE_LOG(LogTemp, Warning, TEXT("Complete"));
-		Original = true;
 	}
 	for (int i = 0; i < Tilemax; ++i) {
 		for (int j = 0; j < Tilemax; ++j) {
@@ -66,12 +60,11 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 				if (height[i + 1][j + 1] == 1)  count += 1;
 			}
 			else {
-				count = 5;
+				count = 6;
 			}
-			if (count >= 5)height[i][j] = 1;
+			if (count >= 6)height[i][j] = 1;
 			else if (count == 3)height[i][j] = 2;
 			else height[i][j] = 0;
-			UE_LOG(LogTemp, Warning, TEXT("Celluar [%d][%d]'s num is %d"), i, j, width[j]);
 		}
 	}
 	if (Tile != nullptr && Tile2 != nullptr && River != nullptr) {
