@@ -36,6 +36,7 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 	width.clear();
 	height.clear();
 	float wall = 0;
+	int gap = 225;
 	for (int i = 0; i < Tilemax; ++i) {
 		for (int j = 0; j < Tilemax; ++j) {
 			width.push_back(FMath::RandRange(0, 1));
@@ -45,7 +46,7 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 		height.push_back(width);
 		width.clear();
 	}
-	for (int time = 0; time < Time; ++time) {
+	if (Tilemax >= 8) {
 		for (int i = 0; i < Tilemax; ++i) {
 			for (int j = 0; j < Tilemax; ++j) {
 				int32 count = 0;
@@ -69,30 +70,60 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 			}
 		}
 	}
-	if (Tile != nullptr && Tile2 != nullptr && River != nullptr) {
+	else
+	{
 		for (int i = 0; i < Tilemax; ++i) {
 			for (int j = 0; j < Tilemax; ++j) {
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.Owner = this;
-				FRotator rotator;
-				FVector SpawnLocation;
-				SpawnLocation.Y = i * 100 + GetActorLocation().Y;
-				SpawnLocation.X = j * 100 + GetActorLocation().X;
-				SpawnLocation.Z = GetActorLocation().Z;
-				if (height[i][j] == 0) {
-					AActor* Tile1 = world->SpawnActor<AActor>(Tile, SpawnLocation, rotator, SpawnParams);
-					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+				int32 count = 0;
+				if (height[i][j] == 0) count += 1;
+				if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
+					if (height[i - 1][j - 1] == 0)  count += 1;
+					if (height[i - 1][j] == 0)  count += 1;
+					if (height[i - 1][j + 1] == 0)  count += 1;
+					if (height[i][j - 1] == 0)  count += 1;
+					if (height[i][j + 1] == 0)  count += 1;
+					if (height[i + 1][j - 1] == 0)  count += 1;
+					if (height[i + 1][j] == 0)  count += 1;
+					if (height[i + 1][j + 1] == 0)  count += 1;
 				}
-				else if (height[i][j] == 1) {
-					AActor* Mountain = world->SpawnActor<AActor>(Tile2, SpawnLocation, rotator, SpawnParams);
-					Mountain->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					FVector Scale;
-					Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
-					Mountain->SetActorScale3D(Scale);
+				else {
+					count = 6;
 				}
-				else if (height[i][j] == 2) {
-					AActor* RiverTile = world->SpawnActor<AActor>(River, SpawnLocation, rotator, SpawnParams);
-					RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+				if (count >= 6)height[i][j] = 0;
+				else if (count == 3)height[i][j] = 2;
+				else height[i][j] = 1;
+			}
+		}
+	}
+	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
+		for (int time = 0; time < Time; ++time) {
+			for (int i = 0; i < Tilemax; ++i) {
+				for (int j = 0; j < Tilemax; ++j) {
+					FActorSpawnParameters SpawnParams;
+					SpawnParams.Owner = this;
+					FRotator rotator;
+					FVector SpawnLocation;
+					SpawnLocation.Y = i * 450 + GetActorLocation().Y;
+					if (i % 2 == 0)
+						SpawnLocation.X = j * 450 + GetActorLocation().X;
+					else
+						SpawnLocation.X = j * 450 + GetActorLocation().X + gap;
+					SpawnLocation.Z = GetActorLocation().Z;
+					if (height[i][j] == 0) {
+						AActor* Tile1 = world->SpawnActor<AActor>(Tile, SpawnLocation, rotator, SpawnParams);
+						Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					}
+					else if (height[i][j] == 1) {//Mountain
+						AActor* MountainTile = world->SpawnActor<AActor>(Mountain, SpawnLocation, rotator, SpawnParams);
+						MountainTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+						FVector Scale;
+						Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
+						MountainTile->SetActorScale3D(Scale);
+					}
+					else if (height[i][j] == 2) {//River
+						AActor* RiverTile = world->SpawnActor<AActor>(River, SpawnLocation, rotator, SpawnParams);
+						RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					}
 				}
 			}
 		}

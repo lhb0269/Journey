@@ -28,7 +28,7 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor> Tile;
 	UPROPERTY(EditAnywhere)
-		TSubclassOf<class AActor> Tile2;
+		TSubclassOf<class AActor> Mountain;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor> River;
 	UPROPERTY(EditAnywhere)
