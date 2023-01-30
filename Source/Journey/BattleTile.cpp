@@ -30,8 +30,31 @@ void ABattleTile::OnConstruction(const FTransform& Transform)
 {
 	int32 w = widthNum;
 	int32 h = heightNum;
+	UWorld* world = GetWorld();
 
 	TArray<TArray<int32>> tileArray;
+
+
+	FVector SpawnLocation;
+	FRotator rotator;
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnLocation.Z = GetActorLocation().Z;
+	if (Tile != nullptr)
+	{
+		for (int i = 0; i < heightNum; i++)
+		{
+			for (int j = 0; j < widthNum; j++)
+			{
+				SpawnLocation.X = j * 1000 + GetActorLocation().X;
+				SpawnLocation.Y = i * 1000 + GetActorLocation().X;
+
+				AActor* Tile1 = world->SpawnActor<AActor>(Tile, SpawnLocation, rotator, SpawnParams);
+				Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+			}
+		}
+	}
+
 
 }
 

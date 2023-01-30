@@ -29,6 +29,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int32 widthNum = 0;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor> Tile;
+
 
 
 };
