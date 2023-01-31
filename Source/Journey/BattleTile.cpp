@@ -46,8 +46,8 @@ void ABattleTile::OnConstruction(const FTransform& Transform)
 		{
 			for (int j = 0; j < widthNum; j++)
 			{
-				SpawnLocation.X = j * 1000 + GetActorLocation().X;
-				SpawnLocation.Y = i * 1000 + GetActorLocation().X;
+				SpawnLocation.X = j * 100 + GetActorLocation().X;
+				SpawnLocation.Y = i * 100 + GetActorLocation().X;
 
 				AActor* Tile1 = world->SpawnActor<AActor>(Tile, SpawnLocation, rotator, SpawnParams);
 				Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
