@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CellularAutomata.generated.h"
+#include<vector>
+using namespace std;
 
 UCLASS()
 class JOURNEY_API ACellularAutomata : public AActor
@@ -33,4 +35,7 @@ public:
 		TSubclassOf<class AActor> River;
 	UPROPERTY(EditAnywhere)
 		int32 Time = 2;
+	TArray<AActor*>AArray;
+	vector<int32>width;
+	vector<vector<int32>>height;
 };
