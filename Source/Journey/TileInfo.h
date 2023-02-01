@@ -22,12 +22,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	UPROPERTY(EditAnywhere, Category = "TileMesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TileMesh")
 	int32 heightNum;
 
-	UPROPERTY(EditAnywhere, Category = "TileMesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite,Category = "TileMesh")
 		UStaticMesh* TileMesh;
-	UPROPERTY(EditAnywhere, Category = "TileMesh")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "TileMesh")
 		UStaticMesh* AreaMesh;
 
 };
