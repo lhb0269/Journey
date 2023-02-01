@@ -2,18 +2,18 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "EngineMinimal.h"
 #include "GameFramework/Actor.h"
-#include "BattleTile.generated.h"
+#include "TileInfo.generated.h"
 
 UCLASS()
-class JOURNEY_API ABattleTile : public AActor
+class JOURNEY_API ATileInfo : public AActor
 {
 	GENERATED_BODY()
 	
 public:	
 	// Sets default values for this actor's properties
-	ABattleTile();
+	ATileInfo();
 
 protected:
 	// Called when the game starts or when spawned
@@ -22,16 +22,12 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void OnConstruction(const FTransform& Transform)override;
+	UPROPERTY(EditAnywhere, Category = "TileMesh")
+	int32 heightNum;
 
-	UPROPERTY(EditAnywhere)
-	int32 heightNum = 0;
-
-	UPROPERTY(EditAnywhere)
-	int32 widthNum = 0;
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AActor > Tile;
-
-
+	UPROPERTY(EditAnywhere, Category = "TileMesh")
+		UStaticMesh* TileMesh;
+	UPROPERTY(EditAnywhere, Category = "TileMesh")
+		UStaticMesh* AreaMesh;
 
 };

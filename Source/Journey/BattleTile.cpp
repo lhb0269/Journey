@@ -2,6 +2,7 @@
 
 
 #include "BattleTile.h"
+#include "TileInfo.h"
 #include <vector>
 
 // Sets default values
@@ -28,12 +29,11 @@ void ABattleTile::Tick(float DeltaTime)
 
 void ABattleTile::OnConstruction(const FTransform& Transform)
 {
-	int32 w = widthNum;
-	int32 h = heightNum;
+	//int32 w = widthNum;
+	//int32 h = heightNum;
 	UWorld* world = GetWorld();
 
-	TArray<TArray<int32>> tileArray;
-
+	TArray<ATileInfo*> tiles;
 
 	FVector SpawnLocation;
 	FRotator rotator;
@@ -47,11 +47,15 @@ void ABattleTile::OnConstruction(const FTransform& Transform)
 			for (int j = 0; j < widthNum; j++)
 			{
 				SpawnLocation.X = j * 100 + GetActorLocation().X;
-				SpawnLocation.Y = i * 100 + GetActorLocation().X;
+				SpawnLocation.Y = i * 100 + GetActorLocation().Y;
 
-				AActor* Tile1 = world->SpawnActor<AActor>(Tile, SpawnLocation, rotator, SpawnParams);
+				ATileInfo* Tile1 = world->SpawnActor<ATileInfo>(Tile, SpawnLocation, rotator, SpawnParams);
 				Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+				Tile1->heightNum = i;
+				tiles.Add(Tile1);
 			}
+			//.Emplace(width);
+			//width.clear;
 		}
 	}
 
