@@ -29,6 +29,12 @@ void AProceduralNoiseGenerator::Tick(float DeltaTime)
 void AProceduralNoiseGenerator::OnConstruction(const FTransform& transform)
 {
 	Super::OnConstruction(transform);
+	for (auto It = AAray.CreateIterator(); It; It++)
+	{
+		(*It)->Destroy();
+	}
+	AAray.Empty();
+	RegisterAllComponents();
 
 	Vertices.Reset();
 	Triangles.Reset();
@@ -41,6 +47,9 @@ void AProceduralNoiseGenerator::OnConstruction(const FTransform& transform)
 
 	ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, TArray<FVector>(), UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
 	ProceduralMesh->SetMaterial(0, Material);
+
+	if (XSize > 0 && YSize > 0)
+		CellularAutomata();
 }
 void AProceduralNoiseGenerator::CreateVertices()
 {
@@ -49,6 +58,8 @@ void AProceduralNoiseGenerator::CreateVertices()
 			float z = FMath::PerlinNoise2D(FVector2D(x * NoiseScale + 0.1, y * NoiseScale + 0.1)) * ZMultiplier;
 			Vertices.Add(FVector(x * Scale, y * Scale, z));
 			UV0.Add(FVector2D(x * UVScale, y * UVScale));
+			if (x < XSize && y < YSize)
+				Zvalue.Add(z);
 		}
 	}
 }
@@ -70,4 +81,68 @@ void AProceduralNoiseGenerator::CreateTriangles()
 	}
 }
 
+
+void AProceduralNoiseGenerator::CellularAutomata()
+{
+	UWorld* world = GetWorld();
+	bool Original = false;
+	width.clear();
+	height.clear();
+	float wall = 0;
+	int gap = 225;
+	for (int i = 0; i < XSize; ++i) {
+		for (int j = 0; j < YSize; ++j) {
+			width.push_back(FMath::RandRange(0, 1));
+		}
+		height.push_back(width);
+		width.clear();
+	}
+	//Check Forest
+	for (int num = 0; num < Tilemax; ++num) {
+		for (int i = 0; i < XSize; ++i) {
+			for (int j = 0; j < YSize; ++j) {
+				int32 count = 0;
+				if (height[i][j] == 1) count += 1;
+				if (i + 1 < XSize && i - 1 >= 0 && j + 1 < YSize && j - 1 >= 0) {
+					if (height[i - 1][j - 1] == 1)  count += 1;
+					if (height[i - 1][j] == 1)  count += 1;
+					if (height[i - 1][j + 1] == 1)  count += 1;
+					if (height[i][j - 1] == 1)  count += 1;
+					if (height[i][j + 1] == 1)  count += 1;
+					if (height[i + 1][j - 1] == 1)  count += 1;
+					if (height[i + 1][j] == 1)  count += 1;
+					if (height[i + 1][j + 1] == 1)  count += 1;
+				}
+				else {
+					count = 6;
+				}
+				if (count > 5)height[i][j] = 1;
+				//else if (count == 3)height[i][j] = 2;
+				else if (count < 5) height[i][j] = 0;
+			}
+		}
+	}
+	//Check Village
+	//
+	if (Tree != nullptr) {
+		for (int i = XSize - 1; i >= 0; --i) {
+			for (int j = YSize - 1; j >= 0; --j) {
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				FRotator rotator;
+				FVector SpawnLocation;
+				SpawnLocation.X = i * 100 + GetActorLocation().X;
+				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+				SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
+				rotator.Roll = 0;
+				rotator.Yaw = FMath::FRandRange(-90, 90);
+				if (height[i][j] == 1) {
+					AActor* Tile1 = world->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
+					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					AAray.Add(Tile1);
+				}
+			}
+		}
+	}
+}
 
