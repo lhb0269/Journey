@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include<vector>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "CellularAutomata.generated.h"
-#include<vector>
 using namespace std;
 
 UCLASS()

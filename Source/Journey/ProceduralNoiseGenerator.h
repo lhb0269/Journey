@@ -2,10 +2,12 @@
 
 #pragma once
 
+#include<vector>
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralNoiseGenerator.generated.h"
 
+using namespace std;
 class UProceduralMeshComponent;
 class UMaterialInterface;
 UCLASS()
@@ -28,6 +30,13 @@ public:
 		float Scale = 0;
 	UPROPERTY(EditAnywhere, Meta = (ClampMin = 0.000001))
 		float UVScale = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+		int32 Tilemax = 5;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class AActor> Tree;
+	TArray<AActor*>AAray;
+	vector<int32>width;
+	vector<vector<int32>>height;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -42,8 +51,10 @@ private:
 	UProceduralMeshComponent* ProceduralMesh;
 	TArray<FVector>Vertices;
 	TArray<int>Triangles;
+	TArray<float>Zvalue;
 	TArray<FVector2D>UV0;
 
 	void CreateVertices();
 	void CreateTriangles();
+	void CellularAutomata();
 };
