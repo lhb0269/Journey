@@ -18,6 +18,15 @@ void AProceduralNoiseGenerator::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	CreateVertices();
+	CreateTriangles();
+
+	//UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UV0, Normals, Tangents);
+
+	ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, TArray<FVector>(), UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
+	ProceduralMesh->SetMaterial(0, Material);
+	if (XSize > 0 && YSize > 0)
+		CellularAutomata();
 }
 
 // Called every frame
@@ -40,16 +49,16 @@ void AProceduralNoiseGenerator::OnConstruction(const FTransform& transform)
 	Triangles.Reset();
 	UV0.Reset();
 
-	CreateVertices();
-	CreateTriangles();
+	//CreateVertices();
+	//CreateTriangles();
 
-	//UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UV0, Normals, Tangents);
+	////UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UV0, Normals, Tangents);
 
-	ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, TArray<FVector>(), UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
-	ProceduralMesh->SetMaterial(0, Material);
+	//ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, TArray<FVector>(), UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
+	//ProceduralMesh->SetMaterial(0, Material);
 
-	if (XSize > 0 && YSize > 0)
-		CellularAutomata();
+	//if (XSize > 0 && YSize > 0)
+	//	CellularAutomata();
 }
 void AProceduralNoiseGenerator::CreateVertices()
 {
@@ -181,7 +190,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				else if (height[i][j] == 3) {
 					rotator.Yaw = 0;
 					AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
-					HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					//HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					AAray.Add(HouseTile);
 				}
 			}
