@@ -98,6 +98,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		width.clear();
 	}
 	//Check Forest
+	int32 tilecount = 0;
 	for (int num = 0; num < Tilemax; ++num) {
 		for (int i = 0; i < XSize; ++i) {
 			for (int j = 0; j < YSize; ++j) {
@@ -116,15 +117,51 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				else {
 					count = 6;
 				}
-				if (count > 5)height[i][j] = 1;
+				if (count > 5) {
+					height[i][j] = 1;
+
+				}
 				//else if (count == 3)height[i][j] = 2;
-				else if (count < 5) height[i][j] = 0;
+				else if (count < 5) {
+					height[i][j] = 0;
+				}
 			}
 		}
 	}
 	//Check Village
+	for (int i = 0; i < XSize; ++i) {
+		for (int j = 0; j < YSize; ++j) {
+			int32 count = 0;
+			if (height[i][j] == 0) count += 1;
+			for (int k = 1; k <= 4; ++k) {
+				if (i + k < XSize && i - k >= 0 && j + k < YSize && j - k >= 0) {
+					if (height[i - k][j - k] == 0)  count += 1;
+					if (height[i - k][j] == 0)  count += 1;
+					if (height[i - k][j + k] == 0)  count += 1;
+					if (height[i][j - k] == 0)  count += 1;
+					if (height[i][j + k] == 0)  count += 1;
+					if (height[i + k][j - k] == 0)  count += 1;
+					if (height[i + k][j] == 0)  count += 1;
+					if (height[i + k][j + k] == 0)  count += 1;
+				}
+			}
+			if (count >= 33) {
+				for (int k = 1; k <= 4; ++k) {
+					height[i - k][j - k] = 4;
+					height[i - k][j] = 4;
+					height[i - k][j + k] = 4;
+					height[i][j - k] = 4;
+					height[i][j + k] = 4;
+					height[i + k][j - k] = 4;
+					height[i + k][j] = 4;
+					height[i + k][j + k] = 4;
+				}
+				height[i][j] = 3;
+			}
+		}
+	}
 	//
-	if (Tree != nullptr) {
+	if (Tree != nullptr && House != nullptr) {
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
 				FActorSpawnParameters SpawnParams;
@@ -135,11 +172,17 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
 				SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
 				rotator.Roll = 0;
-				rotator.Yaw = FMath::FRandRange(-90, 90);
 				if (height[i][j] == 1) {
+					rotator.Yaw = FMath::FRandRange(-90, 90);
 					AActor* Tile1 = world->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
 					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					AAray.Add(Tile1);
+				}
+				else if (height[i][j] == 3) {
+					rotator.Yaw = 0;
+					AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
+					HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					AAray.Add(HouseTile);
 				}
 			}
 		}
