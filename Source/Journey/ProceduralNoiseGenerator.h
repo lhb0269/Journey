@@ -34,6 +34,8 @@ public:
 		int32 Tilemax = 5;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor> Tree;
+	UPROPERTY(EditAnywhere)
+		TSubclassOf<class AActor>House;
 	TArray<AActor*>AAray;
 	vector<int32>width;
 	vector<vector<int32>>height;
