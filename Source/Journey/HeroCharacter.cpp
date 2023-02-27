@@ -28,6 +28,8 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AHeroCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
+
+	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 }
 
 void AHeroCharacter::MoveForward(float value)
