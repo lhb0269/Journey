@@ -22,7 +22,8 @@ void ACellularAutomata::BeginPlay()
 	width.clear();
 	height.clear();
 	float wall = 0;
-	int gap = 225;
+	//int gap = 225;
+	int gap = 200;
 	for (int i = 0; i < Tilemax; ++i) {
 		for (int j = 0; j < Tilemax; ++j) {
 			width.push_back(FMath::RandRange(0, 1));
