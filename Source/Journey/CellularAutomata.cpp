@@ -17,24 +17,6 @@ ACellularAutomata::ACellularAutomata()
 void ACellularAutomata::BeginPlay()
 {
 	Super::BeginPlay();
-
-}
-
-// Called every frame
-void ACellularAutomata::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void ACellularAutomata::OnConstruction(const FTransform& Transform)
-{
-	for (auto It = AArray.CreateIterator(); It; It++)
-	{
-		(*It)->Destroy();
-	}
-	AArray.Empty();
-	RegisterAllComponents();
 	UWorld* world = GetWorld();
 	bool Original = false;
 	width.clear();
@@ -135,5 +117,23 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 			}
 		}
 	}
+}
+
+// Called every frame
+void ACellularAutomata::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void ACellularAutomata::OnConstruction(const FTransform& Transform)
+{
+	for (auto It = AArray.CreateIterator(); It; It++)
+	{
+		(*It)->Destroy();
+	}
+	AArray.Empty();
+	RegisterAllComponents();
+
 }
 
