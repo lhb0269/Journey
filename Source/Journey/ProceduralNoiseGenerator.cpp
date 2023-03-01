@@ -188,7 +188,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 					AAray.Add(Tile1);
 				}
 				else if (height[i][j] == 3) {
-					rotator.Yaw = 0;
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
 					//HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					AAray.Add(HouseTile);
