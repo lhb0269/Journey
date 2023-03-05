@@ -2,6 +2,7 @@
 
 
 #include "HeroCharacter.h"
+#include "Journey/Public/Actors/Item.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/DefaultPawn.h"
@@ -26,6 +27,8 @@ AHeroCharacter::AHeroCharacter()
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);
+
+	PlayerInputComponent->BindAction("Interact", IE_Pressed, this, &AHeroCharacter::Interact);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AHeroCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
 
@@ -51,5 +54,23 @@ void AHeroCharacter::MoveRight(float value)
 		const FRotator YawRot(0, Rot.Yaw, 0);
 		const FVector Direction = FRotationMatrix(YawRot).GetUnitAxis(EAxis::Y);
 		AddMovementInput(Direction, value);
+	}
+}
+
+void AHeroCharacter::Interact()
+{
+	
+	FVector Start = GetActorLocation();
+	FVector End = Start + GetActorLocation().ForwardVector * 500.0f;
+
+	FHitResult HitResult;
+	FCollisionQueryParams Params;
+	Params.AddIgnoredActor(this);
+	if (GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, Params))
+	{
+		if (IInteractableInterface* Interface = Cast<IInteractableInterface>(HitResult.GetActor()))
+		{
+			Interface->Interact(this);
+		}
 	}
 }

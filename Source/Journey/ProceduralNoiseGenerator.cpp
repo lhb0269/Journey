@@ -154,7 +154,20 @@ void AProceduralNoiseGenerator::CellularAutomata()
 					if (height[i + k][j + k] == 0)  count += 1;
 				}
 			}
-			if (count >= 33) {
+			if (count >= 50) {
+				for (int k = 1; k <= 5; ++k) {
+					height[i - k][j - k] = 4;
+					height[i - k][j] = 4;
+					height[i - k][j + k] = 4;
+					height[i][j - k] = 4;
+					height[i][j + k] = 4;
+					height[i + k][j - k] = 4;
+					height[i + k][j] = 4;
+					height[i + k][j + k] = 4;
+				}
+				height[i][j] = 5;
+			}
+			else if (count >= 33) {
 				for (int k = 1; k <= 4; ++k) {
 					height[i - k][j - k] = 4;
 					height[i - k][j] = 4;
@@ -189,6 +202,12 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				}
 				else if (height[i][j] == 3) {
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
+					//HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					AAray.Add(HouseTile);
+				}
+				else if (height[i][j] == 5) {
+					rotator.Yaw = 0;
 					AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
 					//HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					AAray.Add(HouseTile);
