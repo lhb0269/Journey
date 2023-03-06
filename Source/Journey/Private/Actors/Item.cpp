@@ -16,7 +16,7 @@ AItem::AItem()
 // Called when the game starts or when spawned
 void AItem::BeginPlay()
 {
-	Super::BeginPlay();
+	Super::BeginPlay(); 
 	
 }
 
@@ -27,4 +27,9 @@ void AItem::Interact(class AHeroCharacter* Character)
 		Character->AddItemToInventoryWidget(PosionData);
 	}
 	Destroy();
+}
+
+void AItem::Use(AHeroCharacter* Character)
+{
+	UE_LOG(LogTemp,Warning,TEXT("USING ITEM: %s"),*GetName());
 }

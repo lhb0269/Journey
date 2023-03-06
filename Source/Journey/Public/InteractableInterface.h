@@ -16,11 +16,13 @@ class UInteractableInterface : public UInterface
 /**
  * 
  */
+class AHeroCharacter;
 class JOURNEY_API IInteractableInterface
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void Interact(class AHeroCharacter* Character)=0;
+	virtual void Interact(AHeroCharacter* Character)=0;
+	virtual void Use(AHeroCharacter* Character){}
 };

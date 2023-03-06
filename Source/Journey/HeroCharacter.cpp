@@ -24,6 +24,20 @@ AHeroCharacter::AHeroCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
+void AHeroCharacter::UseItem(TSubclassOf<AItem> ItemSubclass)
+{
+	if(ItemSubclass)
+	{
+		if(AItem* CDOItem = ItemSubclass.GetDefaultObject()){
+			CDOItem->Use(this);
+		}
+		else
+		{
+			UE_LOG(LogTemp,Warning,TEXT("FAILED ITEM"));
+		}
+	}
+}
+
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	check(PlayerInputComponent);

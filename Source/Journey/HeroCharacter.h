@@ -8,6 +8,7 @@
 #include"Journey/Public/Structs.h"
 #include "HeroCharacter.generated.h"
 
+class AItem;
 /**
  * 
  */
@@ -62,6 +63,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent,Category="Inventory")
 	void AddItemToInventoryWidget(FPosion PosionData);
 protected:
+	UFUNCTION(BlueprintCallable,Category="Test")
+	void UseItem(TSubclassOf<AItem> ItemSubclass);
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);
 	void MoveRight(float value);

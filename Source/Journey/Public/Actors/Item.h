@@ -27,4 +27,6 @@ protected:
 public:
 	virtual void Interact(class AHeroCharacter* Character) override;
 	FPosion GetItemData() const {return PosionData;}
+
+	virtual void Use(AHeroCharacter* Character)override;
 };
