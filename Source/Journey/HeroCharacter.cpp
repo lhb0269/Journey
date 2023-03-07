@@ -24,6 +24,11 @@ AHeroCharacter::AHeroCharacter()
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
+void AHeroCharacter::AddHealth(float Value)
+{
+	UE_LOG(LogTemp,Warning,TEXT("Adding Health :%f "),Value);
+}
+
 void AHeroCharacter::UseItem(TSubclassOf<AItem> ItemSubclass)
 {
 	if(ItemSubclass)
