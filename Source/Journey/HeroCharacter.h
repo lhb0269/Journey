@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "BasicCharacter.h"
 #include "Engine/DataTable.h"
-#include"Journey/Public/Structs.h"
 #include "HeroCharacter.generated.h"
 
 /**
@@ -36,10 +35,10 @@ public:
 	int32 skill2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 skill3;
-	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	// Æ÷¸¸°¨
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 satiety;
-	// ï¿½Ç·Îµï¿½
+	// ÇÇ·Îµµ
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fatigue;
 
@@ -59,12 +58,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* FollowCamera;
 
-	UFUNCTION(BlueprintImplementableEvent,Category="Inventory")
-	void AddItemToInventoryWidget(FPosion PosionData);
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);
 	void MoveRight(float value);
-	void Interact();
-	
 };
