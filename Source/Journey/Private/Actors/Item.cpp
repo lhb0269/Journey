@@ -11,8 +11,6 @@ AItem::AItem()
 	PrimaryActorTick.bCanEverTick = false;
 	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	RootComponent = ItemMesh;
-
-	PosionData.ItemClass = StaticClass();
 }
 
 // Called when the game starts or when spawned

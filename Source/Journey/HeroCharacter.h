@@ -62,7 +62,6 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent,Category="Inventory")
 	void AddItemToInventoryWidget(FPosion PosionData);
-	void AddHealth(float Value);
 protected:
 	UFUNCTION(BlueprintCallable,Category="Test")
 	void UseItem(TSubclassOf<AItem> ItemSubclass);
