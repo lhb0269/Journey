@@ -2,13 +2,15 @@
 
 
 #include "HeroCharacter.h"
+
+#include "Journey/InventoryComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
-
+#include "Items/Item.h"
 AHeroCharacter::AHeroCharacter()
 {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -21,6 +23,18 @@ AHeroCharacter::AHeroCharacter()
 	FollowCamera->bUsePawnControlRotation = true;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
+
+	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
+	Inventory->Capacity = 20;
+}
+
+void AHeroCharacter::UseItem(UItem* Item)
+{
+		if(Item)
+		{
+			Item->Use(this);
+			Item->OnUse(this);
+		}
 }
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

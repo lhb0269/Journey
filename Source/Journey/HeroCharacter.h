@@ -35,10 +35,10 @@ public:
 	int32 skill2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 skill3;
-	// Æ÷¸¸°¨
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 satiety;
-	// ÇÇ·Îµµ
+	// ï¿½Ç·Îµï¿½
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 fatigue;
 
@@ -48,7 +48,6 @@ UCLASS()
 class JOURNEY_API AHeroCharacter : public ABasicCharacter
 {
 	GENERATED_BODY()
-	
 public:
 	AHeroCharacter();
 
@@ -58,6 +57,11 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* FollowCamera;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	class UInventoryComponent* Inventory;
+
+	UFUNCTION(BlueprintCallable,Category="Items")
+	void UseItem(class UItem* Item);
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);

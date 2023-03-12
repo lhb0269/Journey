@@ -182,7 +182,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
 				rotator.Roll = 0;
 				if (height[i][j] == 1) {
-					rotator.Yaw = FMath::FRandRange(-90, 90);
+					rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
 					AActor* Tile1 = world->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
 					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					AAray.Add(Tile1);
