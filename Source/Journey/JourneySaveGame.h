@@ -29,5 +29,8 @@ public:
 
 	UPROPERTY()
 	int32 HighScore;
+
+	UPROPERTY(VisibleAnywhere, Category = "Saved Location")
+	FVector SavedPos;
 	
 };

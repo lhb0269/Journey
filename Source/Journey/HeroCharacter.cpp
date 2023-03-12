@@ -11,6 +11,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Items/Item.h"
+#include "Kismet/GameplayStatics.h"
+
 AHeroCharacter::AHeroCharacter()
 {
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -35,6 +37,22 @@ void AHeroCharacter::UseItem(UItem* Item)
 			Item->Use(this);
 			Item->OnUse(this);
 		}
+}
+
+void AHeroCharacter::LoadGame()
+{
+	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
+
+	if (MySaveGame == nullptr)
+	{
+
+	}
+}
+
+void AHeroCharacter::SaveGame()
+{
+	MySaveGame->SavedPos = GetActorLocation();
+	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
 }
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

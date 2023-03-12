@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "BasicCharacter.h"
 #include "Engine/DataTable.h"
+#include "JourneySaveGame.h"
 #include "HeroCharacter.generated.h"
+
 
 /**
  * 
@@ -62,6 +64,11 @@ public:
 
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
+
+	UJourneySaveGame* MySaveGame;
+
+	void LoadGame();
+	void SaveGame();
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);
