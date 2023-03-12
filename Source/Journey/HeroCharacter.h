@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "BasicCharacter.h"
 #include "Engine/DataTable.h"
-#include"Journey/Public/Structs.h"
 #include "HeroCharacter.generated.h"
 
 /**
@@ -49,7 +48,6 @@ UCLASS()
 class JOURNEY_API AHeroCharacter : public ABasicCharacter
 {
 	GENERATED_BODY()
-	
 public:
 	AHeroCharacter();
 
@@ -59,12 +57,13 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* FollowCamera;
 
-	UFUNCTION(BlueprintImplementableEvent,Category="Inventory")
-	void AddItemToInventoryWidget(FPosion PosionData);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	class UInventoryComponent* Inventory;
+
+	UFUNCTION(BlueprintCallable,Category="Items")
+	void UseItem(class UItem* Item);
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);
 	void MoveRight(float value);
-	void Interact();
-	
 };
