@@ -28,7 +28,8 @@ void ACellularAutomata::BeginPlay()
 // 있으면 배치 데이터를 새로 만들지는 않는다.
 	if (chcekSaveFile())
 	{
-
+		// 받아온데이터를 기반으로 다시 생성한다.
+		
 	}
 	else
 	{
@@ -102,7 +103,7 @@ void ACellularAutomata::BeginPlay()
 	}
 
 	
-	UE_LOG(LogTemp, Warning, TEXT("%d"), height.size());
+	//UE_LOG(LogTemp, Warning, TEXT("%d"), height.size());
 	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
 		for (int i = 0; i < Tilemax; ++i) {
 			for (int j = 0; j < Tilemax; ++j) {
@@ -121,6 +122,8 @@ void ACellularAutomata::BeginPlay()
 				CATileInfos[i][j].isVisited = false;
 				CATileInfos[i][j].tileType = height[i][j];
 				CATileInfos[i][j].tilePos = SpawnLocation;
+				UE_LOG(LogTemp, Log, TEXT("height : %d %d, location : %s"), i, j, *SpawnLocation.ToString());
+	
 
 				if (height[i][j] == 0) {
 					AActor* Tile1 = world->SpawnActor<AActor>(Tile, SpawnLocation, rotator, SpawnParams);
@@ -177,12 +180,9 @@ bool ACellularAutomata::chcekSaveFile()
 	{
 		return false;
 	}
-	// 기존 데이터가 존재한다면 height 값을 받아온다.
-	for (int i = 0; i < Tilemax; ++i) {
-		for (int j = 0; j < Tilemax; ++j) {
-		}
-	}
-	//CATileInfos = MySaveGame->CADatas;
+	// 기존 데이터가 존재한다면 FCAStruct 값을 받아온다.
+	CATileInfos = MySaveGame->CADatas;
+	Tilemax = MySaveGame->tileMax;
 
 	return true;
 	

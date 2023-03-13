@@ -2,13 +2,15 @@
 
 
 #include "HeroCharacter.h"
-
+#include "Engine/World.h"
 #include "Journey/InventoryComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
-#include "GameFramework/Character.h"
+
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
@@ -35,8 +37,8 @@ AHeroCharacter::AHeroCharacter()
 	{
 		MySaveGame = GetMutableDefault<UJourneySaveGame>(); // Gets the mutable default object of a class.
 	}
-
-
+	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
+	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -62,7 +64,7 @@ void AHeroCharacter::SaveGame()
 {
 	// CellularAutomata 가져오기 
 	CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
-	CellularActor->height;
+
 
 	MySaveGame->SavedPos = GetActorLocation();
 	//MySaveGame->height = CellularActor->height;
@@ -78,10 +80,31 @@ void AHeroCharacter::SaveGame()
 	
 	//MySaveGame->height = ;
 	
-	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+	//UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+
+	FString OriginalLevelName = GetWorld()->GetMapName();
+	UGameplayStatics::OpenLevel(this, "WorldMap", true);
 
 
 }
+
+void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	// Check if the overlapped actor has a specific tag
+	if (OtherActor->ActorHasTag("TownBox"))
+	{
+		// 이전에 들어갔던 곳인지 확인
+
+		// 아니면 게임 저장
+
+
+		
+		// Load the next level
+		UGameplayStatics::OpenLevel(this, "Town", true);
+	}
+}
+
+
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

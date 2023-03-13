@@ -7,6 +7,7 @@
 #include "Engine/DataTable.h"
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
+#include "ProceduralNoiseGenerator.h"
 #include "HeroCharacter.generated.h"
 
 
@@ -69,9 +70,17 @@ public:
 	UJourneySaveGame* MySaveGame;
 	// 월드맵 정보
 	ACellularAutomata* CellularActor;
+	AProceduralNoiseGenerator* ProceduralActor;
 
 	void LoadGame();
 	void SaveGame();
+
+	// 월드맵 충돌 체크
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+			const FHitResult& SweepResult);
+
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);

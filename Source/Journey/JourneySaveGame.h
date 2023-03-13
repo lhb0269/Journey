@@ -37,6 +37,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Saved Location")
 	FVector SavedPos;
 
+	UPROPERTY()
+	int32 tileMax;
+
 	// CellularAutomata 데이터 값 저장
 	TArray<TArray<FCAStruct>> CADatas;
 	
