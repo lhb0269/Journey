@@ -3,6 +3,7 @@
 
 #include "Journey/Items/FoodItem.h"
 #include "Journey/InventoryComponent.h"
+#include "Journey/ShopComponent.h"
 
 void UFoodItem::Use(AHeroCharacter* Character)
 {
@@ -11,6 +12,10 @@ void UFoodItem::Use(AHeroCharacter* Character)
 		if(OwingInventory)
 		{
 			OwingInventory->RemoveItem(this);
+		}
+		else
+		{
+			OwningShop->RemoveItem(this);
 		}
 	}
 }

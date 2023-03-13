@@ -26,16 +26,37 @@ AHeroCharacter::AHeroCharacter()
 
 	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 	Inventory->Capacity = 20;
+
+	shop = CreateDefaultSubobject<UShopComponent>("Shop");
+	shop->Capacity = 20;
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
 {
 		if(Item)
 		{
-			Item->Use(this);
-			Item->OnUse(this);
+			if(Item->OwingInventory!=nullptr && Item-> OwningShop == nullptr)
+			{
+				Item->Use(this);
+				Item->OnUse(this);
+			}
+			if(Item->OwingInventory==nullptr && Item-> OwningShop != nullptr)
+			{
+				Inventory->AddItem(Item);
+				shop->RemoveItem(Item);
+				Item->OnUse(this);
+				UE_LOG(LogTemp,Warning,TEXT("Buy item"));
+			}
 		}
 }
+
+// void AHeroCharacter::BuyItem(UItem* Item, UInventoryComponent* Inventory)
+// {
+// 	if(Item)
+// 	{
+// 		Item->Buy(Inventory);
+// 	}
+// }
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {

@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "BasicCharacter.h"
+#include "InventoryComponent.h"
+#include"ShopComponent.h"
 #include "Engine/DataTable.h"
 #include "HeroCharacter.generated.h"
 
@@ -59,9 +61,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UInventoryComponent* Inventory;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	class UShopComponent* shop;
+	
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
+	//UFUNCTION(BlueprintCallable,Category="Items")
+	//void BuyItem(UItem* Item,UInventoryComponent* UserInventory);
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);
