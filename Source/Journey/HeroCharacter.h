@@ -6,6 +6,7 @@
 #include "BasicCharacter.h"
 #include "Engine/DataTable.h"
 #include "JourneySaveGame.h"
+#include "CellularAutomata.h"
 #include "HeroCharacter.generated.h"
 
 
@@ -66,6 +67,8 @@ public:
 	void UseItem(class UItem* Item);
 
 	UJourneySaveGame* MySaveGame;
+	// 월드맵 정보
+	ACellularAutomata* CellularActor;
 
 	void LoadGame();
 	void SaveGame();

@@ -11,6 +11,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Items/Item.h"
+#include "CellularAutomata.h"
 #include "Kismet/GameplayStatics.h"
 
 AHeroCharacter::AHeroCharacter()
@@ -28,6 +29,14 @@ AHeroCharacter::AHeroCharacter()
 
 	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 	Inventory->Capacity = 20;
+
+	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
+	if (nullptr == MySaveGame)
+	{
+		MySaveGame = GetMutableDefault<UJourneySaveGame>(); // Gets the mutable default object of a class.
+	}
+
+
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -51,8 +60,27 @@ void AHeroCharacter::LoadGame()
 
 void AHeroCharacter::SaveGame()
 {
+	// CellularAutomata 가져오기 
+	CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
+	CellularActor->height;
+
 	MySaveGame->SavedPos = GetActorLocation();
+	//MySaveGame->height = CellularActor->height;
+
+	// 현재위치를 저장해야한다.
+	
+
+	//for (int i = 0; i < 6; ++i) {
+	//	for (int j = 0; j < 6; ++j) {
+	//		UE_LOG(LogTemp, Log, TEXT("Character Location :: %d"), CellularActor->height[i][j]);
+	//	}
+	//}
+	
+	//MySaveGame->height = ;
+	
 	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+
+
 }
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -62,6 +90,7 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::SaveGame);
 }
 
 void AHeroCharacter::MoveForward(float value)
