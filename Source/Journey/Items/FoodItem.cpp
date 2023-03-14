@@ -2,7 +2,15 @@
 
 
 #include "Journey/Items/FoodItem.h"
+
+#include "Journey/HeroCharacter.h"
 #include "Journey/InventoryComponent.h"
+#include "Journey/ShopComponent.h"
+
+UFoodItem::UFoodItem()
+{
+	HealthToHeal = cost;
+}
 
 void UFoodItem::Use(AHeroCharacter* Character)
 {
@@ -10,7 +18,12 @@ void UFoodItem::Use(AHeroCharacter* Character)
 	{
 		if(OwingInventory)
 		{
+			Character->hp+=(HealthToHeal/2);
 			OwingInventory->RemoveItem(this);
+		}
+		else
+		{
+			OwningShop->RemoveItem(this);
 		}
 	}
 }
