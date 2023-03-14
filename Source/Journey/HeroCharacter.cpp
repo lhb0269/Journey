@@ -2,32 +2,17 @@
 
 
 #include "HeroCharacter.h"
-#include "Engine/World.h"
+
 #include "Journey/InventoryComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-#include "Components/CapsuleComponent.h"
-#include "GameFramework/Character.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
-#include "HeroAIController.h"
+#include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Items/Item.h"
-#include "CellularAutomata.h"
-#include "Kismet/GameplayStatics.h"
-
 AHeroCharacter::AHeroCharacter()
 {
-
-	WorldCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("WorldCameraBoom"));
-	WorldCameraBoom->SetupAttachment(RootComponent);
-	WorldCameraBoom->TargetArmLength = 800.0f;
-	//WorldCameraBoom->bUsePawnControlRotation = true;
-
-	WorldFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("WorldFollowCamera"));
-	WorldFollowCamera->SetupAttachment(WorldCameraBoom, USpringArmComponent::SocketName);
-	//WorldFollowCamera->bUsePawnControlRotation = true;
-
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 800.0f;
@@ -35,124 +20,50 @@ AHeroCharacter::AHeroCharacter()
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	//FollowCamera->bUsePawnControlRotation = true;
-
-	WorldFollowCamera->bAutoActivate = false;
-	FollowCamera->bAutoActivate = false;
-
-
-	WorldFollowCamera->SetActive(true);
-	FollowCamera->SetActive(false);
-
+	FollowCamera->bUsePawnControlRotation = true;
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
 	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 	Inventory->Capacity = 20;
 
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
-	if (nullptr == MySaveGame)
-	{
-		MySaveGame = GetMutableDefault<UJourneySaveGame>(); // Gets the mutable default object of a class.
-	}
-	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
-	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
+	shop = CreateDefaultSubobject<UShopComponent>("Shop");
+	shop->Capacity = 20;
+
+	hp = 50;
+	gold=200;
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
 {
 		if(Item)
 		{
-			Item->Use(this);
-			Item->OnUse(this);
+			if(Item->OwingInventory!=nullptr && Item-> OwningShop == nullptr)
+			{
+				Item->Use(this);
+				Item->OnUse(this);
+			}
+			if(Item->OwingInventory==nullptr && Item-> OwningShop != nullptr)//ì‚¬ëŠ”ê±°
+			{
+				if(gold >= Item->cost)
+				{
+					Inventory->AddItem(Item);
+					shop->RemoveItem(Item);
+					UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
+					gold-=Item->cost;
+					Item->OnUse(this);
+				}
+			}
 		}
 }
 
-void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
-{
-	AHeroAIController* AIController = Cast<AHeroAIController>(GetController());
-	if (AIController)
-	{
-		AIController->MoveToLocation(DestLocation);
-	}
-}
-
-void AHeroCharacter::LoadGame()
-{
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
-
-	if (MySaveGame == nullptr)
-	{
-
-	}
-}
-
-void AHeroCharacter::SaveGame()
-{
-	//MySaveGame->height = ;
-	
-	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
-}
-
-void AHeroCharacter::GoToWorldMap()
-{
-	UGameplayStatics::OpenLevel(this, "WorldMap", true);
-
-	//UE_LOG(LogTemp, Warning, TEXT("NowPos: %s, SavedPos: %s"), *GetActorLocation().ToString(), *MySaveGame->SavedPos.ToString());
-}
-
-void AHeroCharacter::ChangeCamera(bool isWorld)
-{
-	if (isWorld)
-	{
-		WorldFollowCamera->SetActive(true);
-		FollowCamera->SetActive(false);
-	}
-	else
-	{
-		WorldFollowCamera->SetActive(false);
-		FollowCamera->SetActive(true);
-	}
-}
-
-void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
-{
-	// Check if the overlapped actor has a specific tag
-	if (OtherActor->ActorHasTag("TownBox"))
-	{
-		// CellularAutomata °¡Á®¿À±â 
-		CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
-
-		AWorldCubeBase *worldCube = Cast<AWorldCubeBase>(OtherActor);
-
-		// ¹æ¹®Çß´ø°÷ÀÎÁö Ã¼Å©
-		if (!worldCube->isVisited)
-		{
-
-			// ¾Æ´Ï¸é ¹æ¹® Çß´Ù°í Ã¼Å©
-			CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
-
-			MySaveGame->SavedPos = OtherActor->GetActorLocation();
-			MySaveGame->CADatas = CellularActor->CATileInfos;
-			MySaveGame->tileMax = CellularActor->Tilemax;
-			MySaveGame->PlayerName = "TESTNAME";
-
-
-			// ÇöÀçÀ§Ä¡¸¦ ÀúÀåÇØ¾ßÇÑ´Ù.
-			// ÀÌÀü¿¡ µé¾î°¬´ø °÷ÀÎÁö È®ÀÎ
-
-			// ¾Æ´Ï¸é °ÔÀÓ ÀúÀå
-			SaveGame();
-
-			// Load the next level
-			UGameplayStatics::OpenLevel(this, "Town", true);
-		}
-
-	
-	}
-}
-
-
+// void AHeroCharacter::BuyItem(UItem* Item, UInventoryComponent* Inventory)
+// {
+// 	if(Item)
+// 	{
+// 		Item->Buy(Inventory);
+// 	}
+// }
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
@@ -161,7 +72,6 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 }
 
 void AHeroCharacter::MoveForward(float value)
