@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "Journey/Items/Item.h"
-#include "FoodItem.generated.h"
+#include "EquipItem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class JOURNEY_API UFoodItem : public UItem
+class JOURNEY_API UEquipItem : public UItem
 {
 	GENERATED_BODY()
 public:
-	UFoodItem();
+	UEquipItem();
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta=(ClampMin=0.0))
-	float HealthToHeal;
+	int32 Armour;
 protected:
 	virtual void Use(class AHeroCharacter* Character) override;
 };
