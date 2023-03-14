@@ -2,6 +2,8 @@
 
 
 #include "Journey/Items/FoodItem.h"
+
+#include "Journey/HeroCharacter.h"
 #include "Journey/InventoryComponent.h"
 #include "Journey/ShopComponent.h"
 
@@ -11,6 +13,7 @@ void UFoodItem::Use(AHeroCharacter* Character)
 	{
 		if(OwingInventory)
 		{
+			Character->hp+=20;
 			OwingInventory->RemoveItem(this);
 		}
 		else

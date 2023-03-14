@@ -29,6 +29,9 @@ AHeroCharacter::AHeroCharacter()
 
 	shop = CreateDefaultSubobject<UShopComponent>("Shop");
 	shop->Capacity = 20;
+
+	hp = 50;
+	gold=200;
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -40,12 +43,16 @@ void AHeroCharacter::UseItem(UItem* Item)
 				Item->Use(this);
 				Item->OnUse(this);
 			}
-			if(Item->OwingInventory==nullptr && Item-> OwningShop != nullptr)
+			if(Item->OwingInventory==nullptr && Item-> OwningShop != nullptr)//사는거
 			{
-				Inventory->AddItem(Item);
-				shop->RemoveItem(Item);
-				Item->OnUse(this);
-				UE_LOG(LogTemp,Warning,TEXT("Buy item"));
+				if(gold >= Item->cost)
+				{
+					Inventory->AddItem(Item);
+					shop->RemoveItem(Item);
+					UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
+					gold-=Item->cost;
+					Item->OnUse(this);
+				}
 			}
 		}
 }

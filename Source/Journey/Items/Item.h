@@ -32,6 +32,8 @@ public:
 	FText ItemDescription;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta = (ClampMin =0.0))
 	float weight;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Item")
+	int32 cost;
 	UPROPERTY()
 	class UInventoryComponent* OwingInventory;
 	class UShopComponent* OwningShop;

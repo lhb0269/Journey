@@ -64,7 +64,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UShopComponent* shop;
-	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	int32 hp;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	int32 gold;
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
 	//UFUNCTION(BlueprintCallable,Category="Items")
