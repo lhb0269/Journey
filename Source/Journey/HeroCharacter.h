@@ -5,11 +5,7 @@
 #include "CoreMinimal.h"
 #include "BasicCharacter.h"
 #include "Engine/DataTable.h"
-#include "JourneySaveGame.h"
-#include "CellularAutomata.h"
-#include "ProceduralNoiseGenerator.h"
 #include "HeroCharacter.generated.h"
-
 
 /**
  * 
@@ -61,15 +57,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* FollowCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class USpringArmComponent* WorldCameraBoom;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class UCameraComponent* WorldFollowCamera;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UInventoryComponent* Inventory;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	class UShopComponent* shop;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	int32 hp;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	int32 gold;
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
 
@@ -95,6 +91,9 @@ public:
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
 			class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 			const FHitResult& SweepResult); 
+
+	//UFUNCTION(BlueprintCallable,Category="Items")
+	//void BuyItem(UItem* Item,UInventoryComponent* UserInventory);
 
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
