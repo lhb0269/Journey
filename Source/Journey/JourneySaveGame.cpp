@@ -5,5 +5,4 @@
 
 UJourneySaveGame::UJourneySaveGame()
 {
-
 }
