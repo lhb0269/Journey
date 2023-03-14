@@ -10,7 +10,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
-
+#include "HeroAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
@@ -18,6 +18,16 @@
 
 AHeroCharacter::AHeroCharacter()
 {
+
+	WorldCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("WorldCameraBoom"));
+	WorldCameraBoom->SetupAttachment(RootComponent);
+	WorldCameraBoom->TargetArmLength = 800.0f;
+	//WorldCameraBoom->bUsePawnControlRotation = true;
+
+	WorldFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("WorldFollowCamera"));
+	WorldFollowCamera->SetupAttachment(WorldCameraBoom, USpringArmComponent::SocketName);
+	//WorldFollowCamera->bUsePawnControlRotation = true;
+
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 800.0f;
@@ -25,7 +35,15 @@ AHeroCharacter::AHeroCharacter()
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	FollowCamera->bUsePawnControlRotation = true;
+	//FollowCamera->bUsePawnControlRotation = true;
+
+	WorldFollowCamera->bAutoActivate = false;
+	FollowCamera->bAutoActivate = false;
+
+
+	WorldFollowCamera->SetActive(true);
+	FollowCamera->SetActive(false);
+
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 
@@ -48,6 +66,15 @@ void AHeroCharacter::UseItem(UItem* Item)
 			Item->Use(this);
 			Item->OnUse(this);
 		}
+}
+
+void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
+{
+	AHeroAIController* AIController = Cast<AHeroAIController>(GetController());
+	if (AIController)
+	{
+		AIController->MoveToLocation(DestLocation);
+	}
 }
 
 void AHeroCharacter::LoadGame()
@@ -74,6 +101,20 @@ void AHeroCharacter::GoToWorldMap()
 	//UE_LOG(LogTemp, Warning, TEXT("NowPos: %s, SavedPos: %s"), *GetActorLocation().ToString(), *MySaveGame->SavedPos.ToString());
 }
 
+void AHeroCharacter::ChangeCamera(bool isWorld)
+{
+	if (isWorld)
+	{
+		WorldFollowCamera->SetActive(true);
+		FollowCamera->SetActive(false);
+	}
+	else
+	{
+		WorldFollowCamera->SetActive(false);
+		FollowCamera->SetActive(true);
+	}
+}
+
 void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// Check if the overlapped actor has a specific tag
@@ -87,10 +128,11 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		// 방문했던곳인지 체크
 		if (!worldCube->isVisited)
 		{
+
 			// 아니면 방문 했다고 체크
 			CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
 
-			MySaveGame->SavedPos = GetActorLocation();
+			MySaveGame->SavedPos = OtherActor->GetActorLocation();
 			MySaveGame->CADatas = CellularActor->CATileInfos;
 			MySaveGame->tileMax = CellularActor->Tilemax;
 			MySaveGame->PlayerName = "TESTNAME";
@@ -101,7 +143,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 			// 아니면 게임 저장
 			SaveGame();
-
 
 			// Load the next level
 			UGameplayStatics::OpenLevel(this, "Town", true);

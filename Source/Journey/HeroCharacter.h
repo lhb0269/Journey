@@ -61,11 +61,22 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* FollowCamera;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	class USpringArmComponent* WorldCameraBoom;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
+	class UCameraComponent* WorldFollowCamera;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UInventoryComponent* Inventory;
 
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void MoveToLocation(const FVector& DestLocation);
+
+
 
 	UJourneySaveGame* MySaveGame;
 	// 월드맵 정보
@@ -76,6 +87,8 @@ public:
 	void SaveGame();
 
 	void GoToWorldMap();
+
+	void ChangeCamera(bool isWorld);
 
 	// 월드맵 충돌 체크
 	UFUNCTION()

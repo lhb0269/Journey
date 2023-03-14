@@ -124,11 +124,11 @@ void ACellularAutomata::BeginPlay()
 				SpawnParams.Owner = this;
 				FRotator rotator;
 				FVector SpawnLocation;
-				SpawnLocation.Y = i * 450 + GetActorLocation().Y;
+				SpawnLocation.Y = i * 380 + GetActorLocation().Y;
 				if (i % 2 == 0)
-					SpawnLocation.X = j * 450 + GetActorLocation().X;
+					SpawnLocation.X = j * 420 + GetActorLocation().X;
 				else
-					SpawnLocation.X = j * 450 + GetActorLocation().X + gap;
+					SpawnLocation.X = j * 420 + GetActorLocation().X + gap;
 				SpawnLocation.Z = GetActorLocation().Z;
 
 				// FCAStruct 값 추가
@@ -178,7 +178,12 @@ void ACellularAutomata::BeginPlay()
 
 	// 생성 완료 후 플레이어 위치 조정
 	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
-	PlayerCharacter->SetActorLocation(MySaveGame->SavedPos);
+	if (chcekSaveFile())
+	{
+		PlayerCharacter->SetActorLocation(MySaveGame->SavedPos);
+		PlayerCharacter->ChangeCamera(true);
+	}
+
 }
 
 // Called every frame
