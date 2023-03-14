@@ -23,7 +23,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void initWorldCubeBase(bool visited, int32 num);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isVisited;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 cubeNumber;
 };

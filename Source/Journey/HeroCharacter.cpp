@@ -62,30 +62,16 @@ void AHeroCharacter::LoadGame()
 
 void AHeroCharacter::SaveGame()
 {
-	// CellularAutomata 가져오기 
-	CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
-
-
-	MySaveGame->SavedPos = GetActorLocation();
-	//MySaveGame->height = CellularActor->height;
-
-	// 현재위치를 저장해야한다.
-	
-
-	//for (int i = 0; i < 6; ++i) {
-	//	for (int j = 0; j < 6; ++j) {
-	//		UE_LOG(LogTemp, Log, TEXT("Character Location :: %d"), CellularActor->height[i][j]);
-	//	}
-	//}
-	
 	//MySaveGame->height = ;
 	
-	//UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+}
 
-	FString OriginalLevelName = GetWorld()->GetMapName();
+void AHeroCharacter::GoToWorldMap()
+{
 	UGameplayStatics::OpenLevel(this, "WorldMap", true);
 
-
+	//UE_LOG(LogTemp, Warning, TEXT("NowPos: %s, SavedPos: %s"), *GetActorLocation().ToString(), *MySaveGame->SavedPos.ToString());
 }
 
 void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -93,14 +79,35 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
-		// 이전에 들어갔던 곳인지 확인
+		// CellularAutomata 가져오기 
+		CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
 
-		// 아니면 게임 저장
+		AWorldCubeBase *worldCube = Cast<AWorldCubeBase>(OtherActor);
+
+		// 방문했던곳인지 체크
+		if (!worldCube->isVisited)
+		{
+			// 아니면 방문 했다고 체크
+			CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
+
+			MySaveGame->SavedPos = GetActorLocation();
+			MySaveGame->CADatas = CellularActor->CATileInfos;
+			MySaveGame->tileMax = CellularActor->Tilemax;
+			MySaveGame->PlayerName = "TESTNAME";
 
 
-		
-		// Load the next level
-		UGameplayStatics::OpenLevel(this, "Town", true);
+			// 현재위치를 저장해야한다.
+			// 이전에 들어갔던 곳인지 확인
+
+			// 아니면 게임 저장
+			SaveGame();
+
+
+			// Load the next level
+			UGameplayStatics::OpenLevel(this, "Town", true);
+		}
+
+	
 	}
 }
 
@@ -113,7 +120,7 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::SaveGame);
+	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 }
 
 void AHeroCharacter::MoveForward(float value)

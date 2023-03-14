@@ -27,3 +27,9 @@ void AWorldCubeBase::Tick(float DeltaTime)
 
 }
 
+void AWorldCubeBase::initWorldCubeBase(bool visited, int32 num)
+{
+	isVisited = visited;
+	cubeNumber = num;
+}
+

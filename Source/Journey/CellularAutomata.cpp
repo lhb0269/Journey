@@ -5,6 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "JourneySaveGame.h"
 #include "Components/ChildActorComponent.h"
+#include "HeroCharacter.h"
 
 // Sets default values
 ACellularAutomata::ACellularAutomata()
@@ -29,7 +30,23 @@ void ACellularAutomata::BeginPlay()
 	if (chcekSaveFile())
 	{
 		// 받아온데이터를 기반으로 다시 생성한다.
+		// 기존 데이터가 존재한다면 FCAStruct 값을 받아온다.
+		CATileInfos = MySaveGame->CADatas;
+		//Tilemax = MySaveGame->tileMax;
+		// 
+		//TileMax 6고정
+		Tilemax = 6;
 		
+		width.clear();
+		height.clear();
+		for (int i = 0; i < Tilemax; ++i) {
+			for (int j = 0; j < Tilemax; ++j) {
+				width.push_back(CATileInfos[j + i * Tilemax].tileType);
+			}
+			height.push_back(width);
+			width.clear();
+		}
+		UE_LOG(LogTemp, Warning, TEXT("Tilemax: %d"), MySaveGame->tileMax);
 	}
 	else
 	{
@@ -93,17 +110,13 @@ void ACellularAutomata::BeginPlay()
 				}
 			}
 		}
+
+		// FCAStruct 초기화
+		CATileInfos.Init(FCAStruct(), Tilemax * Tilemax);
 	}
 
-	// FCAStruct 초기화
-	CATileInfos.Init(TArray<FCAStruct>(), Tilemax);
-	for (int32 RowIndex = 0; RowIndex < Tilemax; ++RowIndex)
-	{
-		CATileInfos[RowIndex].Init(FCAStruct(), Tilemax);
-	}
 
-	
-	//UE_LOG(LogTemp, Warning, TEXT("%d"), height.size());
+	UE_LOG(LogTemp, Warning, TEXT("%d"), height.size());
 	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
 		for (int i = 0; i < Tilemax; ++i) {
 			for (int j = 0; j < Tilemax; ++j) {
@@ -119,22 +132,32 @@ void ACellularAutomata::BeginPlay()
 				SpawnLocation.Z = GetActorLocation().Z;
 
 				// FCAStruct 값 추가
-				CATileInfos[i][j].isVisited = false;
-				CATileInfos[i][j].tileType = height[i][j];
-				CATileInfos[i][j].tilePos = SpawnLocation;
-				UE_LOG(LogTemp, Log, TEXT("height : %d %d, location : %s"), i, j, *SpawnLocation.ToString());
+				if (!chcekSaveFile())
+				{
+					CATileInfos[j + i * Tilemax].isVisited = false;
+					CATileInfos[j + i * Tilemax].tileType = height[i][j];
+					CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
+					UE_LOG(LogTemp, Log, TEXT("height : %d %d, location : %s"), i, j, *SpawnLocation.ToString());
+				}
+			
+				
+			
 	
 
 				if (height[i][j] == 0) {
-					AActor* Tile1 = world->SpawnActor<AActor>(Tile, SpawnLocation, rotator, SpawnParams);
+					AWorldCubeBase* Tile1 = world->SpawnActor<AWorldCubeBase>(Tile, SpawnLocation, rotator, SpawnParams);
 					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					Tile1->cubeNumber = j + i * Tilemax;
+					Tile1->isVisited = CATileInfos[j + i * Tilemax].isVisited;
 					AArray.Add(Tile1);
 
 
 				}
 				else if (height[i][j] == 1) {//Mountain
-					AActor* MountainTile = world->SpawnActor<AActor>(Mountain, SpawnLocation, rotator, SpawnParams);
+					AWorldCubeBase* MountainTile = world->SpawnActor<AWorldCubeBase>(Mountain, SpawnLocation, rotator, SpawnParams);
 					MountainTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					MountainTile->cubeNumber = j + i * Tilemax;
+					MountainTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
 					//FVector Scale;
 					//Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
 					//MountainTile->SetActorScale3D(Scale);
@@ -142,8 +165,10 @@ void ACellularAutomata::BeginPlay()
 
 				}
 				else if (height[i][j] == 2) {//River
-					AActor* RiverTile = world->SpawnActor<AActor>(River, SpawnLocation, rotator, SpawnParams);
+					AWorldCubeBase* RiverTile = world->SpawnActor<AWorldCubeBase>(River, SpawnLocation, rotator, SpawnParams);
 					RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					RiverTile->cubeNumber = j + i * Tilemax;
+					RiverTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
 					AArray.Add(RiverTile);
 
 				}
@@ -151,7 +176,9 @@ void ACellularAutomata::BeginPlay()
 		}
 	}
 
-
+	// 생성 완료 후 플레이어 위치 조정
+	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	PlayerCharacter->SetActorLocation(MySaveGame->SavedPos);
 }
 
 // Called every frame
@@ -180,9 +207,7 @@ bool ACellularAutomata::chcekSaveFile()
 	{
 		return false;
 	}
-	// 기존 데이터가 존재한다면 FCAStruct 값을 받아온다.
-	CATileInfos = MySaveGame->CADatas;
-	Tilemax = MySaveGame->tileMax;
+
 
 	return true;
 	

@@ -75,6 +75,8 @@ public:
 	void LoadGame();
 	void SaveGame();
 
+	void GoToWorldMap();
+
 	// 월드맵 충돌 체크
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
