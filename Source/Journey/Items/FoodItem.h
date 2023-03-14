@@ -14,7 +14,6 @@ class JOURNEY_API UFoodItem : public UItem
 {
 	GENERATED_BODY()
 public:
-	UFoodItem();
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta=(ClampMin=0.0))
 	float HealthToHeal;
 protected:
