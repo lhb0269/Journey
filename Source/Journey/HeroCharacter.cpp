@@ -50,6 +50,12 @@ AHeroCharacter::AHeroCharacter()
 	Inventory = CreateDefaultSubobject<UInventoryComponent>("Inventory");
 	Inventory->Capacity = 20;
 
+	shop = CreateDefaultSubobject<UShopComponent>("Shop");
+	shop->Capacity = 20;
+
+	hp = 50;
+	gold=200;
+
 	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
 	if (nullptr == MySaveGame)
 	{
@@ -63,10 +69,32 @@ void AHeroCharacter::UseItem(UItem* Item)
 {
 		if(Item)
 		{
-			Item->Use(this);
-			Item->OnUse(this);
+			if(Item->OwingInventory!=nullptr && Item-> OwningShop == nullptr)
+			{
+				Item->Use(this);
+				Item->OnUse(this);
+			}
+			if(Item->OwingInventory==nullptr && Item-> OwningShop != nullptr)//ì‚¬ëŠ”ê±°
+			{
+				if(gold >= Item->cost)
+				{
+					Inventory->AddItem(Item);
+					shop->RemoveItem(Item);
+					UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
+					gold-=Item->cost;
+					Item->OnUse(this);
+				}
+			}
 		}
 }
+
+// void AHeroCharacter::BuyItem(UItem* Item, UInventoryComponent* Inventory)
+// {
+// 	if(Item)
+// 	{
+// 		Item->Buy(Inventory);
+// 	}
+// }
 
 void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
 {
@@ -120,16 +148,16 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
-		// CellularAutomata °¡Á®¿À±â 
+		// CellularAutomata ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 
 		CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
 
 		AWorldCubeBase *worldCube = Cast<AWorldCubeBase>(OtherActor);
 
-		// ¹æ¹®Çß´ø°÷ÀÎÁö Ã¼Å©
+		// ï¿½æ¹®ï¿½ß´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã¼Å©
 		if (!worldCube->isVisited)
 		{
 
-			// ¾Æ´Ï¸é ¹æ¹® Çß´Ù°í Ã¼Å©
+			// ï¿½Æ´Ï¸ï¿½ ï¿½æ¹® ï¿½ß´Ù°ï¿½ Ã¼Å©
 			CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
 
 			MySaveGame->SavedPos = OtherActor->GetActorLocation();
@@ -138,10 +166,10 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			MySaveGame->PlayerName = "TESTNAME";
 
 
-			// ÇöÀçÀ§Ä¡¸¦ ÀúÀåÇØ¾ßÇÑ´Ù.
-			// ÀÌÀü¿¡ µé¾î°¬´ø °÷ÀÎÁö È®ÀÎ
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¡ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ø¾ï¿½ï¿½Ñ´ï¿½.
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½î°¬ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ È®ï¿½ï¿½
 
-			// ¾Æ´Ï¸é °ÔÀÓ ÀúÀå
+			// ï¿½Æ´Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 			SaveGame();
 
 			// Load the next level
@@ -161,7 +189,6 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 }
 
 void AHeroCharacter::MoveForward(float value)
