@@ -1,8 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
+
 #include "ProceduralNoiseGenerator.h"
 #include "ProceduralMeshComponent.h"
+#include "HeroCharacter.h"
+#include "Kismet/GameplayStatics.h"
+
+
 // Sets default values
 AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 {
@@ -27,6 +32,10 @@ void AProceduralNoiseGenerator::BeginPlay()
 	ProceduralMesh->SetMaterial(0, Material);
 	if (XSize > 0 && YSize > 0)
 		CellularAutomata();
+
+	// 생성 완료 후 플레이어 위치 조정
+	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	PlayerCharacter->ChangeCamera(false);
 }
 
 // Called every frame

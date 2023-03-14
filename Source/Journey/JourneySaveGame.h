@@ -3,8 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CellularAutomata.h"
 #include "GameFramework/SaveGame.h"
 #include "JourneySaveGame.generated.h"
+
+
+using namespace std;
 
 /**
  * 
@@ -29,5 +33,18 @@ public:
 
 	UPROPERTY()
 	int32 HighScore;
+
+	UPROPERTY(VisibleAnywhere, Category = "Saved Location")
+	FVector SavedPos;
+
+	UPROPERTY()
+	int32 tileMax;
+
+	UPROPERTY()
+	// CellularAutomata 데이터 값 저장
+	TArray<FCAStruct> CADatas;
+
+	
+	
 	
 };
