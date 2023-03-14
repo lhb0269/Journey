@@ -1,9 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "JourneySaveGame.h"
+#include "HeroAIController.h"
 
-UJourneySaveGame::UJourneySaveGame()
-{
-
-}
