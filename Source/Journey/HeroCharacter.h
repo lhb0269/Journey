@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "BasicCharacter.h"
-#include "InventoryComponent.h"
-#include"ShopComponent.h"
 #include "Engine/DataTable.h"
 #include "HeroCharacter.generated.h"
 
