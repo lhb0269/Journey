@@ -68,8 +68,33 @@ public:
 	int32 gold;
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
+
+	UFUNCTION(BlueprintCallable, Category = "Movement")
+	void MoveToLocation(const FVector& DestLocation);
+
+
+
+	UJourneySaveGame* MySaveGame;
+	// 월드맵 정보
+	ACellularAutomata* CellularActor;
+	AProceduralNoiseGenerator* ProceduralActor;
+
+	void LoadGame();
+	void SaveGame();
+
+	void GoToWorldMap();
+
+	void ChangeCamera(bool isWorld);
+
+	// 월드맵 충돌 체크
+	UFUNCTION()
+	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
+			class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+			const FHitResult& SweepResult); 
+
 	//UFUNCTION(BlueprintCallable,Category="Items")
 	//void BuyItem(UItem* Item,UInventoryComponent* UserInventory);
+
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	void MoveForward(float value);
