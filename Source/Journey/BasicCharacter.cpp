@@ -25,8 +25,6 @@ void ABasicCharacter::Tick(float DeltaTime)
 
 }
 
-
-
 // Called to bind functionality to input
 void ABasicCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
