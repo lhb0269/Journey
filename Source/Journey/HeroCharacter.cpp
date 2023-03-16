@@ -82,7 +82,7 @@ void AHeroCharacter::UseItem(UItem* Item)
 					shop->RemoveItem(Item);
 					UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
 					gold-=Item->cost;
-					Item->OnUse(this);
+					//Item->OnUse(this);
 				}
 			}
 		}
