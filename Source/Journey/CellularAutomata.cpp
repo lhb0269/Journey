@@ -1,9 +1,12 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-
+#include "Engine/World.h"
 #include "CellularAutomata.h"
 #include "Kismet/GameplayStatics.h"
 #include "JourneySaveGame.h"
+#include "AI/NavigationSystemBase.h" 
+#include "NavigationSystem.h"
+#include "NavigationSystem/Public/NavigationSystem.h"
 #include "Components/ChildActorComponent.h"
 #include "HeroCharacter.h"
 
@@ -46,7 +49,7 @@ void ACellularAutomata::BeginPlay()
 			height.push_back(width);
 			width.clear();
 		}
-		UE_LOG(LogTemp, Warning, TEXT("Tilemax: %d"), MySaveGame->tileMax);
+	
 	}
 	else
 	{
@@ -184,13 +187,15 @@ void ACellularAutomata::BeginPlay()
 		PlayerCharacter->ChangeCamera(true);
 	}
 
+	// 생성 완료 후 네비게이션 다시 빌드
+	RebuildNavigationMesh();
+
 }
 
 // Called every frame
 void ACellularAutomata::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void ACellularAutomata::OnConstruction(const FTransform& Transform)
@@ -216,5 +221,21 @@ bool ACellularAutomata::chcekSaveFile()
 
 	return true;
 	
+}
+
+void ACellularAutomata::RebuildNavigationMesh()
+{
+	UWorld* World = GetWorld();
+	if (World)
+	{
+		
+		UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(World);
+		if (NavSystem)
+		{
+			
+			NavSystem->CancelBuild();
+			NavSystem->Build();
+		}
+	}
 }
 

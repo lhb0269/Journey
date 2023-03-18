@@ -108,6 +108,8 @@ public:
 	//void BuyItem(UItem* Item,UInventoryComponent* UserInventory);
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void BeginPlay() override;
 	void MoveForward(float value);
 	void MoveRight(float value);
+	void OnRightClick();
 };

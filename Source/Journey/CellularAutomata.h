@@ -50,6 +50,8 @@ public:
 
 	bool chcekSaveFile();
 
+	void RebuildNavigationMesh();
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 Tilemax = 5;
@@ -71,4 +73,6 @@ public:
 	TArray<FCAStruct> CATileInfos;
 	// 저장 파일
 	UJourneySaveGame* MySaveGame;
+
+
 };

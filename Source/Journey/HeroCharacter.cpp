@@ -3,6 +3,7 @@
 
 #include "HeroCharacter.h"
 #include "Engine/World.h"
+#include "NavigationSystem.h"
 #include "Journey/InventoryComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
@@ -14,6 +15,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
 AHeroCharacter::AHeroCharacter()
@@ -126,7 +128,6 @@ void AHeroCharacter::GoToWorldMap()
 {
 	UGameplayStatics::OpenLevel(this, "WorldMap", true);
 
-	//UE_LOG(LogTemp, Warning, TEXT("NowPos: %s, SavedPos: %s"), *GetActorLocation().ToString(), *MySaveGame->SavedPos.ToString());
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
@@ -190,6 +191,43 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
+	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
+
+}
+void AHeroCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController->bShowMouseCursor = true;
+	PlayerController->SetInputMode(FInputModeGameAndUI());
+}
+
+void AHeroCharacter::OnRightClick()
+{
+	FVector2D ScreenPosition;
+	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
+	{
+		FVector WorldLocation;
+		FVector WorldDirection;
+		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
+		{
+			FHitResult HitResult;
+			FVector StartLocation = WorldLocation;
+			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
+
+			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+			{
+				FVector TargetLocation = HitResult.Location;
+
+				APlayerController* PlayerController = Cast<APlayerController>(GetController());
+				if (PlayerController)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("WorldLocation: %s"), *TargetLocation.ToString());
+					UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
+				}
+			}
+		}
+	}
 }
 
 void AHeroCharacter::MoveForward(float value)
