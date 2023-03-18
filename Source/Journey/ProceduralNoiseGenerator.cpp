@@ -33,7 +33,7 @@ void AProceduralNoiseGenerator::BeginPlay()
 	if (XSize > 0 && YSize > 0)
 		CellularAutomata();
 
-	// »ý¼º ¿Ï·á ÈÄ ÇÃ·¹ÀÌ¾î À§Ä¡ Á¶Á¤
+	// ï¿½ï¿½ï¿½ï¿½ ï¿½Ï·ï¿½ ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½
 	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	PlayerCharacter->ChangeCamera(false);
 }
@@ -188,7 +188,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				FVector SpawnLocation;
 				SpawnLocation.X = i * 100 + GetActorLocation().X;
 				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
-				SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
+				SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
 				rotator.Roll = 0;
 				if (height[i][j] == 1) {
 					rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
