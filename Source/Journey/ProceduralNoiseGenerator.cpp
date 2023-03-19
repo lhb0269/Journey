@@ -228,6 +228,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				}
 				else if (height[i][j] == 5) { //여관생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
 					AActor* MotelTile = world->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(MotelTile);
 				}
