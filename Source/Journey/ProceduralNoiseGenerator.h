@@ -36,6 +36,10 @@ public:
 		TSubclassOf<class AActor> Tree;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor>House;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>Shop;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>motel;
 	TArray<AActor*>AAray;
 	vector<int32>width;
 	vector<vector<int32>>height;
@@ -55,7 +59,10 @@ private:
 	TArray<int>Triangles;
 	TArray<float>Zvalue;
 	TArray<FVector2D>UV0;
-
+	
+	bool IsShop;
+	bool IsMotel;
+	
 	void CreateVertices();
 	void CreateTriangles();
 	void CellularAutomata();
