@@ -222,7 +222,7 @@ void AHeroCharacter::OnRightClick()
 				APlayerController* PlayerController = Cast<APlayerController>(GetController());
 				if (PlayerController)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("WorldLocation: %s"), *TargetLocation.ToString());
+					
 					UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
 				}
 			}

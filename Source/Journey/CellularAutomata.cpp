@@ -1,13 +1,15 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "Engine/World.h"
 #include "CellularAutomata.h"
+#include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
 #include "JourneySaveGame.h"
 #include "AI/NavigationSystemBase.h" 
 #include "NavigationSystem.h"
 #include "NavigationSystem/Public/NavigationSystem.h"
 #include "Components/ChildActorComponent.h"
+#include "Math/UnrealMath.h"
+#include <array>
 #include "HeroCharacter.h"
 
 // Sets default values
@@ -138,6 +140,8 @@ void ACellularAutomata::BeginPlay()
 				if (!chcekSaveFile())
 				{
 					CATileInfos[j + i * Tilemax].isVisited = false;
+					CATileInfos[j + i * Tilemax].isTown = false;
+					CATileInfos[j + i * Tilemax].isKey = false;
 					CATileInfos[j + i * Tilemax].tileType = height[i][j];
 					CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
 					UE_LOG(LogTemp, Log, TEXT("height : %d %d, location : %s"), i, j, *SpawnLocation.ToString());
@@ -152,6 +156,9 @@ void ACellularAutomata::BeginPlay()
 					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					Tile1->cubeNumber = j + i * Tilemax;
 					Tile1->isVisited = CATileInfos[j + i * Tilemax].isVisited;
+					Tile1->isTown = CATileInfos[j + i * Tilemax].isTown;
+					Tile1->isKey = CATileInfos[j + i * Tilemax].isKey;
+					Tile1->resetCubeState();
 					AArray.Add(Tile1);
 
 
@@ -161,6 +168,9 @@ void ACellularAutomata::BeginPlay()
 					MountainTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					MountainTile->cubeNumber = j + i * Tilemax;
 					MountainTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
+					MountainTile->isTown = CATileInfos[j + i * Tilemax].isTown;
+					MountainTile->isKey = CATileInfos[j + i * Tilemax].isKey;
+					MountainTile->resetCubeState();
 					//FVector Scale;
 					//Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
 					//MountainTile->SetActorScale3D(Scale);
@@ -172,12 +182,25 @@ void ACellularAutomata::BeginPlay()
 					RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					RiverTile->cubeNumber = j + i * Tilemax;
 					RiverTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
+					RiverTile->isTown = CATileInfos[j + i * Tilemax].isTown;
+					RiverTile->isKey = CATileInfos[j + i * Tilemax].isKey;
+					RiverTile->resetCubeState();
 					AArray.Add(RiverTile);
 
 				}
 			}
 		}
 	}
+
+
+	// 생성 완료 후 마을, 키 설정하기
+	// 마을 설정하기 
+	if (!chcekSaveFile())
+	{
+		GenRandomkeyTown();
+	}
+	
+
 
 	// 생성 완료 후 플레이어 위치 조정
 	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
@@ -237,5 +260,96 @@ void ACellularAutomata::RebuildNavigationMesh()
 			NavSystem->Build();
 		}
 	}
+}
+
+void ACellularAutomata::GenRandomkeyTown()
+{
+	// create town number
+	std::array<int32, 3> RandomNumbers;
+	for (int32 i = 0; i < RandomNumbers.size(); i++)
+	{
+		bool IsDuplicate = true;
+
+		while (IsDuplicate)
+		{
+			int32 NewRandomNumber = FMath::RandRange(1, (Tilemax*Tilemax - 1));
+
+			// Check if the new number is already in the array
+			IsDuplicate = false;
+			for (int32 j = 0; j < i; j++)
+			{
+				if (RandomNumbers[j] == NewRandomNumber)
+				{
+					IsDuplicate = true;
+					break;
+				}
+	
+			}
+			if (CATileInfos[NewRandomNumber].tileType != 0)			
+				IsDuplicate = true;
+	
+
+			// If the new number is not a duplicate, add it to the array
+			if (!IsDuplicate)
+			{
+				RandomNumbers[i] = NewRandomNumber;
+				CATileInfos[NewRandomNumber].isTown = true;
+				AArray[NewRandomNumber]->isTown = true;
+				AArray[NewRandomNumber]->resetCubeState();
+				UE_LOG(LogTemp, Warning, TEXT("town: %d"), NewRandomNumber);
+			}
+		}
+	}
+	
+	// create key 
+	for (int32 i = 0; i < RandomNumbers.size(); i++)
+	{
+		bool IsDuplicate = true;
+
+		while (IsDuplicate)
+		{
+			int32 NewRandomNumber = FMath::RandRange(1, (Tilemax * Tilemax - 1));
+
+			// Check if the new number is already in the array
+			IsDuplicate = false;
+			for (int32 j = 0; j < i; j++)
+			{
+				if (RandomNumbers[j] == NewRandomNumber)
+				{
+					IsDuplicate = true;
+					break;
+				}
+
+	
+			}
+
+			if (CATileInfos[NewRandomNumber].tileType != 0)
+				IsDuplicate = true;
+	
+
+			if (CATileInfos[NewRandomNumber].isTown)
+				IsDuplicate = true;
+
+			if (!IsDuplicate)
+			{
+				RandomNumbers[i] = NewRandomNumber;
+				CATileInfos[NewRandomNumber].isKey = true;
+				AArray[NewRandomNumber]->isKey = true;
+				AArray[NewRandomNumber]->resetCubeState();
+				UE_LOG(LogTemp, Warning, TEXT("Key: %d"), NewRandomNumber);
+			}
+		}
+	}
+	
+	//TArray<AActor*> FoundActors;
+	//TSubclassOf<AWorldCubeBase> ClassToFind = AWorldCubeBase::StaticClass();
+
+	//UGameplayStatics::GetAllActorsOfClass(GetWorld(), ClassToFind, FoundActors);
+
+	//for (AActor* Actor : FoundActors)
+	//{
+	//	Cast< AWorldCubeBase>(Actor)->Key->SetVisibility(true);
+	//}
+	
 }
 

@@ -25,9 +25,16 @@ public:
 
 	void initWorldCubeBase(bool visited, int32 num);
 
+	void resetCubeState();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isVisited;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isTown;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isKey;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 cubeNumber;
+
 };

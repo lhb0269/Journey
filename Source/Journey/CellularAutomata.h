@@ -24,6 +24,10 @@ public:
 	int32 tileType;
 	UPROPERTY()
 	bool isVisited;
+	UPROPERTY()
+	bool isTown;
+	UPROPERTY()
+	bool isKey;
 
 
 };
@@ -52,6 +56,10 @@ public:
 
 	void RebuildNavigationMesh();
 
+	void GenRandomkeyTown();
+	
+
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 Tilemax = 5;
@@ -63,7 +71,7 @@ public:
 		TSubclassOf<class AWorldCubeBase> River;
 	UPROPERTY(EditAnywhere)
 		int32 Time = 2;
-	TArray<AActor*>AArray;
+	TArray<AWorldCubeBase*>AArray;
 	vector<int32>width;
 
 
