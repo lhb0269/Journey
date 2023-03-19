@@ -16,6 +16,8 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 
 	ProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>("ProceduralMesh");
 	ProceduralMesh->SetupAttachment(GetRootComponent());
+	IsMotel = false;
+	IsShop = false;
 }
 
 // Called when the game starts or when spawned
@@ -178,8 +180,30 @@ void AProceduralNoiseGenerator::CellularAutomata()
 			}
 		}
 	}
+	while(!IsMotel)
+	{
+		int32 x = FMath::RandRange(25,75);
+		int32 y = FMath::RandRange(25,75);
+		if(height[x][y] == 3)
+		{
+			height[x][y] = 5;
+			IsMotel = true;
+			UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
+		}
+	}
+	while(!IsShop)
+	{
+		int32 x = FMath::RandRange(25,75);
+		int32 y = FMath::RandRange(25,75);
+		if(height[x][y] == 3)
+		{
+			height[x][y] = 6;
+			IsShop = true;
+			UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
+		}
+	}
 	//
-	if (Tree != nullptr && House != nullptr) {
+	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr) {
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
 				FActorSpawnParameters SpawnParams;
@@ -201,6 +225,16 @@ void AProceduralNoiseGenerator::CellularAutomata()
 					AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
 					//HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					AAray.Add(HouseTile);
+				}
+				else if (height[i][j] == 5) { //여관생성
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					AActor* MotelTile = world->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(MotelTile);
+				}
+				else if (height[i][j] == 6) { //상점생성
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					AActor* Shoptile = world->SpawnActor<AActor>(Shop, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(Shoptile);
 				}
 			}
 		}
