@@ -77,7 +77,12 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 hp;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	int32 mp;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	int32 Armour;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 gold;
+	
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
 
