@@ -127,11 +127,11 @@ void ACellularAutomata::BeginPlay()
 				SpawnParams.Owner = this;
 				FRotator rotator;
 				FVector SpawnLocation;
-				SpawnLocation.Y = i * 380 + GetActorLocation().Y;
+				SpawnLocation.Y = i * 360 + GetActorLocation().Y;
 				if (i % 2 == 0)
-					SpawnLocation.X = j * 420 + GetActorLocation().X;
+					SpawnLocation.X = j * 390 + GetActorLocation().X;
 				else
-					SpawnLocation.X = j * 420 + GetActorLocation().X + gap;
+					SpawnLocation.X = j * 390 + GetActorLocation().X + gap;
 				SpawnLocation.Z = GetActorLocation().Z;
 
 				// FCAStruct °ª Ãß°¡
