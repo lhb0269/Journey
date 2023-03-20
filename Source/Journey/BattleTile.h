@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "TileInfo.h"
 #include "BattleTile.generated.h"
 
 UCLASS()
@@ -22,7 +23,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	virtual void OnConstruction(const FTransform& Transform)override;
 
 	UPROPERTY(EditAnywhere)
 	int32 heightNum = 0;
@@ -30,7 +30,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 widthNum = 0;
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AActor > Tile;
+	TSubclassOf<class ATileInfo > Tile;
 
 
 

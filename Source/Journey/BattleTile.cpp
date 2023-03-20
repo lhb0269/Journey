@@ -11,6 +11,8 @@ ABattleTile::ABattleTile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	
+
 }
 
 // Called when the game starts or when spawned
@@ -18,19 +20,6 @@ void ABattleTile::BeginPlay()
 {
 	Super::BeginPlay();
 	
-}
-
-// Called every frame
-void ABattleTile::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-void ABattleTile::OnConstruction(const FTransform& Transform)
-{
-	//int32 w = widthNum;
-	//int32 h = heightNum;
 	UWorld* world = GetWorld();
 
 	TArray<ATileInfo*> tiles;
@@ -46,8 +35,8 @@ void ABattleTile::OnConstruction(const FTransform& Transform)
 		{
 			for (int j = 0; j < widthNum; j++)
 			{
-				SpawnLocation.X = j * 100 + GetActorLocation().X;
-				SpawnLocation.Y = i * 100 + GetActorLocation().Y;
+				SpawnLocation.X = j * 200 + GetActorLocation().X;
+				SpawnLocation.Y = i * 200 + GetActorLocation().Y;
 
 				ATileInfo* Tile1 = world->SpawnActor<ATileInfo>(Tile, SpawnLocation, rotator, SpawnParams);
 				Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
@@ -58,7 +47,13 @@ void ABattleTile::OnConstruction(const FTransform& Transform)
 			//width.clear;
 		}
 	}
+}
 
+// Called every frame
+void ABattleTile::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
 
 }
+
 

@@ -173,8 +173,19 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			// �ƴϸ� ���� ����
 			SaveGame();
 
-			// Load the next level
-			UGameplayStatics::OpenLevel(this, "Town", true);
+			// check town or battle
+			if (worldCube->isTown)
+			{
+				// Load the next level
+				UGameplayStatics::OpenLevel(this, "Town", true);
+			}
+			else
+			{
+				// Load the next level
+				UGameplayStatics::OpenLevel(this, "AIMAP", true);
+			}
+
+			
 		}
 
 	
