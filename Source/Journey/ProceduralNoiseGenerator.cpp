@@ -182,8 +182,8 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	}
 	while(!IsMotel)
 	{
-		int32 x = FMath::RandRange(25,75);
-		int32 y = FMath::RandRange(25,75);
+		int32 x = FMath::RandRange(12,37);
+		int32 y = FMath::RandRange(12,37);
 		if(height[x][y] == 3)
 		{
 			height[x][y] = 5;
@@ -193,8 +193,8 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	}
 	while(!IsShop)
 	{
-		int32 x = FMath::RandRange(25,75);
-		int32 y = FMath::RandRange(25,75);
+		int32 x = FMath::RandRange(12,37);
+		int32 y = FMath::RandRange(12,37);
 		if(height[x][y] == 3)
 		{
 			height[x][y] = 6;
