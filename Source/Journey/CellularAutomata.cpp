@@ -9,6 +9,7 @@
 #include "NavigationSystem/Public/NavigationSystem.h"
 #include "Components/ChildActorComponent.h"
 #include "Math/UnrealMath.h"
+#include "GameDataSingleton.h"
 #include <array>
 #include "HeroCharacter.h"
 
@@ -30,95 +31,93 @@ void ACellularAutomata::BeginPlay()
 	//int gap = 225;
 	int gap = 200;
 
+	// FCAStruct 초기화
+	CATileInfos.Init(FCAStruct(), Tilemax * Tilemax);
 	// 맵 데이터 저장파일이 있는지 확인한다.
-// 있으면 배치 데이터를 새로 만들지는 않는다.
-	if (chcekSaveFile())
-	{
-		// 받아온데이터를 기반으로 다시 생성한다.
-		// 기존 데이터가 존재한다면 FCAStruct 값을 받아온다.
-		CATileInfos = MySaveGame->CADatas;
-		//Tilemax = MySaveGame->tileMax;
-		// 
-		//TileMax 6고정
-		Tilemax = 6;
-		
+
+	// 있으면 배치 데이터를 새로 만들지는 않는다.
+	// 230403 : Level 을 통합하여 체크할 필요가 없어짐
+	//if (chcekSaveFile())
+	
+	// 받아온데이터를 기반으로 다시 생성한다.
+	// 기존 데이터가 존재한다면 FCAStruct 값을 받아온다.
+	//CATileInfos = MySaveGame->CADatas;
+	//Tilemax = MySaveGame->tileMax;
+	// 
+	//TileMax 6고정
+	Tilemax = 6;
+	
+	width.clear();
+	height.clear();
+	for (int i = 0; i < Tilemax; ++i) {
+		for (int j = 0; j < Tilemax; ++j) {
+			width.push_back(CATileInfos[j + i * Tilemax].tileType);
+		}
+		height.push_back(width);
 		width.clear();
-		height.clear();
+	}
+	
+	width.clear();
+	height.clear();
+	for (int i = 0; i < Tilemax; ++i) {
+		for (int j = 0; j < Tilemax; ++j) {
+			width.push_back(FMath::RandRange(0, 1));
+			if (width[j] == 1)
+				wall++;
+		}
+		height.push_back(width);
+		width.clear();
+	}
+	if (Tilemax >= 8) {
 		for (int i = 0; i < Tilemax; ++i) {
 			for (int j = 0; j < Tilemax; ++j) {
-				width.push_back(CATileInfos[j + i * Tilemax].tileType);
+				int32 count = 0;
+				if (height[i][j] == 1) count += 1;
+				if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
+					if (height[i - 1][j - 1] == 1)  count += 1;
+					if (height[i - 1][j] == 1)  count += 1;
+					if (height[i - 1][j + 1] == 1)  count += 1;
+					if (height[i][j - 1] == 1)  count += 1;
+					if (height[i][j + 1] == 1)  count += 1;
+					if (height[i + 1][j - 1] == 1)  count += 1;
+					if (height[i + 1][j] == 1)  count += 1;
+					if (height[i + 1][j + 1] == 1)  count += 1;
+				}
+				else {
+					count = 6;
+				}
+				if (count >= 6)height[i][j] = 1;
+				else if (count == 3)height[i][j] = 2;
+				else height[i][j] = 0;
 			}
-			height.push_back(width);
-			width.clear();
 		}
-	
 	}
 	else
 	{
-		width.clear();
-		height.clear();
 		for (int i = 0; i < Tilemax; ++i) {
 			for (int j = 0; j < Tilemax; ++j) {
-				width.push_back(FMath::RandRange(0, 1));
-				if (width[j] == 1)
-					wall++;
-			}
-			height.push_back(width);
-			width.clear();
-		}
-		if (Tilemax >= 8) {
-			for (int i = 0; i < Tilemax; ++i) {
-				for (int j = 0; j < Tilemax; ++j) {
-					int32 count = 0;
-					if (height[i][j] == 1) count += 1;
-					if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
-						if (height[i - 1][j - 1] == 1)  count += 1;
-						if (height[i - 1][j] == 1)  count += 1;
-						if (height[i - 1][j + 1] == 1)  count += 1;
-						if (height[i][j - 1] == 1)  count += 1;
-						if (height[i][j + 1] == 1)  count += 1;
-						if (height[i + 1][j - 1] == 1)  count += 1;
-						if (height[i + 1][j] == 1)  count += 1;
-						if (height[i + 1][j + 1] == 1)  count += 1;
-					}
-					else {
-						count = 6;
-					}
-					if (count >= 6)height[i][j] = 1;
-					else if (count == 3)height[i][j] = 2;
-					else height[i][j] = 0;
+				int32 count = 0;
+				if (height[i][j] == 0) count += 1;
+				if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
+					if (height[i - 1][j - 1] == 0)  count += 1;
+					if (height[i - 1][j] == 0)  count += 1;
+					if (height[i - 1][j + 1] == 0)  count += 1;
+					if (height[i][j - 1] == 0)  count += 1;
+					if (height[i][j + 1] == 0)  count += 1;
+					if (height[i + 1][j - 1] == 0)  count += 1;
+					if (height[i + 1][j] == 0)  count += 1;
+					if (height[i + 1][j + 1] == 0)  count += 1;
 				}
-			}
-		}
-		else
-		{
-			for (int i = 0; i < Tilemax; ++i) {
-				for (int j = 0; j < Tilemax; ++j) {
-					int32 count = 0;
-					if (height[i][j] == 0) count += 1;
-					if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
-						if (height[i - 1][j - 1] == 0)  count += 1;
-						if (height[i - 1][j] == 0)  count += 1;
-						if (height[i - 1][j + 1] == 0)  count += 1;
-						if (height[i][j - 1] == 0)  count += 1;
-						if (height[i][j + 1] == 0)  count += 1;
-						if (height[i + 1][j - 1] == 0)  count += 1;
-						if (height[i + 1][j] == 0)  count += 1;
-						if (height[i + 1][j + 1] == 0)  count += 1;
-					}
-					else {
-						count = 6;
-					}
-					if (count >= 6)height[i][j] = 0;
-					else if (count == 3)height[i][j] = 2;
-					else height[i][j] = 1;
+				else {
+					count = 6;
 				}
+				if (count >= 6)height[i][j] = 0;
+				else if (count == 3)height[i][j] = 2;
+				else height[i][j] = 1;
 			}
 		}
-
-		// FCAStruct 초기화
-		CATileInfos.Init(FCAStruct(), Tilemax * Tilemax);
 	}
+	
 
 
 	UE_LOG(LogTemp, Warning, TEXT("%d"), height.size());
@@ -195,24 +194,23 @@ void ACellularAutomata::BeginPlay()
 
 	// 생성 완료 후 마을, 키 설정하기
 	// 마을 설정하기 
-	if (!chcekSaveFile())
-	{
-		GenRandomkeyTown();
-	}
+	GenRandomkeyTown();
 	
-
-
 	// 생성 완료 후 플레이어 위치 조정
-	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	// 0403 싱글톤방식 변경으로 맵 이동시에 따로 지정
+	/*AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (chcekSaveFile())
 	{
 		PlayerCharacter->SetActorLocation(MySaveGame->SavedPos);
 		PlayerCharacter->ChangeCamera(true);
-	}
+	}*/
 
 	// 생성 완료 후 네비게이션 다시 빌드
 	RebuildNavigationMesh();
 
+	// 생성 완료 후 UGameDataSingleton 에 추가
+	UGameDataSingleton::GetInstance()->TileInfos = CATileInfos;
+	
 }
 
 // Called every frame

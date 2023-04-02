@@ -13,6 +13,7 @@
 #include "GameFramework/PlayerController.h"
 #include "HeroAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameDataSingleton.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
@@ -126,7 +127,8 @@ void AHeroCharacter::SaveGame()
 
 void AHeroCharacter::GoToWorldMap()
 {
-	UGameplayStatics::OpenLevel(this, "WorldMap", true);
+	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
 
 }
 
@@ -150,7 +152,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
 		// CellularAutomata �������� 
-		CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
+		//CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
 
 		AWorldCubeBase *worldCube = Cast<AWorldCubeBase>(OtherActor);
 
@@ -159,30 +161,38 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 
 			// �ƴϸ� �湮 �ߴٰ� üũ
-			CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
+			UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
+			UGameDataSingleton::GetInstance()->SavedPos = OtherActor->GetActorLocation();
+			//CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
 
-			MySaveGame->SavedPos = OtherActor->GetActorLocation();
-			MySaveGame->CADatas = CellularActor->CATileInfos;
-			MySaveGame->tileMax = CellularActor->Tilemax;
-			MySaveGame->PlayerName = "TESTNAME";
+			//MySaveGame->SavedPos = OtherActor->GetActorLocation();
+			//MySaveGame->CADatas = CellularActor->CATileInfos;
+			//MySaveGame->tileMax = CellularActor->Tilemax;
+			//MySaveGame->PlayerName = "TESTNAME";
 
 
 			// ������ġ�� �����ؾ��Ѵ�.
 			// ������ ���� ������ Ȯ��
 
 			// �ƴϸ� ���� ����
-			SaveGame();
+			//SaveGame();
 
 			// check town or battle
+			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
 			if (worldCube->isTown)
 			{
+				worldCube->isVisited = true;
+				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				// Load the next level
-				UGameplayStatics::OpenLevel(this, "Town", true);
+				//UGameplayStatics::OpenLevel(this, "Town", true);
 			}
 			else
 			{
+				worldCube->isVisited = true;
+				worldCube->isKey = false;
+				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				// Load the next level
-				UGameplayStatics::OpenLevel(this, "AIMAP", true);
+				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
 			}
 
 			
