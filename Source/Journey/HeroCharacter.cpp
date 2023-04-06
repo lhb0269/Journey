@@ -58,12 +58,7 @@ AHeroCharacter::AHeroCharacter()
 
 	hp = 50;
 	gold=200;
-
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
-	if (nullptr == MySaveGame)
-	{
-		MySaveGame = GetMutableDefault<UJourneySaveGame>(); // Gets the mutable default object of a class.
-	}
+	
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 }
@@ -110,19 +105,12 @@ void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
 
 void AHeroCharacter::LoadGame()
 {
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
 
-	if (MySaveGame == nullptr)
-	{
-
-	}
 }
 
 void AHeroCharacter::SaveGame()
 {
-	//MySaveGame->height = ;
-	
-	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+
 }
 
 void AHeroCharacter::GoToWorldMap()
@@ -163,7 +151,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 
 			// �ƴϸ� �湮 �ߴٰ� üũ
-			UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
+ 			UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
 			UGameDataSingleton::GetInstance()->SavedPos = OtherActor->GetActorLocation();
 			//CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
 

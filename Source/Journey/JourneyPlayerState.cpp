@@ -21,51 +21,51 @@ int32 AJourneyPlayerState::GetGameHighScore() const
 
 void AJourneyPlayerState::InitPlayerData()
 {
-	UJourneySaveGame* JSaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
-	if (nullptr == JSaveGame)
-	{
-		JSaveGame = GetMutableDefault<UJourneySaveGame>(); // Gets the mutable default object of a class.
-	}
+	//UJourneySaveGame* JSaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
+	//if (nullptr == JSaveGame)
+	//{
+	//	JSaveGame = GetMutableDefault<UJourneySaveGame>(); // Gets the mutable default object of a class.
+	//}
 
-	SetPlayerName(JSaveGame->PlayerName);
-	//SetCharacterLevel(JSaveGame->Level);
-	GameHighScore = JSaveGame->HighScore;
-	Exp = JSaveGame->Exp;
+	//SetPlayerName(JSaveGame->PlayerName);
+	////SetCharacterLevel(JSaveGame->Level);
+	//GameHighScore = JSaveGame->HighScore;
+	//Exp = JSaveGame->Exp;
 
-	SavePlayerData();
+	//SavePlayerData();
 }
 
 void AJourneyPlayerState::SavePlayerData()
 {
-	// SpawnActorµµ °á±¹¿£ NewObject¸¦ »ç¿ëÇÑ´Ù.
-	UJourneySaveGame* NewPlayerData = NewObject<UJourneySaveGame>(); // °¡ºñÁö ÄÃ·ºÅÍ ´öºÐ¿¡ Delete ¾È½áµµ µÊ.
-	NewPlayerData->PlayerName = GetPlayerName();
-	NewPlayerData->Level = CharacterLevel;
-	NewPlayerData->Exp = Exp;
-	NewPlayerData->HighScore = GameHighScore;
+	// SpawnActorï¿½ï¿½ ï¿½á±¹ï¿½ï¿½ NewObjectï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Ñ´ï¿½.
+	//UJourneySaveGame* NewPlayerData = NewObject<UJourneySaveGame>(); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã·ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ð¿ï¿½ Delete ï¿½È½áµµ ï¿½ï¿½.
+	//NewPlayerData->PlayerName = GetPlayerName();
+	//NewPlayerData->Level = CharacterLevel;
+	//NewPlayerData->Exp = Exp;
+	//NewPlayerData->HighScore = GameHighScore;
 
-	if (false == UGameplayStatics::SaveGameToSlot(NewPlayerData, SaveSlotName, 0))
-	{
-		UE_LOG(LogClass, Warning, TEXT("SaveGame Error!"));
-	}
+	//if (false == UGameplayStatics::SaveGameToSlot(NewPlayerData, SaveSlotName, 0))
+	//{
+	//	UE_LOG(LogClass, Warning, TEXT("SaveGame Error!"));
+	//}
 }
 
 void AJourneyPlayerState::AddExp()
 {
 
-	// ´Ù¸¥ ÄÚµå´Â »ý·«.
-	// µ¥ÀÌÅÍ°¡ º¯ÇÒ ¶§¸¶´Ù ÀúÀå.
+	// ï¿½Ù¸ï¿½ ï¿½Úµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	SavePlayerData();
 }
 
 void AJourneyPlayerState::AddGameScore()
 {
-	// ÃÖ°í Á¡¼ö°¡ ¹Ù²î¸é ±³Ã¼ÇÏ±â.
+	// ï¿½Ö°ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ù²ï¿½ï¿½ ï¿½ï¿½Ã¼ï¿½Ï±ï¿½.
 	GameScore++;
 	if (GameScore >= GameHighScore)
 	{
 		GameHighScore = GameScore;
 	}
-	// µ¥ÀÌÅÍ°¡ º¯ÇÒ ¶§¸¶´Ù ÀúÀå.
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
 	SavePlayerData();
 }

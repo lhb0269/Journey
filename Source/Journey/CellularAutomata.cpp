@@ -209,7 +209,8 @@ void ACellularAutomata::BeginPlay()
 	RebuildNavigationMesh();
 
 	// 생성 완료 후 UGameDataSingleton 에 추가
-	UGameDataSingleton::GetInstance()->TileInfos = CATileInfos;
+	if(UGameDataSingleton::GetInstance()->TileInfos.IsEmpty())
+		UGameDataSingleton::GetInstance()->TileInfos = MoveTemp(CATileInfos);
 	
 }
 
@@ -232,7 +233,6 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 
 bool ACellularAutomata::chcekSaveFile()
 {
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
 
 	if (MySaveGame == nullptr)
 	{
