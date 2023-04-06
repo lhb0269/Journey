@@ -44,8 +44,8 @@ AHeroCharacter::AHeroCharacter()
 	FollowCamera->bAutoActivate = false;
 
 
-	WorldFollowCamera->SetActive(true);
 	FollowCamera->SetActive(false);
+	WorldFollowCamera->SetActive(true);
 
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -129,6 +129,8 @@ void AHeroCharacter::GoToWorldMap()
 {
 	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
 	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
+	WorldFollowCamera->SetActive(true);
+	FollowCamera->SetActive(false);
 
 }
 
@@ -183,6 +185,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			{
 				worldCube->isVisited = true;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
+				FollowCamera->SetActive(true);
+				WorldFollowCamera->SetActive(false);
 				// Load the next level
 				//UGameplayStatics::OpenLevel(this, "Town", true);
 			}
@@ -191,6 +195,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				worldCube->isVisited = true;
 				worldCube->isKey = false;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
+				FollowCamera->SetActive(true);
+				WorldFollowCamera->SetActive(false);
 				// Load the next level
 				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
 			}

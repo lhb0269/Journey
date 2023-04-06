@@ -31,20 +31,20 @@ void ACellularAutomata::BeginPlay()
 	//int gap = 225;
 	int gap = 200;
 
-	// FCAStruct ÃÊ±âÈ­
+	// FCAStruct ì´ˆê¸°í™”
 	CATileInfos.Init(FCAStruct(), Tilemax * Tilemax);
-	// ¸Ê µ¥ÀÌÅÍ ÀúÀåÆÄÀÏÀÌ ÀÖ´ÂÁö È®ÀÎÇÑ´Ù.
+	// ë§µ ë°ì´í„° ì €ì¥íŒŒì¼ì´ ìˆëŠ”ì§€ í™•ì¸í•œë‹¤.
 
-	// ÀÖÀ¸¸é ¹èÄ¡ µ¥ÀÌÅÍ¸¦ »õ·Î ¸¸µéÁö´Â ¾Ê´Â´Ù.
-	// 230403 : Level À» ÅëÇÕÇÏ¿© Ã¼Å©ÇÒ ÇÊ¿ä°¡ ¾ø¾îÁü
+	// ìˆìœ¼ë©´ ë°°ì¹˜ ë°ì´í„°ë¥¼ ìƒˆë¡œ ë§Œë“¤ì§€ëŠ” ì•ŠëŠ”ë‹¤.
+	// 230403 : Level ì„ í†µí•©í•˜ì—¬ ì²´í¬í•  í•„ìš”ê°€ ì—†ì–´ì§
 	//if (chcekSaveFile())
 	
-	// ¹Ş¾Æ¿Âµ¥ÀÌÅÍ¸¦ ±â¹İÀ¸·Î ´Ù½Ã »ı¼ºÇÑ´Ù.
-	// ±âÁ¸ µ¥ÀÌÅÍ°¡ Á¸ÀçÇÑ´Ù¸é FCAStruct °ªÀ» ¹Ş¾Æ¿Â´Ù.
+	// ë°›ì•„ì˜¨ë°ì´í„°ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë‹¤ì‹œ ìƒì„±í•œë‹¤.
+	// ê¸°ì¡´ ë°ì´í„°ê°€ ì¡´ì¬í•œë‹¤ë©´ FCAStruct ê°’ì„ ë°›ì•„ì˜¨ë‹¤.
 	//CATileInfos = MySaveGame->CADatas;
 	//Tilemax = MySaveGame->tileMax;
 	// 
-	//TileMax 6°íÁ¤
+	//TileMax 6ê³ ì •
 	Tilemax = 6;
 	
 	width.clear();
@@ -135,7 +135,7 @@ void ACellularAutomata::BeginPlay()
 					SpawnLocation.X = j * 390 + GetActorLocation().X + gap;
 				SpawnLocation.Z = GetActorLocation().Z;
 
-				// FCAStruct °ª Ãß°¡
+				// FCAStruct ê°’ ì¶”ê°€
 				if (!chcekSaveFile())
 				{
 					CATileInfos[j + i * Tilemax].isVisited = false;
@@ -192,12 +192,12 @@ void ACellularAutomata::BeginPlay()
 	}
 
 
-	// »ı¼º ¿Ï·á ÈÄ ¸¶À», Å° ¼³Á¤ÇÏ±â
-	// ¸¶À» ¼³Á¤ÇÏ±â 
+	// ìƒì„± ì™„ë£Œ í›„ ë§ˆì„, í‚¤ ì„¤ì •í•˜ê¸°
+	// ë§ˆì„ ì„¤ì •í•˜ê¸° 
 	GenRandomkeyTown();
 	
-	// »ı¼º ¿Ï·á ÈÄ ÇÃ·¹ÀÌ¾î À§Ä¡ Á¶Á¤
-	// 0403 ½Ì±ÛÅæ¹æ½Ä º¯°æÀ¸·Î ¸Ê ÀÌµ¿½Ã¿¡ µû·Î ÁöÁ¤
+	// ìƒì„± ì™„ë£Œ í›„ í”Œë ˆì´ì–´ ìœ„ì¹˜ ì¡°ì •
+	// 0403 ì‹±ê¸€í†¤ë°©ì‹ ë³€ê²½ìœ¼ë¡œ ë§µ ì´ë™ì‹œì— ë”°ë¡œ ì§€ì •
 	/*AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (chcekSaveFile())
 	{
@@ -205,10 +205,10 @@ void ACellularAutomata::BeginPlay()
 		PlayerCharacter->ChangeCamera(true);
 	}*/
 
-	// »ı¼º ¿Ï·á ÈÄ ³×ºñ°ÔÀÌ¼Ç ´Ù½Ã ºôµå
+	// ìƒì„± ì™„ë£Œ í›„ ë„¤ë¹„ê²Œì´ì…˜ ë‹¤ì‹œ ë¹Œë“œ
 	RebuildNavigationMesh();
 
-	// »ı¼º ¿Ï·á ÈÄ UGameDataSingleton ¿¡ Ãß°¡
+	// ìƒì„± ì™„ë£Œ í›„ UGameDataSingleton ì— ì¶”ê°€
 	UGameDataSingleton::GetInstance()->TileInfos = CATileInfos;
 	
 }
