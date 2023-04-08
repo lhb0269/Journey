@@ -57,6 +57,8 @@ public:
 	void RebuildNavigationMesh();
 
 	void GenRandomkeyTown();
+
+	void GenMapData();
 	
 
 
@@ -79,6 +81,7 @@ public:
 
 	// tile 정보를 저장할 vector
 	TArray<FCAStruct> CATileInfos;
+	TArray<FCAStruct> MainTileInfos;
 	// 저장 파일
 	UJourneySaveGame* MySaveGame;
 
