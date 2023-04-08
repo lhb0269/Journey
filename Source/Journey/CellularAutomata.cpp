@@ -32,11 +32,6 @@ void ACellularAutomata::BeginPlay()
 	int gap = 200;
 
 
-
-	// FCAStruct ÃÊ±âÈ­
-	//CATileInfos.Init(FCAStruct(), Tilemax * Tilemax);
-
-	//TileMax 6°íÁ¤
 	Tilemax = 6;
 
 	// 12x12 ¸Ê»ı¼º
@@ -130,20 +125,7 @@ void ACellularAutomata::BeginPlay()
 	//				SpawnLocation.X = j * 390 + GetActorLocation().X + gap;
 	//			SpawnLocation.Z = GetActorLocation().Z;
 
-	//			// FCAStruct °ª Ãß°¡
-	//			if (!chcekSaveFile())
-	//			{
-	//				CATileInfos[j + i * Tilemax].isVisited = false;
-	//				CATileInfos[j + i * Tilemax].isTown = false;
-	//				CATileInfos[j + i * Tilemax].isKey = false;
-	//				CATileInfos[j + i * Tilemax].tileType = height[i][j];
-	//				CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
-	//				UE_LOG(LogTemp, Log, TEXT("height : %d %d, location : %s"), i, j, *SpawnLocation.ToString());
-	//			}
-	//		
-	//			
-	//		
-	//
+
 
 	//			if (height[i][j] == 0) {
 	//				AWorldCubeBase* Tile1 = world->SpawnActor<AWorldCubeBase>(Tile, SpawnLocation, rotator, SpawnParams);
@@ -190,9 +172,11 @@ void ACellularAutomata::BeginPlay()
 	// »ı¼º ¿Ï·á ÈÄ ¸¶À», Å° ¼³Á¤ÇÏ±â
 	// ¸¶À» ¼³Á¤ÇÏ±â 
 	//GenRandomkeyTown();
+
+
 	
-	// »ı¼º ¿Ï·á ÈÄ ÇÃ·¹ÀÌ¾î À§Ä¡ Á¶Á¤
-	// 0403 ½Ì±ÛÅæ¹æ½Ä º¯°æÀ¸·Î ¸Ê ÀÌµ¿½Ã¿¡ µû·Î ÁöÁ¤
+	// ????„ë£Œ ?„ ?Œ?ˆ?´ì–??„ì¹˜ ì¡°ì •
+	// 0403 ?±ê??¤ë°©? ë³€ê²½ìœ¼ë? ë§??´ë™?œ? ?°ë? ì§€?•
 	/*AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (chcekSaveFile())
 	{
@@ -200,12 +184,14 @@ void ACellularAutomata::BeginPlay()
 		PlayerCharacter->ChangeCamera(true);
 	}*/
 
-	// »ı¼º ¿Ï·á ÈÄ ³×ºñ°ÔÀÌ¼Ç ´Ù½Ã ºôµå
+	// ????„ë£Œ ?„ ?¤ë?ê²Œ?´ì…˜ ?¤ì‹œ ë¹Œ?œ
 	RebuildNavigationMesh();
 
+
 	// »ı¼º ¿Ï·á ÈÄ UGameDataSingleton ¿¡ Ãß°¡
-	UGameDataSingleton::GetInstance()->TileInfos = MainTileInfos;
-	
+	if(UGameDataSingleton::GetInstance()->TileInfos.IsEmpty())
+		UGameDataSingleton::GetInstance()->TileInfos = MoveTemp(CATileInfos);
+
 }
 
 // Called every frame
@@ -227,7 +213,6 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 
 bool ACellularAutomata::chcekSaveFile()
 {
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
 
 	if (MySaveGame == nullptr)
 	{

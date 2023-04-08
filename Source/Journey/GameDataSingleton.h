@@ -9,7 +9,7 @@
 
 /**
  * 
- *  °ªµéÀ» Public À¸·Î µ¹·Á ³õ¾ÒÀ½
+ *  ê°’ë“¤ì„ Public ìœ¼ë¡œ ëŒë ¤ ë†“ì•˜ìŒ
  */
 UCLASS()
 class JOURNEY_API UGameDataSingleton : public UObject

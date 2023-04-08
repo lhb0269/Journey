@@ -89,9 +89,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
 
+    int32 mapcode =0;//0 world 1 town 2 battle
 
-
-	UJourneySaveGame* MySaveGame;
+	//UJourneySaveGame* MySaveGame;
 	// 월드맵 정보
 	ACellularAutomata* CellularActor;
 	AProceduralNoiseGenerator* ProceduralActor;
