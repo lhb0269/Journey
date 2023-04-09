@@ -19,6 +19,9 @@
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
+
+#
+
 AHeroCharacter::AHeroCharacter()
 {
 
@@ -41,10 +44,10 @@ AHeroCharacter::AHeroCharacter()
 	//FollowCamera->bUsePawnControlRotation = true;
 
 	WorldFollowCamera->bAutoActivate = false;
-	FollowCamera->bAutoActivate = false;
+	FollowCamera->bAutoActivate = true;
 
 
-	FollowCamera->SetActive(false);
+	FollowCamera->SetActive(true);
 	WorldFollowCamera->SetActive(true);
 
 
@@ -117,13 +120,15 @@ void AHeroCharacter::GoToWorldMap()
 {
 	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
 	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
-	WorldFollowCamera->SetActive(true);
-	FollowCamera->SetActive(false);
-
+	//FollowCamera->SetActive(false);
+	//WorldFollowCamera->SetActive(true);
+	SwitchToWorldFollowCamera();
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
 {
+	CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
+
 	if (isWorld)
 	{
 		WorldFollowCamera->SetActive(true);
@@ -173,8 +178,9 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			{
 				worldCube->isVisited = true;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
-				FollowCamera->SetActive(true);
-				WorldFollowCamera->SetActive(false);
+				SwitchToFollowCamera();
+				//FollowCamera->SetActive(true);
+				//WorldFollowCamera->SetActive(false);
 				// Load the next level
 				//UGameplayStatics::OpenLevel(this, "Town", true);
 			}
@@ -183,8 +189,9 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				worldCube->isVisited = true;
 				worldCube->isKey = false;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
-				FollowCamera->SetActive(true);
-				WorldFollowCamera->SetActive(false);
+				SwitchToFollowCamera();
+				//FollowCamera->SetActive(true);
+				//WorldFollowCamera->SetActive(false);
 				// Load the next level
 				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
 			}
@@ -196,6 +203,23 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	}
 }
 
+void AHeroCharacter::SwitchToFollowCamera()
+{
+
+	// Activate the FollowCamera
+	WorldFollowCamera->SetActive(false);
+	FollowCamera->SetActive(true);
+}
+
+void AHeroCharacter::SwitchToWorldFollowCamera()
+{
+	// Activate the WorldFollowCamera
+	FollowCamera->SetActive(false);
+	WorldFollowCamera->SetActive(true);
+
+
+
+}
 
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -208,7 +232,43 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
 
+	PlayerInputComponent->BindAction("MouseWheelUp", IE_Pressed, this, &AHeroCharacter::OnZoomIn);
+	PlayerInputComponent->BindAction("MouseWheelDown", IE_Pressed, this, &AHeroCharacter::OnZoomOut);
+
 }
+
+void AHeroCharacter::OnZoomIn()
+{
+	float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView - 5.f, 20.f, 180.f);
+
+	// Set the new field of view
+	WorldFollowCamera->SetFieldOfView(NewFieldOfView);
+
+	// Adjust the spring arm's length to compensate for the new field of view
+	float CameraDistance = WorldCameraBoom->TargetArmLength;
+	float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
+	WorldCameraBoom->TargetArmLength = NewCameraDistance;
+
+	// Increase the camera's field of view to zoom out
+	//WorldFollowCamera->SetFieldOfView(WorldFollowCamera->FieldOfView + 5.f);
+}
+
+void AHeroCharacter::OnZoomOut()
+{
+	float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView + 5.f, 20.f, 180.f);
+
+	// Set the new field of view
+	WorldFollowCamera->SetFieldOfView(NewFieldOfView);
+
+	// Adjust the spring arm's length to compensate for the new field of view
+	float CameraDistance = WorldCameraBoom->TargetArmLength;
+	float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
+	WorldCameraBoom->TargetArmLength = NewCameraDistance;
+
+	// Decrease the camera's field of view to zoom in
+	//WorldFollowCamera->SetFieldOfView(WorldFollowCamera->FieldOfView - 5.f);
+}
+
 void AHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();

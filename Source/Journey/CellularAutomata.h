@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WorldCubeBase.h"
+#include "Camera/CameraComponent.h"
 #include "CellularAutomata.generated.h"
 using namespace std;
 
@@ -73,6 +74,8 @@ public:
 		TSubclassOf<class AWorldCubeBase> River;
 	UPROPERTY(EditAnywhere)
 		int32 Time = 2;
+
+	
 	TArray<AWorldCubeBase*>AArray;
 	vector<int32>width;
 
@@ -85,5 +88,5 @@ public:
 	// 저장 파일
 	UJourneySaveGame* MySaveGame;
 
-
+	
 };

@@ -117,4 +117,10 @@ protected:
 	void MoveForward(float value);
 	void MoveRight(float value);
 	void OnRightClick();
+	void OnZoomIn();
+	void OnZoomOut();
+
+	void SwitchToFollowCamera();
+	void SwitchToWorldFollowCamera();
+
 };

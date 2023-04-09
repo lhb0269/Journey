@@ -10,6 +10,7 @@
 #include "Components/ChildActorComponent.h"
 #include "Math/UnrealMath.h"
 #include "GameDataSingleton.h"
+#include "GameFramework/SpringArmComponent.h"
 #include <array>
 #include "HeroCharacter.h"
 
@@ -18,6 +19,14 @@ ACellularAutomata::ACellularAutomata()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+
+	// Create a new root component for the actor
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	//// Create a new camera component and attach it to the root component
+	//CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	//CameraComponent->SetupAttachment(RootComponent);
 
 }
 
@@ -36,6 +45,10 @@ void ACellularAutomata::BeginPlay()
 
 	// 12x12 ∏ ª˝º∫
 	GenMapData();
+	//UGameDataSingleton::GetInstance()->TileInfos = MainTileInfos;
+
+	//CameraComponent->SetRelativeLocationAndRotation(FVector(0.f, 0.f, 500.f), FRotator(0.f, 0.f, 0.f));
+	//CameraComponent->SetFieldOfView(90.f);
 	
 	//width.clear();
 	//height.clear();
@@ -175,8 +188,8 @@ void ACellularAutomata::BeginPlay()
 
 
 	
-	// ?ù???ÑÎ£å ?Ñ ?å?à?¥Ïñ??ÑÏπò Ï°∞Ï†ï
-	// 0403 ?±Í??§Î∞©?ù Î≥ÄÍ≤ΩÏúºÎ? Îß??¥Îèô?ú?ê ?∞Î? ÏßÄ?ï
+	// ????ÑÎ£å ?????¥Ï??ÑÏπò Ï°∞Ï†ï
+	// 0403 ?±Í??§Î∞©??Î≥ÄÍ≤ΩÏúº? Îß??¥Îèô????∞Î? ÏßÄ??
 	/*AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (chcekSaveFile())
 	{
@@ -184,13 +197,14 @@ void ACellularAutomata::BeginPlay()
 		PlayerCharacter->ChangeCamera(true);
 	}*/
 
-	// ?ù???ÑÎ£å ?Ñ ?§Î?Í≤å?¥ÏÖò ?§Ïãú Îπå?ú
+	// ????ÑÎ£å ???§Î?Í≤?¥ÏÖò ?§Ïãú Îπ??
 	RebuildNavigationMesh();
+
 
 
 	// ª˝º∫ øœ∑· »ƒ UGameDataSingleton ø° √ﬂ∞°
 	if(UGameDataSingleton::GetInstance()->TileInfos.IsEmpty())
-		UGameDataSingleton::GetInstance()->TileInfos = MoveTemp(CATileInfos);
+		UGameDataSingleton::GetInstance()->TileInfos = MoveTemp(MainTileInfos);
 
 }
 
@@ -426,80 +440,78 @@ void ACellularAutomata::GenMapData()
 			}
 			// ∏∂¿ª, ø≠ºË∏¶ ª˝º∫«—¥Ÿ. 
 			// create town number
-			//std::array<int32, 3> RandomNumbers;
-			//for (int32 i = 0; i < RandomNumbers.size(); i++)
-			//{
-			//	bool IsDuplicate = true;
+			std::array<int32, 3> RandomNumbers;
+			for (int32 i = 0; i < RandomNumbers.size(); i++)
+			{
+				bool IsDuplicate = true;
 
-			//	while (IsDuplicate)
-			//	{
-			//		int32 NewRandomNumber = FMath::RandRange(1, (Tilemax * Tilemax - 1));
+				while (IsDuplicate)
+				{
+					int32 NewRandomNumber = FMath::RandRange(1, (Tilemax * Tilemax - 1));
 
-			//		// Check if the new number is already in the array
-			//		IsDuplicate = false;
-			//		for (int32 j = 0; j < i; j++)
-			//		{
-			//			if (RandomNumbers[j] == NewRandomNumber)
-			//			{
-			//				IsDuplicate = true;
-			//				break;
-			//			}
+					// Check if the new number is already in the array
+					IsDuplicate = false;
+					for (int32 j = 0; j < i; j++)
+					{
+						if (RandomNumbers[j] == NewRandomNumber)
+						{
+							IsDuplicate = true;
+							break;
+						}
 
-			//		}
-			//		if (TileInfos[NewRandomNumber].tileType != 0)
-			//			IsDuplicate = true;
+					}
+					if (TileInfos[NewRandomNumber].tileType != 0)
+						IsDuplicate = true;
 
 
-			//		// If the new number is not a duplicate, add it to the array
-			//		if (!IsDuplicate)
-			//		{
-			//			RandomNumbers[i] = NewRandomNumber;
-			//			TileInfos[NewRandomNumber].isTown = true;
-			//			AArray[NewRandomNumber]->isTown = true;
-			//			AArray[NewRandomNumber]->resetCubeState();
-			//			UE_LOG(LogTemp, Warning, TEXT("town: %d"), NewRandomNumber);
-			//		}
-			//	}
-			//}
+					// If the new number is not a duplicate, add it to the array
+					if (!IsDuplicate)
+					{
+						RandomNumbers[i] = NewRandomNumber;
+						TileInfos[NewRandomNumber].isTown = true;
+						//AArray[NewRandomNumber]->isTown = true;
 
-			//// create key 
-			//// Ω√¿€ ¿ßƒ°∞° æ∆¥œæÓæﬂ¡ˆ∏∏ ¿€µø«‘
-			//if (startNum != tileCount)
-			//{
-			//	for (int32 i = 0; i < RandomNumbers.size(); i++)
-			//	{
-			//		bool IsDuplicate = true;
+					}
+				}
+			}
 
-			//		while (IsDuplicate)
-			//		{
-			//			int32 NewRandomNumber = FMath::RandRange(1, (Tilemax * Tilemax - 1));
+			// create key 
+			// Ω√¿€ ¿ßƒ°∞° æ∆¥œæÓæﬂ¡ˆ∏∏ ¿€µø«‘
+			if (startNum != tileCount)
+			{
+				for (int32 i = 0; i < RandomNumbers.size(); i++)
+				{
+					bool IsDuplicate = true;
 
-			//			// Check if the new number is already in the array
-			//			IsDuplicate = false;
-			//			for (int32 j = 0; j < i; j++)
-			//			{
-			//				if (RandomNumbers[j] == NewRandomNumber)
-			//				{
-			//					IsDuplicate = true;
-			//					break;
-			//				}
-			//			}
-			//			if (TileInfos[NewRandomNumber].tileType != 0)
-			//				IsDuplicate = true;
+					while (IsDuplicate)
+					{
+						int32 NewRandomNumber = FMath::RandRange(1, (Tilemax * Tilemax - 1));
 
-			//			if (TileInfos[NewRandomNumber].isTown)
-			//				IsDuplicate = true;
+						// Check if the new number is already in the array
+						IsDuplicate = false;
+						for (int32 j = 0; j < i; j++)
+						{
+							if (RandomNumbers[j] == NewRandomNumber)
+							{
+								IsDuplicate = true;
+								break;
+							}
+						}
+						if (TileInfos[NewRandomNumber].tileType != 0)
+							IsDuplicate = true;
 
-			//			if (!IsDuplicate)
-			//			{
-			//				RandomNumbers[i] = NewRandomNumber;
-			//				TileInfos[NewRandomNumber].isKey = true;
-			//				AArray[NewRandomNumber]->isKey = true;
-			//				AArray[NewRandomNumber]->resetCubeState();
-			//			}
-			//		}
-			//	}
-			//}
+						if (TileInfos[NewRandomNumber].isTown)
+							IsDuplicate = true;
+
+						if (!IsDuplicate)
+						{
+							RandomNumbers[i] = NewRandomNumber;
+							TileInfos[NewRandomNumber].isKey = true;
+							//AArray[NewRandomNumber]->isKey = true;
+						}
+					}
+				}
+			}
 			// ª˝º∫ »ƒ vectorø° √ﬂ∞°«—¥Ÿ.
 			CATileVector.push_back(TileInfos);
 		}
@@ -519,9 +531,10 @@ void ACellularAutomata::GenMapData()
 	}
 
 	// 4. Spawn Vector ¿‚æ∆¡ÿ¥Ÿ.
+	int Max2 = Tilemax * 2;
 	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
-		for (int i = 0; i < Tilemax * 2; ++i) {
-			for (int j = 0; j < Tilemax * 2; ++j) {
+		for (int i = 0; i < Max2; ++i) {
+			for (int j = 0; j < Max2; ++j) {
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
 				FRotator rotator;
@@ -533,27 +546,27 @@ void ACellularAutomata::GenMapData()
 					SpawnLocation.X = j * 390 + GetActorLocation().X + gap;
 				SpawnLocation.Z = GetActorLocation().Z;
 
-				MainTileInfos[j + i * Tilemax].tilePos = SpawnLocation;
+				MainTileInfos[j + i * Max2].tilePos = SpawnLocation;
 
 				
-				if (MainTileInfos[j + i * Tilemax].tileType == 0) {
+				if (MainTileInfos[j + i * Max2].tileType == 0) {
 					AWorldCubeBase* Tile1 = world->SpawnActor<AWorldCubeBase>(Tile, SpawnLocation, rotator, SpawnParams);
 					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					Tile1->cubeNumber = j + i * Tilemax;
-					Tile1->isVisited = MainTileInfos[j + i * Tilemax].isVisited;
-					Tile1->isTown = MainTileInfos[j + i * Tilemax].isTown;
-					Tile1->isKey = MainTileInfos[j + i * Tilemax].isKey;
+					Tile1->cubeNumber = j + i * Max2;
+					Tile1->isVisited = MainTileInfos[j + i * Max2].isVisited;
+					Tile1->isTown = MainTileInfos[j + i * Max2].isTown;
+					Tile1->isKey = MainTileInfos[j + i * Max2].isKey;
 					AArray.Add(Tile1);
 
 
 				}
-				else if (MainTileInfos[j + i * Tilemax].tileType == 1) {//Mountain
+				else if (MainTileInfos[j + i * Max2].tileType == 1) {//Mountain
 					AWorldCubeBase* MountainTile = world->SpawnActor<AWorldCubeBase>(Mountain, SpawnLocation, rotator, SpawnParams);
 					MountainTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					MountainTile->cubeNumber = j + i * Tilemax;
-					MountainTile->isVisited = MainTileInfos[j + i * Tilemax].isVisited;
-					MountainTile->isTown = MainTileInfos[j + i * Tilemax].isTown;
-					MountainTile->isKey = MainTileInfos[j + i * Tilemax].isKey;
+					MountainTile->cubeNumber = j + i * Max2;
+					MountainTile->isVisited = MainTileInfos[j + i * Max2].isVisited;
+					MountainTile->isTown = MainTileInfos[j + i * Max2].isTown;
+					MountainTile->isKey = MainTileInfos[j + i * Max2].isKey;
 
 					//FVector Scale;
 					//Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
@@ -561,13 +574,13 @@ void ACellularAutomata::GenMapData()
 					AArray.Add(MountainTile);
 
 				}
-				else if (MainTileInfos[j + i * Tilemax].tileType == 2) {//River
+				else if (MainTileInfos[j + i * Max2].tileType == 2) {//River
 					AWorldCubeBase* RiverTile = world->SpawnActor<AWorldCubeBase>(River, SpawnLocation, rotator, SpawnParams);
 					RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					RiverTile->cubeNumber = j + i * Tilemax;
-					RiverTile->isVisited = MainTileInfos[j + i * Tilemax].isVisited;
-					RiverTile->isTown = MainTileInfos[j + i * Tilemax].isTown;
-					RiverTile->isKey = MainTileInfos[j + i * Tilemax].isKey;
+					RiverTile->cubeNumber = j + i * Max2;
+					RiverTile->isVisited = MainTileInfos[j + i * Max2].isVisited;
+					RiverTile->isTown = MainTileInfos[j + i * Max2].isTown;
+					RiverTile->isKey = MainTileInfos[j + i * Max2].isKey;
 					AArray.Add(RiverTile);
 
 				}
