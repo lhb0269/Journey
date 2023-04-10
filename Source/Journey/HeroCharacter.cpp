@@ -137,7 +137,7 @@ void AHeroCharacter::ChangeCamera(bool isWorld)
 	else
 	{
 		WorldFollowCamera->SetActive(false);
-		FollowCamera->SetActive(true);
+		//FollowCamera->SetActive(true);
 	}
 }
 
