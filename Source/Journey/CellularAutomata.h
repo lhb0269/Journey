@@ -6,6 +6,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WorldCubeBase.h"
+#include "Camera/CameraComponent.h"
 #include "CellularAutomata.generated.h"
 using namespace std;
 
@@ -57,6 +58,8 @@ public:
 	void RebuildNavigationMesh();
 
 	void GenRandomkeyTown();
+
+	void GenMapData();
 	
 
 
@@ -71,6 +74,8 @@ public:
 		TSubclassOf<class AWorldCubeBase> River;
 	UPROPERTY(EditAnywhere)
 		int32 Time = 2;
+
+	
 	TArray<AWorldCubeBase*>AArray;
 	vector<int32>width;
 
@@ -79,8 +84,9 @@ public:
 
 	// tile 정보를 저장할 vector
 	TArray<FCAStruct> CATileInfos;
+	TArray<FCAStruct> MainTileInfos;
 	// 저장 파일
 	UJourneySaveGame* MySaveGame;
 
-
+	
 };

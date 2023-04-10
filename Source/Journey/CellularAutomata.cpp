@@ -9,6 +9,8 @@
 #include "NavigationSystem/Public/NavigationSystem.h"
 #include "Components/ChildActorComponent.h"
 #include "Math/UnrealMath.h"
+#include "GameDataSingleton.h"
+#include "GameFramework/SpringArmComponent.h"
 #include <array>
 #include "HeroCharacter.h"
 
@@ -17,6 +19,14 @@ ACellularAutomata::ACellularAutomata()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+
+	// Create a new root component for the actor
+	//RootComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootComponent"));
+
+	//// Create a new camera component and attach it to the root component
+	//CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	//CameraComponent->SetupAttachment(RootComponent);
 
 }
 
@@ -30,188 +40,171 @@ void ACellularAutomata::BeginPlay()
 	//int gap = 225;
 	int gap = 200;
 
-	// ∏  µ•¿Ã≈Õ ¿˙¿Â∆ƒ¿œ¿Ã ¿÷¥¬¡ˆ »Æ¿Œ«—¥Ÿ.
-// ¿÷¿∏∏È πËƒ° µ•¿Ã≈Õ∏¶ ªı∑Œ ∏∏µÈ¡ˆ¥¬ æ ¥¬¥Ÿ.
-	if (chcekSaveFile())
-	{
-		// πﬁæ∆ø¬µ•¿Ã≈Õ∏¶ ±‚π›¿∏∑Œ ¥ŸΩ√ ª˝º∫«—¥Ÿ.
-		// ±‚¡∏ µ•¿Ã≈Õ∞° ¡∏¿Á«—¥Ÿ∏È FCAStruct ∞™¿ª πﬁæ∆ø¬¥Ÿ.
-		CATileInfos = MySaveGame->CADatas;
-		//Tilemax = MySaveGame->tileMax;
-		// 
-		//TileMax 6∞Ì¡§
-		Tilemax = 6;
-		
-		width.clear();
-		height.clear();
-		for (int i = 0; i < Tilemax; ++i) {
-			for (int j = 0; j < Tilemax; ++j) {
-				width.push_back(CATileInfos[j + i * Tilemax].tileType);
-			}
-			height.push_back(width);
-			width.clear();
-		}
+
+	Tilemax = 6;
+
+	// 12x12 ∏ ª˝º∫
+	GenMapData();
+	//UGameDataSingleton::GetInstance()->TileInfos = MainTileInfos;
+
+	//CameraComponent->SetRelativeLocationAndRotation(FVector(0.f, 0.f, 500.f), FRotator(0.f, 0.f, 0.f));
+	//CameraComponent->SetFieldOfView(90.f);
 	
-	}
-	else
-	{
-		width.clear();
-		height.clear();
-		for (int i = 0; i < Tilemax; ++i) {
-			for (int j = 0; j < Tilemax; ++j) {
-				width.push_back(FMath::RandRange(0, 1));
-				if (width[j] == 1)
-					wall++;
-			}
-			height.push_back(width);
-			width.clear();
-		}
-		if (Tilemax >= 8) {
-			for (int i = 0; i < Tilemax; ++i) {
-				for (int j = 0; j < Tilemax; ++j) {
-					int32 count = 0;
-					if (height[i][j] == 1) count += 1;
-					if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
-						if (height[i - 1][j - 1] == 1)  count += 1;
-						if (height[i - 1][j] == 1)  count += 1;
-						if (height[i - 1][j + 1] == 1)  count += 1;
-						if (height[i][j - 1] == 1)  count += 1;
-						if (height[i][j + 1] == 1)  count += 1;
-						if (height[i + 1][j - 1] == 1)  count += 1;
-						if (height[i + 1][j] == 1)  count += 1;
-						if (height[i + 1][j + 1] == 1)  count += 1;
-					}
-					else {
-						count = 6;
-					}
-					if (count >= 6)height[i][j] = 1;
-					else if (count == 3)height[i][j] = 2;
-					else height[i][j] = 0;
-				}
-			}
-		}
-		else
-		{
-			for (int i = 0; i < Tilemax; ++i) {
-				for (int j = 0; j < Tilemax; ++j) {
-					int32 count = 0;
-					if (height[i][j] == 0) count += 1;
-					if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
-						if (height[i - 1][j - 1] == 0)  count += 1;
-						if (height[i - 1][j] == 0)  count += 1;
-						if (height[i - 1][j + 1] == 0)  count += 1;
-						if (height[i][j - 1] == 0)  count += 1;
-						if (height[i][j + 1] == 0)  count += 1;
-						if (height[i + 1][j - 1] == 0)  count += 1;
-						if (height[i + 1][j] == 0)  count += 1;
-						if (height[i + 1][j + 1] == 0)  count += 1;
-					}
-					else {
-						count = 6;
-					}
-					if (count >= 6)height[i][j] = 0;
-					else if (count == 3)height[i][j] = 2;
-					else height[i][j] = 1;
-				}
-			}
-		}
-
-		// FCAStruct √ ±‚»≠
-		CATileInfos.Init(FCAStruct(), Tilemax * Tilemax);
-	}
-
-
-	UE_LOG(LogTemp, Warning, TEXT("%d"), height.size());
-	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
-		for (int i = 0; i < Tilemax; ++i) {
-			for (int j = 0; j < Tilemax; ++j) {
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.Owner = this;
-				FRotator rotator;
-				FVector SpawnLocation;
-				SpawnLocation.Y = i * 360 + GetActorLocation().Y;
-				if (i % 2 == 0)
-					SpawnLocation.X = j * 390 + GetActorLocation().X;
-				else
-					SpawnLocation.X = j * 390 + GetActorLocation().X + gap;
-				SpawnLocation.Z = GetActorLocation().Z;
-
-				// FCAStruct ∞™ √ﬂ∞°
-				if (!chcekSaveFile())
-				{
-					CATileInfos[j + i * Tilemax].isVisited = false;
-					CATileInfos[j + i * Tilemax].isTown = false;
-					CATileInfos[j + i * Tilemax].isKey = false;
-					CATileInfos[j + i * Tilemax].tileType = height[i][j];
-					CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
-					UE_LOG(LogTemp, Log, TEXT("height : %d %d, location : %s"), i, j, *SpawnLocation.ToString());
-				}
-			
-				
-			
-	
-
-				if (height[i][j] == 0) {
-					AWorldCubeBase* Tile1 = world->SpawnActor<AWorldCubeBase>(Tile, SpawnLocation, rotator, SpawnParams);
-					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					Tile1->cubeNumber = j + i * Tilemax;
-					Tile1->isVisited = CATileInfos[j + i * Tilemax].isVisited;
-					Tile1->isTown = CATileInfos[j + i * Tilemax].isTown;
-					Tile1->isKey = CATileInfos[j + i * Tilemax].isKey;
-					Tile1->resetCubeState();
-					AArray.Add(Tile1);
+	//width.clear();
+	//height.clear();
+	//for (int i = 0; i < Tilemax; ++i) {
+	//	for (int j = 0; j < Tilemax; ++j) {
+	//		width.push_back(CATileInfos[j + i * Tilemax].tileType);
+	//	}
+	//	height.push_back(width);
+	//	width.clear();
+	//}
+	//
+	//width.clear();
+	//height.clear();
+	//for (int i = 0; i < Tilemax; ++i) {
+	//	for (int j = 0; j < Tilemax; ++j) {
+	//		width.push_back(FMath::RandRange(0, 1));
+	//		if (width[j] == 1)
+	//			wall++;
+	//	}
+	//	height.push_back(width);
+	//	width.clear();
+	//}
+	//if (Tilemax >= 8) {
+	//	for (int i = 0; i < Tilemax; ++i) {
+	//		for (int j = 0; j < Tilemax; ++j) {
+	//			int32 count = 0;
+	//			if (height[i][j] == 1) count += 1;
+	//			if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
+	//				if (height[i - 1][j - 1] == 1)  count += 1;
+	//				if (height[i - 1][j] == 1)  count += 1;
+	//				if (height[i - 1][j + 1] == 1)  count += 1;
+	//				if (height[i][j - 1] == 1)  count += 1;
+	//				if (height[i][j + 1] == 1)  count += 1;
+	//				if (height[i + 1][j - 1] == 1)  count += 1;
+	//				if (height[i + 1][j] == 1)  count += 1;
+	//				if (height[i + 1][j + 1] == 1)  count += 1;
+	//			}
+	//			else {
+	//				count = 6;
+	//			}
+	//			if (count >= 6)height[i][j] = 1;
+	//			else if (count == 3)height[i][j] = 2;
+	//			else height[i][j] = 0;
+	//		}
+	//	}
+	//}
+	//else
+	//{
+	//	for (int i = 0; i < Tilemax; ++i) {
+	//		for (int j = 0; j < Tilemax; ++j) {
+	//			int32 count = 0;
+	//			if (height[i][j] == 0) count += 1;
+	//			if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
+	//				if (height[i - 1][j - 1] == 0)  count += 1;
+	//				if (height[i - 1][j] == 0)  count += 1;
+	//				if (height[i - 1][j + 1] == 0)  count += 1;
+	//				if (height[i][j - 1] == 0)  count += 1;
+	//				if (height[i][j + 1] == 0)  count += 1;
+	//				if (height[i + 1][j - 1] == 0)  count += 1;
+	//				if (height[i + 1][j] == 0)  count += 1;
+	//				if (height[i + 1][j + 1] == 0)  count += 1;
+	//			}
+	//			else {
+	//				count = 6;
+	//			}
+	//			if (count >= 6)height[i][j] = 0;
+	//			else if (count == 3)height[i][j] = 2;
+	//			else height[i][j] = 1;
+	//		}
+	//	}
+	//}
+	//
 
 
-				}
-				else if (height[i][j] == 1) {//Mountain
-					AWorldCubeBase* MountainTile = world->SpawnActor<AWorldCubeBase>(Mountain, SpawnLocation, rotator, SpawnParams);
-					MountainTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					MountainTile->cubeNumber = j + i * Tilemax;
-					MountainTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
-					MountainTile->isTown = CATileInfos[j + i * Tilemax].isTown;
-					MountainTile->isKey = CATileInfos[j + i * Tilemax].isKey;
-					MountainTile->resetCubeState();
-					//FVector Scale;
-					//Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
-					//MountainTile->SetActorScale3D(Scale);
-					AArray.Add(MountainTile);
+	//UE_LOG(LogTemp, Warning, TEXT("%d"), height.size());
+	//if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
+	//	for (int i = 0; i < Tilemax; ++i) {
+	//		for (int j = 0; j < Tilemax; ++j) {
+	//			FActorSpawnParameters SpawnParams;
+	//			SpawnParams.Owner = this;
+	//			FRotator rotator;
+	//			FVector SpawnLocation;
+	//			SpawnLocation.Y = i * 360 + GetActorLocation().Y;
+	//			if (i % 2 == 0)
+	//				SpawnLocation.X = j * 390 + GetActorLocation().X;
+	//			else
+	//				SpawnLocation.X = j * 390 + GetActorLocation().X + gap;
+	//			SpawnLocation.Z = GetActorLocation().Z;
 
-				}
-				else if (height[i][j] == 2) {//River
-					AWorldCubeBase* RiverTile = world->SpawnActor<AWorldCubeBase>(River, SpawnLocation, rotator, SpawnParams);
-					RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					RiverTile->cubeNumber = j + i * Tilemax;
-					RiverTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
-					RiverTile->isTown = CATileInfos[j + i * Tilemax].isTown;
-					RiverTile->isKey = CATileInfos[j + i * Tilemax].isKey;
-					RiverTile->resetCubeState();
-					AArray.Add(RiverTile);
 
-				}
-			}
-		}
-	}
+
+	//			if (height[i][j] == 0) {
+	//				AWorldCubeBase* Tile1 = world->SpawnActor<AWorldCubeBase>(Tile, SpawnLocation, rotator, SpawnParams);
+	//				Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+	//				Tile1->cubeNumber = j + i * Tilemax;
+	//				Tile1->isVisited = CATileInfos[j + i * Tilemax].isVisited;
+	//				Tile1->isTown = CATileInfos[j + i * Tilemax].isTown;
+	//				Tile1->isKey = CATileInfos[j + i * Tilemax].isKey;
+	//				Tile1->resetCubeState();
+	//				AArray.Add(Tile1);
+
+
+	//			}
+	//			else if (height[i][j] == 1) {//Mountain
+	//				AWorldCubeBase* MountainTile = world->SpawnActor<AWorldCubeBase>(Mountain, SpawnLocation, rotator, SpawnParams);
+	//				MountainTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+	//				MountainTile->cubeNumber = j + i * Tilemax;
+	//				MountainTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
+	//				MountainTile->isTown = CATileInfos[j + i * Tilemax].isTown;
+	//				MountainTile->isKey = CATileInfos[j + i * Tilemax].isKey;
+	//				MountainTile->resetCubeState();
+	//				//FVector Scale;
+	//				//Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
+	//				//MountainTile->SetActorScale3D(Scale);
+	//				AArray.Add(MountainTile);
+
+	//			}
+	//			else if (height[i][j] == 2) {//River
+	//				AWorldCubeBase* RiverTile = world->SpawnActor<AWorldCubeBase>(River, SpawnLocation, rotator, SpawnParams);
+	//				RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+	//				RiverTile->cubeNumber = j + i * Tilemax;
+	//				RiverTile->isVisited = CATileInfos[j + i * Tilemax].isVisited;
+	//				RiverTile->isTown = CATileInfos[j + i * Tilemax].isTown;
+	//				RiverTile->isKey = CATileInfos[j + i * Tilemax].isKey;
+	//				RiverTile->resetCubeState();
+	//				AArray.Add(RiverTile);
+
+	//			}
+	//		}
+	//	}
+	//}
 
 
 	// ª˝º∫ øœ∑· »ƒ ∏∂¿ª, ≈∞ º≥¡§«œ±‚
 	// ∏∂¿ª º≥¡§«œ±‚ 
-	if (!chcekSaveFile())
-	{
-		GenRandomkeyTown();
-	}
+	//GenRandomkeyTown();
+
+
 	
-
-
-	// ª˝º∫ øœ∑· »ƒ «√∑π¿ÃæÓ ¿ßƒ° ¡∂¡§
-	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	// ????ÑÎ£å ?????¥Ï??ÑÏπò Ï°∞Ï†ï
+	// 0403 ?±Í??§Î∞©??Î≥ÄÍ≤ΩÏúº? Îß??¥Îèô????∞Î? ÏßÄ??
+	/*AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (chcekSaveFile())
 	{
 		PlayerCharacter->SetActorLocation(MySaveGame->SavedPos);
 		PlayerCharacter->ChangeCamera(true);
-	}
+	}*/
 
-	// ª˝º∫ øœ∑· »ƒ ≥◊∫Ò∞‘¿Ãº« ¥ŸΩ√ ∫ÙµÂ
+	// ????ÑÎ£å ???§Î?Í≤?¥ÏÖò ?§Ïãú Îπ??
 	RebuildNavigationMesh();
+
+
+
+	// ª˝º∫ øœ∑· »ƒ UGameDataSingleton ø° √ﬂ∞°
+	if(UGameDataSingleton::GetInstance()->TileInfos.IsEmpty())
+		UGameDataSingleton::GetInstance()->TileInfos = MoveTemp(MainTileInfos);
 
 }
 
@@ -234,7 +227,6 @@ void ACellularAutomata::OnConstruction(const FTransform& Transform)
 
 bool ACellularAutomata::chcekSaveFile()
 {
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
 
 	if (MySaveGame == nullptr)
 	{
@@ -351,5 +343,249 @@ void ACellularAutomata::GenRandomkeyTown()
 	//	Cast< AWorldCubeBase>(Actor)->Key->SetVisibility(true);
 	//}
 	
+}
+
+void ACellularAutomata::GenMapData()
+{
+	// 1. ¿œ¥‹ «√∑π¿ÃæÓ ¿ßƒ°∏¶ ∑£¥˝¿∏∑Œ ∞Ì∏•¥Ÿ (1~4)
+	int startNum = FMath::RandRange(1, 4);
+
+	// 2. 4∞≥¿« ≈∏¿œ πËø≠ø° ∏∂¿ª∞˙ ø≠ºË∏¶ ª—∏∞¥Ÿ. («√∑π¿ÃæÓ ¿ßƒ°¿Œ ≈∏¿œ πËø≠¿∫ ø≠ºË∏¶ ¡¶ø‹«—¥Ÿ.)
+	std::vector<TArray<FCAStruct>> CATileVector;
+	TArray<FCAStruct> TileInfos;
+	float wall = 0;
+	UWorld* world = GetWorld();
+	bool Original = false;
+	int gap = 200;
+
+	for (int tileCount = 0; tileCount < 4; tileCount++)
+	{
+		TileInfos.Init(FCAStruct(), Tilemax * Tilemax);
+		width.clear();
+		height.clear();
+		for (int i = 0; i < Tilemax; ++i) {
+			for (int j = 0; j < Tilemax; ++j) {
+				width.push_back(FMath::RandRange(0, 1));
+				if (width[j] == 1)
+					wall++;
+			}
+			height.push_back(width);
+			width.clear();
+		}
+		if (Tilemax >= 8) {
+			for (int i = 0; i < Tilemax; ++i) {
+				for (int j = 0; j < Tilemax; ++j) {
+					int32 count = 0;
+					if (height[i][j] == 1) count += 1;
+					if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
+						if (height[i - 1][j - 1] == 1)  count += 1;
+						if (height[i - 1][j] == 1)  count += 1;
+						if (height[i - 1][j + 1] == 1)  count += 1;
+						if (height[i][j - 1] == 1)  count += 1;
+						if (height[i][j + 1] == 1)  count += 1;
+						if (height[i + 1][j - 1] == 1)  count += 1;
+						if (height[i + 1][j] == 1)  count += 1;
+						if (height[i + 1][j + 1] == 1)  count += 1;
+					}
+					else {
+						count = 6;
+					}
+					if (count >= 6)height[i][j] = 1;
+					else if (count == 3)height[i][j] = 2;
+					else height[i][j] = 0;
+				}
+			}
+		}
+		else
+		{
+			for (int i = 0; i < Tilemax; ++i) {
+				for (int j = 0; j < Tilemax; ++j) {
+					int32 count = 0;
+					if (height[i][j] == 0) count += 1;
+					if (i + 1 < Tilemax && i - 1 >= 0 && j + 1 < Tilemax && j - 1 >= 0) {
+						if (height[i - 1][j - 1] == 0)  count += 1;
+						if (height[i - 1][j] == 0)  count += 1;
+						if (height[i - 1][j + 1] == 0)  count += 1;
+						if (height[i][j - 1] == 0)  count += 1;
+						if (height[i][j + 1] == 0)  count += 1;
+						if (height[i + 1][j - 1] == 0)  count += 1;
+						if (height[i + 1][j] == 0)  count += 1;
+						if (height[i + 1][j + 1] == 0)  count += 1;
+					}
+					else {
+						count = 6;
+					}
+					if (count >= 6)height[i][j] = 0;
+					else if (count == 3)height[i][j] = 2;
+					else height[i][j] = 1;
+				}
+			}
+		}
+
+		if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
+			for (int i = 0; i < Tilemax; ++i) 
+			{
+				for (int j = 0; j < Tilemax; ++j) 
+				{
+					// FCAStruct ∞™ √ﬂ∞°
+
+					TileInfos[j + i * Tilemax].isVisited = false;
+					TileInfos[j + i * Tilemax].isTown = false;
+					TileInfos[j + i * Tilemax].isKey = false;
+					TileInfos[j + i * Tilemax].tileType = height[i][j];
+					//SpawnLocation √ﬂ∞°«ÿ¡‡æﬂ«‘
+					//CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
+
+				}
+			}
+			// ∏∂¿ª, ø≠ºË∏¶ ª˝º∫«—¥Ÿ. 
+			// create town number
+			std::array<int32, 3> RandomNumbers;
+			for (int32 i = 0; i < RandomNumbers.size(); i++)
+			{
+				bool IsDuplicate = true;
+
+				while (IsDuplicate)
+				{
+					int32 NewRandomNumber = FMath::RandRange(1, (Tilemax * Tilemax - 1));
+
+					// Check if the new number is already in the array
+					IsDuplicate = false;
+					for (int32 j = 0; j < i; j++)
+					{
+						if (RandomNumbers[j] == NewRandomNumber)
+						{
+							IsDuplicate = true;
+							break;
+						}
+
+					}
+					if (TileInfos[NewRandomNumber].tileType != 0)
+						IsDuplicate = true;
+
+
+					// If the new number is not a duplicate, add it to the array
+					if (!IsDuplicate)
+					{
+						RandomNumbers[i] = NewRandomNumber;
+						TileInfos[NewRandomNumber].isTown = true;
+						//AArray[NewRandomNumber]->isTown = true;
+
+					}
+				}
+			}
+
+			// create key 
+			// Ω√¿€ ¿ßƒ°∞° æ∆¥œæÓæﬂ¡ˆ∏∏ ¿€µø«‘
+			if (startNum != tileCount)
+			{
+				for (int32 i = 0; i < RandomNumbers.size(); i++)
+				{
+					bool IsDuplicate = true;
+
+					while (IsDuplicate)
+					{
+						int32 NewRandomNumber = FMath::RandRange(1, (Tilemax * Tilemax - 1));
+
+						// Check if the new number is already in the array
+						IsDuplicate = false;
+						for (int32 j = 0; j < i; j++)
+						{
+							if (RandomNumbers[j] == NewRandomNumber)
+							{
+								IsDuplicate = true;
+								break;
+							}
+						}
+						if (TileInfos[NewRandomNumber].tileType != 0)
+							IsDuplicate = true;
+
+						if (TileInfos[NewRandomNumber].isTown)
+							IsDuplicate = true;
+
+						if (!IsDuplicate)
+						{
+							RandomNumbers[i] = NewRandomNumber;
+							TileInfos[NewRandomNumber].isKey = true;
+							//AArray[NewRandomNumber]->isKey = true;
+						}
+					}
+				}
+			}
+			// ª˝º∫ »ƒ vectorø° √ﬂ∞°«—¥Ÿ.
+			CATileVector.push_back(TileInfos);
+		}
+	}
+	
+
+	// 3. «œ≥™∑Œ «’ƒ£¥Ÿ.
+	for (int tileCount = 0; tileCount < 4; tileCount++)
+	{
+		for (int x = 0; x < Tilemax ; x++)
+		{
+			for (int y = 0; y < Tilemax ; y++)
+			{
+				MainTileInfos.Add(CATileVector[tileCount][y + x * Tilemax]);
+			}
+		}
+	}
+
+	// 4. Spawn Vector ¿‚æ∆¡ÿ¥Ÿ.
+	int Max2 = Tilemax * 2;
+	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
+		for (int i = 0; i < Max2; ++i) {
+			for (int j = 0; j < Max2; ++j) {
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				FRotator rotator;
+				FVector SpawnLocation;
+				SpawnLocation.Y = i * 360 + GetActorLocation().Y;
+				if (i % 2 == 0)
+					SpawnLocation.X = j * 390 + GetActorLocation().X;
+				else
+					SpawnLocation.X = j * 390 + GetActorLocation().X + gap;
+				SpawnLocation.Z = GetActorLocation().Z;
+
+				MainTileInfos[j + i * Max2].tilePos = SpawnLocation;
+
+				
+				if (MainTileInfos[j + i * Max2].tileType == 0) {
+					AWorldCubeBase* Tile1 = world->SpawnActor<AWorldCubeBase>(Tile, SpawnLocation, rotator, SpawnParams);
+					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					Tile1->cubeNumber = j + i * Max2;
+					Tile1->isVisited = MainTileInfos[j + i * Max2].isVisited;
+					Tile1->isTown = MainTileInfos[j + i * Max2].isTown;
+					Tile1->isKey = MainTileInfos[j + i * Max2].isKey;
+					AArray.Add(Tile1);
+
+
+				}
+				else if (MainTileInfos[j + i * Max2].tileType == 1) {//Mountain
+					AWorldCubeBase* MountainTile = world->SpawnActor<AWorldCubeBase>(Mountain, SpawnLocation, rotator, SpawnParams);
+					MountainTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					MountainTile->cubeNumber = j + i * Max2;
+					MountainTile->isVisited = MainTileInfos[j + i * Max2].isVisited;
+					MountainTile->isTown = MainTileInfos[j + i * Max2].isTown;
+					MountainTile->isKey = MainTileInfos[j + i * Max2].isKey;
+
+					//FVector Scale;
+					//Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
+					//MountainTile->SetActorScale3D(Scale);
+					AArray.Add(MountainTile);
+
+				}
+				else if (MainTileInfos[j + i * Max2].tileType == 2) {//River
+					AWorldCubeBase* RiverTile = world->SpawnActor<AWorldCubeBase>(River, SpawnLocation, rotator, SpawnParams);
+					RiverTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+					RiverTile->cubeNumber = j + i * Max2;
+					RiverTile->isVisited = MainTileInfos[j + i * Max2].isVisited;
+					RiverTile->isTown = MainTileInfos[j + i * Max2].isTown;
+					RiverTile->isKey = MainTileInfos[j + i * Max2].isKey;
+					AArray.Add(RiverTile);
+
+				}
+			}
+		}
+	}
 }
 

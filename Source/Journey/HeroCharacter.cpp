@@ -13,10 +13,14 @@
 #include "GameFramework/PlayerController.h"
 #include "HeroAIController.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameDataSingleton.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/GameplayStatics.h"
+
+
+#
 
 AHeroCharacter::AHeroCharacter()
 {
@@ -40,11 +44,11 @@ AHeroCharacter::AHeroCharacter()
 	//FollowCamera->bUsePawnControlRotation = true;
 
 	WorldFollowCamera->bAutoActivate = false;
-	FollowCamera->bAutoActivate = false;
+	FollowCamera->bAutoActivate = true;
 
 
+	FollowCamera->SetActive(true);
 	WorldFollowCamera->SetActive(true);
-	FollowCamera->SetActive(false);
 
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -57,12 +61,7 @@ AHeroCharacter::AHeroCharacter()
 
 	hp = 50;
 	gold=200;
-
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
-	if (nullptr == MySaveGame)
-	{
-		MySaveGame = GetMutableDefault<UJourneySaveGame>(); // Gets the mutable default object of a class.
-	}
+	
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 }
@@ -109,29 +108,27 @@ void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
 
 void AHeroCharacter::LoadGame()
 {
-	MySaveGame = Cast<UJourneySaveGame>(UGameplayStatics::LoadGameFromSlot("MySaveSlot", 0));
 
-	if (MySaveGame == nullptr)
-	{
-
-	}
 }
 
 void AHeroCharacter::SaveGame()
 {
-	//MySaveGame->height = ;
-	
-	UGameplayStatics::SaveGameToSlot(MySaveGame, "MySaveSlot", 0);
+
 }
 
 void AHeroCharacter::GoToWorldMap()
 {
-	UGameplayStatics::OpenLevel(this, "WorldMap", true);
-
+	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
+	//FollowCamera->SetActive(false);
+	//WorldFollowCamera->SetActive(true);
+	SwitchToWorldFollowCamera();
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
 {
+	CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
+
 	if (isWorld)
 	{
 		WorldFollowCamera->SetActive(true);
@@ -150,7 +147,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
 		// CellularAutomata �������� 
-		CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
+		//CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
 
 		AWorldCubeBase *worldCube = Cast<AWorldCubeBase>(OtherActor);
 
@@ -159,30 +156,44 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 
 			// �ƴϸ� �湮 �ߴٰ� üũ
-			CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
+ 			UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
+			UGameDataSingleton::GetInstance()->SavedPos = OtherActor->GetActorLocation();
+			//CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
 
-			MySaveGame->SavedPos = OtherActor->GetActorLocation();
-			MySaveGame->CADatas = CellularActor->CATileInfos;
-			MySaveGame->tileMax = CellularActor->Tilemax;
-			MySaveGame->PlayerName = "TESTNAME";
+			//MySaveGame->SavedPos = OtherActor->GetActorLocation();
+			//MySaveGame->CADatas = CellularActor->CATileInfos;
+			//MySaveGame->tileMax = CellularActor->Tilemax;
+			//MySaveGame->PlayerName = "TESTNAME";
 
 
 			// ������ġ�� �����ؾ��Ѵ�.
 			// ������ ���� ������ Ȯ��
 
 			// �ƴϸ� ���� ����
-			SaveGame();
+			//SaveGame();
 
 			// check town or battle
+			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
 			if (worldCube->isTown)
 			{
+				worldCube->isVisited = true;
+				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
+				SwitchToFollowCamera();
+				//FollowCamera->SetActive(true);
+				//WorldFollowCamera->SetActive(false);
 				// Load the next level
-				UGameplayStatics::OpenLevel(this, "Town", true);
+				//UGameplayStatics::OpenLevel(this, "Town", true);
 			}
 			else
 			{
+				worldCube->isVisited = true;
+				worldCube->isKey = false;
+				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
+				SwitchToFollowCamera();
+				//FollowCamera->SetActive(true);
+				//WorldFollowCamera->SetActive(false);
 				// Load the next level
-				UGameplayStatics::OpenLevel(this, "AIMAP", true);
+				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
 			}
 
 			
@@ -192,6 +203,23 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	}
 }
 
+void AHeroCharacter::SwitchToFollowCamera()
+{
+
+	// Activate the FollowCamera
+	WorldFollowCamera->SetActive(false);
+	FollowCamera->SetActive(true);
+}
+
+void AHeroCharacter::SwitchToWorldFollowCamera()
+{
+	// Activate the WorldFollowCamera
+	FollowCamera->SetActive(false);
+	WorldFollowCamera->SetActive(true);
+
+
+
+}
 
 
 void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -204,7 +232,43 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
 
+	PlayerInputComponent->BindAction("MouseWheelUp", IE_Pressed, this, &AHeroCharacter::OnZoomIn);
+	PlayerInputComponent->BindAction("MouseWheelDown", IE_Pressed, this, &AHeroCharacter::OnZoomOut);
+
 }
+
+void AHeroCharacter::OnZoomIn()
+{
+	float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView - 5.f, 20.f, 180.f);
+
+	// Set the new field of view
+	WorldFollowCamera->SetFieldOfView(NewFieldOfView);
+
+	// Adjust the spring arm's length to compensate for the new field of view
+	float CameraDistance = WorldCameraBoom->TargetArmLength;
+	float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
+	WorldCameraBoom->TargetArmLength = NewCameraDistance;
+
+	// Increase the camera's field of view to zoom out
+	//WorldFollowCamera->SetFieldOfView(WorldFollowCamera->FieldOfView + 5.f);
+}
+
+void AHeroCharacter::OnZoomOut()
+{
+	float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView + 5.f, 20.f, 180.f);
+
+	// Set the new field of view
+	WorldFollowCamera->SetFieldOfView(NewFieldOfView);
+
+	// Adjust the spring arm's length to compensate for the new field of view
+	float CameraDistance = WorldCameraBoom->TargetArmLength;
+	float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
+	WorldCameraBoom->TargetArmLength = NewCameraDistance;
+
+	// Decrease the camera's field of view to zoom in
+	//WorldFollowCamera->SetFieldOfView(WorldFollowCamera->FieldOfView - 5.f);
+}
+
 void AHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
