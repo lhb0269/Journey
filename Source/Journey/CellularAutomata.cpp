@@ -433,6 +433,12 @@ void ACellularAutomata::GenMapData()
 					TileInfos[j + i * Tilemax].isTown = false;
 					TileInfos[j + i * Tilemax].isKey = false;
 					TileInfos[j + i * Tilemax].tileType = height[i][j];
+
+					// 0413 
+					// monster data fixed
+					TileInfos[j + i * Tilemax].monsterLevel = 1;
+					TileInfos[j + i * Tilemax].monsterPower = 1;
+					TileInfos[j + i * Tilemax].monsterType = 1;
 					//SpawnLocation 추가해줘야함
 					//CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
 
