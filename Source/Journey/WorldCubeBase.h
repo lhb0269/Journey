@@ -37,4 +37,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int32 cubeNumber;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int monsterType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int monsterPower;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int monsterLevel;
+
 };
