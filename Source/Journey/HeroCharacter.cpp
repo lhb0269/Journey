@@ -231,6 +231,7 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
+	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, this, &AHeroCharacter::OnLeftClick);
 
 	PlayerInputComponent->BindAction("MouseWheelUp", IE_Pressed, this, &AHeroCharacter::OnZoomIn);
 	PlayerInputComponent->BindAction("MouseWheelDown", IE_Pressed, this, &AHeroCharacter::OnZoomOut);
@@ -275,6 +276,33 @@ void AHeroCharacter::BeginPlay()
 	APlayerController* PlayerController = Cast<APlayerController>(GetController());
 	PlayerController->bShowMouseCursor = true;
 	PlayerController->SetInputMode(FInputModeGameAndUI());
+}
+
+void AHeroCharacter::OnLeftClick()
+{
+	FVector2D ScreenPosition;
+	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
+	{
+		FVector WorldLocation;
+		FVector WorldDirection;
+		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
+		{
+			FHitResult HitResult;
+			FVector StartLocation = WorldLocation;
+			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
+
+			//if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+			//{
+			//	FVector TargetLocation = HitResult.Location;
+
+			//	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+			//	if (PlayerController)
+			//	{
+			//		UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
+			//	}
+			//}
+		}
+	}
 }
 
 void AHeroCharacter::OnRightClick()

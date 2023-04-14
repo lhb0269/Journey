@@ -116,6 +116,7 @@ protected:
 	virtual void BeginPlay() override;
 	void MoveForward(float value);
 	void MoveRight(float value);
+	void OnLeftClick();
 	void OnRightClick();
 	void OnZoomIn();
 	void OnZoomOut();
