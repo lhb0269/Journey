@@ -436,9 +436,9 @@ void ACellularAutomata::GenMapData()
 
 					// 0413 
 					// monster data fixed
-					TileInfos[j + i * Tilemax].monsterLevel = 1;
-					TileInfos[j + i * Tilemax].monsterPower = 1;
-					TileInfos[j + i * Tilemax].monsterType = 1;
+					TileInfos[j + i * Tilemax].monsterLevel = FMath::RandRange(1, 3);
+					TileInfos[j + i * Tilemax].monsterPower = FMath::RandRange(100, 300);
+					TileInfos[j + i * Tilemax].monsterType = FMath::RandRange(1, 3);
 					//SpawnLocation 추가해줘야함
 					//CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
 

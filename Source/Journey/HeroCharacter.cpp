@@ -291,16 +291,25 @@ void AHeroCharacter::OnLeftClick()
 			FVector StartLocation = WorldLocation;
 			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
-			//if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
-			//{
-			//	FVector TargetLocation = HitResult.Location;
+			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+			{
 
-			//	APlayerController* PlayerController = Cast<APlayerController>(GetController());
-			//	if (PlayerController)
-			//	{
-			//		UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
-			//	}
-			//}
+				AActor* HitActor = HitResult.GetActor();
+
+				AWorldCubeBase* WCube = dynamic_cast<AWorldCubeBase*>(HitActor);
+
+				// 캐스팅 결과 확인하기
+				if (WCube != nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("MONSTER Power %d"), WCube->monsterPower);
+					UE_LOG(LogTemp, Warning, TEXT("MONSTER Level %d"), WCube->monsterLevel);
+					UE_LOG(LogTemp, Warning, TEXT("MONSTER Type %d"), WCube->monsterType);
+				}
+				else
+				{
+					
+				}
+			}
 		}
 	}
 }
