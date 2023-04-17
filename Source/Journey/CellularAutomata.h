@@ -14,7 +14,7 @@ class UJourneySaveGame;
 
 // 
 USTRUCT()
-// CellularAutomata·Î »ı¼ºÇÑ Å¸ÀÏ Á¤º¸¸¦ ÀúÀåÇÕ´Ï´Ù.
+// CellularAutomataë¡œ ìƒì„±í•œ íƒ€ì¼ ì •ë³´ë¥¼ ì €ì¥í•©ë‹ˆë‹¤.
 struct FCAStruct
 {
 	GENERATED_BODY()
@@ -90,10 +90,10 @@ public:
 
 	vector<vector<int32>>height;
 
-	// tile Á¤º¸¸¦ ÀúÀåÇÒ vector
+	// tile ì •ë³´ë¥¼ ì €ì¥í•  vector
 	TArray<FCAStruct> CATileInfos;
 	TArray<FCAStruct> MainTileInfos;
-	// ÀúÀå ÆÄÀÏ
+	// ì €ì¥ íŒŒì¼
 	UJourneySaveGame* MySaveGame;
 
 	

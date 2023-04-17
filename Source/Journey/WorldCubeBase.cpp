@@ -14,6 +14,9 @@ AWorldCubeBase::AWorldCubeBase()
 	isVisited = false;
 	isTown = false;
 	isKey = false;
+	monsterPower=10;
+	monsterLevel=5;
+	monsterType=1;
 }
 
 // Called when the game starts or when spawned

@@ -43,7 +43,7 @@ void ACellularAutomata::BeginPlay()
 
 	Tilemax = 6;
 
-	// 12x12 ¸Ê»ı¼º
+	// 12x12 ë§µìƒì„±
 	GenMapData();
 	//UGameDataSingleton::GetInstance()->TileInfos = MainTileInfos;
 
@@ -182,14 +182,14 @@ void ACellularAutomata::BeginPlay()
 	//}
 
 
-	// »ı¼º ¿Ï·á ÈÄ ¸¶À», Å° ¼³Á¤ÇÏ±â
-	// ¸¶À» ¼³Á¤ÇÏ±â 
+	// ìƒì„± ì™„ë£Œ í›„ ë§ˆì„, í‚¤ ì„¤ì •í•˜ê¸°
+	// ë§ˆì„ ì„¤ì •í•˜ê¸° 
 	//GenRandomkeyTown();
 
 
 	
-	// ????„ë£Œ ?????´ì??„ì¹˜ ì¡°ì •
-	// 0403 ?±ê??¤ë°©??ë³€ê²½ìœ¼? ë§??´ë™????°ë? ì§€??
+	// ????ê¾¨ì¦º ?????ëŒ??ê¾©íŠ‚ è­°ê³—ì ™
+	// 0403 ?ê¹ƒ??ã…»ê°‘??è¹‚Â€å¯ƒìŒì‘? ï§??ëŒ€ë£????ê³•? ï§Â€??
 	/*AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	if (chcekSaveFile())
 	{
@@ -197,12 +197,12 @@ void ACellularAutomata::BeginPlay()
 		PlayerCharacter->ChangeCamera(true);
 	}*/
 
-	// ????„ë£Œ ???¤ë?ê²?´ì…˜ ?¤ì‹œ ë¹??
+	// ????ê¾¨ì¦º ???ã…»?å¯ƒ?ëŒë€¡ ?ã…¼ë–† é®??
 	RebuildNavigationMesh();
 
 
 
-	// »ı¼º ¿Ï·á ÈÄ UGameDataSingleton ¿¡ Ãß°¡
+	// ìƒì„± ì™„ë£Œ í›„ UGameDataSingleton ì— ì¶”ê°€
 	if(UGameDataSingleton::GetInstance()->TileInfos.IsEmpty())
 		UGameDataSingleton::GetInstance()->TileInfos = MoveTemp(MainTileInfos);
 
@@ -347,10 +347,10 @@ void ACellularAutomata::GenRandomkeyTown()
 
 void ACellularAutomata::GenMapData()
 {
-	// 1. ÀÏ´Ü ÇÃ·¹ÀÌ¾î À§Ä¡¸¦ ·£´ıÀ¸·Î °í¸¥´Ù (1~4)
+	// 1. ì¼ë‹¨ í”Œë ˆì´ì–´ ìœ„ì¹˜ë¥¼ ëœë¤ìœ¼ë¡œ ê³ ë¥¸ë‹¤ (1~4)
 	int startNum = FMath::RandRange(1, 4);
 
-	// 2. 4°³ÀÇ Å¸ÀÏ ¹è¿­¿¡ ¸¶À»°ú ¿­¼è¸¦ »Ñ¸°´Ù. (ÇÃ·¹ÀÌ¾î À§Ä¡ÀÎ Å¸ÀÏ ¹è¿­Àº ¿­¼è¸¦ Á¦¿ÜÇÑ´Ù.)
+	// 2. 4ê°œì˜ íƒ€ì¼ ë°°ì—´ì— ë§ˆì„ê³¼ ì—´ì‡ ë¥¼ ë¿Œë¦°ë‹¤. (í”Œë ˆì´ì–´ ìœ„ì¹˜ì¸ íƒ€ì¼ ë°°ì—´ì€ ì—´ì‡ ë¥¼ ì œì™¸í•œë‹¤.)
 	std::vector<TArray<FCAStruct>> CATileVector;
 	TArray<FCAStruct> TileInfos;
 	float wall = 0;
@@ -427,7 +427,7 @@ void ACellularAutomata::GenMapData()
 			{
 				for (int j = 0; j < Tilemax; ++j) 
 				{
-					// FCAStruct °ª Ãß°¡
+					// FCAStruct ê°’ ì¶”ê°€
 
 					TileInfos[j + i * Tilemax].isVisited = false;
 					TileInfos[j + i * Tilemax].isTown = false;
@@ -439,12 +439,12 @@ void ACellularAutomata::GenMapData()
 					TileInfos[j + i * Tilemax].monsterLevel = FMath::RandRange(1, 3);
 					TileInfos[j + i * Tilemax].monsterPower = FMath::RandRange(100, 300);
 					TileInfos[j + i * Tilemax].monsterType = FMath::RandRange(1, 3);
-					//SpawnLocation Ãß°¡ÇØÁà¾ßÇÔ
+					//SpawnLocation ì¶”ê°€í•´ì¤˜ì•¼í•¨
 					//CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
 
 				}
 			}
-			// ¸¶À», ¿­¼è¸¦ »ı¼ºÇÑ´Ù. 
+			// ë§ˆì„, ì—´ì‡ ë¥¼ ìƒì„±í•œë‹¤. 
 			// create town number
 			std::array<int32, 3> RandomNumbers;
 			for (int32 i = 0; i < RandomNumbers.size(); i++)
@@ -482,7 +482,7 @@ void ACellularAutomata::GenMapData()
 			}
 
 			// create key 
-			// ½ÃÀÛ À§Ä¡°¡ ¾Æ´Ï¾î¾ßÁö¸¸ ÀÛµ¿ÇÔ
+			// ì‹œì‘ ìœ„ì¹˜ê°€ ì•„ë‹ˆì–´ì•¼ì§€ë§Œ ì‘ë™í•¨
 			if (startNum != tileCount)
 			{
 				for (int32 i = 0; i < RandomNumbers.size(); i++)
@@ -518,13 +518,13 @@ void ACellularAutomata::GenMapData()
 					}
 				}
 			}
-			// »ı¼º ÈÄ vector¿¡ Ãß°¡ÇÑ´Ù.
+			// ìƒì„± í›„ vectorì— ì¶”ê°€í•œë‹¤.
 			CATileVector.push_back(TileInfos);
 		}
 	}
 	
 
-	// 3. ÇÏ³ª·Î ÇÕÄ£´Ù.
+	// 3. í•˜ë‚˜ë¡œ í•©ì¹œë‹¤.
 	for (int tileCount = 0; tileCount < 4; tileCount++)
 	{
 		for (int x = 0; x < Tilemax ; x++)
@@ -536,7 +536,7 @@ void ACellularAutomata::GenMapData()
 		}
 	}
 
-	// 4. Spawn Vector Àâ¾ÆÁØ´Ù.
+	// 4. Spawn Vector ì¡ì•„ì¤€ë‹¤.
 	int Max2 = Tilemax * 2;
 	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
 		for (int i = 0; i < Max2; ++i) {
