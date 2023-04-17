@@ -433,6 +433,12 @@ void ACellularAutomata::GenMapData()
 					TileInfos[j + i * Tilemax].isTown = false;
 					TileInfos[j + i * Tilemax].isKey = false;
 					TileInfos[j + i * Tilemax].tileType = height[i][j];
+
+					// 0413 
+					// monster data fixed
+					TileInfos[j + i * Tilemax].monsterLevel = FMath::RandRange(1, 3);
+					TileInfos[j + i * Tilemax].monsterPower = FMath::RandRange(100, 300);
+					TileInfos[j + i * Tilemax].monsterType = FMath::RandRange(1, 3);
 					//SpawnLocation 추가해줘야함
 					//CATileInfos[j + i * Tilemax].tilePos = SpawnLocation;
 
@@ -556,6 +562,10 @@ void ACellularAutomata::GenMapData()
 					Tile1->isVisited = MainTileInfos[j + i * Max2].isVisited;
 					Tile1->isTown = MainTileInfos[j + i * Max2].isTown;
 					Tile1->isKey = MainTileInfos[j + i * Max2].isKey;
+					Tile1->monsterLevel = MainTileInfos[j + i * Max2].monsterLevel;
+					Tile1->monsterType = MainTileInfos[j + i * Max2].monsterType;
+					Tile1->monsterPower = MainTileInfos[j + i * Max2].monsterPower;
+
 					AArray.Add(Tile1);
 
 
@@ -567,10 +577,10 @@ void ACellularAutomata::GenMapData()
 					MountainTile->isVisited = MainTileInfos[j + i * Max2].isVisited;
 					MountainTile->isTown = MainTileInfos[j + i * Max2].isTown;
 					MountainTile->isKey = MainTileInfos[j + i * Max2].isKey;
+					MountainTile->monsterLevel = MainTileInfos[j + i * Max2].monsterLevel;
+					MountainTile->monsterType = MainTileInfos[j + i * Max2].monsterType;
+					MountainTile->monsterPower = MainTileInfos[j + i * Max2].monsterPower;
 
-					//FVector Scale;
-					//Scale.X = 1.0f; Scale.Y = 1.0f; Scale.Z = FMath::FRandRange(1.0f, 50.0f);
-					//MountainTile->SetActorScale3D(Scale);
 					AArray.Add(MountainTile);
 
 				}
@@ -581,6 +591,10 @@ void ACellularAutomata::GenMapData()
 					RiverTile->isVisited = MainTileInfos[j + i * Max2].isVisited;
 					RiverTile->isTown = MainTileInfos[j + i * Max2].isTown;
 					RiverTile->isKey = MainTileInfos[j + i * Max2].isKey;
+					RiverTile->monsterLevel = MainTileInfos[j + i * Max2].monsterLevel;
+					RiverTile->monsterType = MainTileInfos[j + i * Max2].monsterType;
+					RiverTile->monsterPower = MainTileInfos[j + i * Max2].monsterPower;
+
 					AArray.Add(RiverTile);
 
 				}

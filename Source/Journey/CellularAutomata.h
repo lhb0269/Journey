@@ -30,6 +30,14 @@ public:
 	UPROPERTY()
 	bool isKey;
 
+	UPROPERTY()
+	int monsterType;
+
+	UPROPERTY()
+	int monsterPower;
+
+	UPROPERTY()
+	int monsterLevel;
 
 };
 
