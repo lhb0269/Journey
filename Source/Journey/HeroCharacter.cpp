@@ -33,15 +33,10 @@ AHeroCharacter::AHeroCharacter()
 	WorldFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("WorldFollowCamera"));
 	WorldFollowCamera->SetupAttachment(WorldCameraBoom, USpringArmComponent::SocketName);
 	//WorldFollowCamera->bUsePawnControlRotation = true;
-
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 800.0f;
-	CameraBoom->bUsePawnControlRotation = true;
-
+	
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-	//FollowCamera->bUsePawnControlRotation = true;
+	FollowCamera->SetupAttachment(RootComponent);
+	FollowCamera->bUsePawnControlRotation = true;
 
 	WorldFollowCamera->bAutoActivate = false;
 	FollowCamera->bAutoActivate = true;
@@ -183,6 +178,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				//WorldFollowCamera->SetActive(false);
 				// Load the next level
 				//UGameplayStatics::OpenLevel(this, "Town", true);
+				PlayerController->SetInputMode(FInputModeGameOnly());
+				PlayerController->bShowMouseCursor=false;
 			}
 			else
 			{
@@ -194,6 +191,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				//WorldFollowCamera->SetActive(false);
 				// Load the next level
 				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
+				PlayerController->SetInputMode(FInputModeGameOnly());
+				PlayerController->bShowMouseCursor=false;
 			}
 
 			
@@ -227,7 +226,9 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAxis("MoveForward", this, &AHeroCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
-
+	PlayerInputComponent->BindAxis("Look Up", this, &AHeroCharacter::Pitch_Up);
+	PlayerInputComponent->BindAxis("Turn Right", this, &AHeroCharacter::Turn_Right);
+	
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
@@ -273,7 +274,7 @@ void AHeroCharacter::OnZoomOut()
 void AHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	APlayerController* PlayerController = Cast<APlayerController>(GetController());
+	PlayerController = Cast<APlayerController>(GetController());
 	PlayerController->bShowMouseCursor = true;
 	PlayerController->SetInputMode(FInputModeGameAndUI());
 }
@@ -330,8 +331,6 @@ void AHeroCharacter::OnRightClick()
 			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
 			{
 				FVector TargetLocation = HitResult.Location;
-
-				APlayerController* PlayerController = Cast<APlayerController>(GetController());
 				if (PlayerController)
 				{
 					
@@ -346,10 +345,7 @@ void AHeroCharacter::MoveForward(float value)
 {
 	if ((Controller != NULL) && (value != 0.0f))
 	{
-		const FRotator Rot = Controller->GetControlRotation();
-		const FRotator YawRot(0, Rot.Yaw, 0);
-		const FVector Direction = FRotationMatrix(YawRot).GetUnitAxis(EAxis::X);
-		AddMovementInput(Direction, value);
+		AddMovementInput(GetActorForwardVector(), value);
 	}
 }
 
@@ -357,9 +353,22 @@ void AHeroCharacter::MoveRight(float value)
 {
 	if ((Controller != NULL) && (value != 0.0f))
 	{
-		const FRotator Rot = Controller->GetControlRotation();
-		const FRotator YawRot(0, Rot.Yaw, 0);
-		const FVector Direction = FRotationMatrix(YawRot).GetUnitAxis(EAxis::Y);
-		AddMovementInput(Direction, value);
+		AddMovementInput(GetActorRightVector(), value);
+	}
+}
+
+void AHeroCharacter::Turn_Right(float value)
+{
+	if ((Controller != NULL) && (value != 0.0f))
+	{
+		PlayerController->AddYawInput(value);
+	}
+}
+
+void AHeroCharacter::Pitch_Up(float value)
+{
+	if ((Controller != NULL) && (value != 0.0f))
+	{
+		PlayerController->AddPitchInput(value);
 	}
 }
