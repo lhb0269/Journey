@@ -545,7 +545,7 @@ void ACellularAutomata::GenMapData()
 				SpawnParams.Owner = this;
 				FRotator rotator;
 				FVector SpawnLocation;
-				SpawnLocation.Y = i * 360 + GetActorLocation().Y;
+				SpawnLocation.Y = i * 350 + GetActorLocation().Y;
 				if (i % 2 == 0)
 					SpawnLocation.X = j * 390 + GetActorLocation().X;
 				else
