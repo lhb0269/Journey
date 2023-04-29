@@ -114,6 +114,9 @@ void AHeroCharacter::SaveGame()
 void AHeroCharacter::GoToWorldMap()
 {
 	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+	PlayerController->bShowMouseCursor = true;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
 	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
 	//FollowCamera->SetActive(false);
 	//WorldFollowCamera->SetActive(true);
@@ -180,6 +183,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				//UGameplayStatics::OpenLevel(this, "Town", true);
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
+				bUseControllerRotationPitch = true;
+				bUseControllerRotationYaw = true;
 			}
 			else
 			{
@@ -193,6 +198,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
+				bUseControllerRotationPitch = true;
+				bUseControllerRotationYaw = true;
 			}
 
 			
