@@ -90,12 +90,12 @@ public:
 	void MoveToLocation(const FVector& DestLocation);
 
     int32 mapcode =0;//0 world 1 town 2 battle
-
+	float TurnRate =50.f;
 	//UJourneySaveGame* MySaveGame;
 	// 월드맵 정보
 	ACellularAutomata* CellularActor;
 	AProceduralNoiseGenerator* ProceduralActor;
-
+	APlayerController* PlayerController;
 	void LoadGame();
 	void SaveGame();
 
@@ -116,6 +116,8 @@ protected:
 	virtual void BeginPlay() override;
 	void MoveForward(float value);
 	void MoveRight(float value);
+	void Turn_Right(float value);
+	void Pitch_Up(float value);
 	void OnLeftClick();
 	void OnRightClick();
 	void OnZoomIn();
