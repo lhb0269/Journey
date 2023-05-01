@@ -56,7 +56,8 @@ AHeroCharacter::AHeroCharacter()
 
 	hp = 50;
 	gold=200;
-	
+
+	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 }
@@ -121,6 +122,7 @@ void AHeroCharacter::GoToWorldMap()
 	//FollowCamera->SetActive(false);
 	//WorldFollowCamera->SetActive(true);
 	SwitchToWorldFollowCamera();
+	isTown=false;
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
@@ -185,6 +187,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
 				bUseControllerRotationYaw = true;
+				isTown = true;
 			}
 			else
 			{
@@ -200,6 +203,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
 				bUseControllerRotationYaw = true;
+				isTown = true;
 			}
 
 			
@@ -324,23 +328,27 @@ void AHeroCharacter::OnLeftClick()
 
 void AHeroCharacter::OnRightClick()
 {
+	UE_LOG(LogTemp,Warning,TEXT("rightclick"));
 	FVector2D ScreenPosition;
 	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
 	{
+		UE_LOG(LogTemp,Warning,TEXT("rightclick2"));
 		FVector WorldLocation;
 		FVector WorldDirection;
 		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
 		{
+			UE_LOG(LogTemp,Warning,TEXT("rightclick3"));
 			FHitResult HitResult;
 			FVector StartLocation = WorldLocation;
 			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
 			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
 			{
+				UE_LOG(LogTemp,Warning,TEXT("rightclick4"));
 				FVector TargetLocation = HitResult.Location;
 				if (PlayerController)
 				{
-					
+					UE_LOG(LogTemp,Warning,TEXT("rightclick5"));
 					UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
 				}
 			}
