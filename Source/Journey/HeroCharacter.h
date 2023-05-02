@@ -82,6 +82,12 @@ public:
 	int32 Armour;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 gold;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
+	bool isAttack;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
+	bool isDeath;
 	
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
@@ -102,6 +108,10 @@ public:
 	void GoToWorldMap();
 
 	void ChangeCamera(bool isWorld);
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void ChangeGameMode();
+
 
 	// 월드맵 충돌 체크
 	UFUNCTION()

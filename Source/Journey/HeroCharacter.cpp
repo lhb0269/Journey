@@ -20,8 +20,6 @@
 #include "Kismet/GameplayStatics.h"
 
 
-#
-
 AHeroCharacter::AHeroCharacter()
 {
 
@@ -139,6 +137,11 @@ void AHeroCharacter::ChangeCamera(bool isWorld)
 	}
 }
 
+void AHeroCharacter::ChangeGameMode()
+{
+
+}
+
 void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// Check if the overlapped actor has a specific tag
@@ -240,6 +243,8 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
 	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, this, &AHeroCharacter::OnLeftClick);
+
+
 
 	PlayerInputComponent->BindAction("MouseWheelUp", IE_Pressed, this, &AHeroCharacter::OnZoomIn);
 	PlayerInputComponent->BindAction("MouseWheelDown", IE_Pressed, this, &AHeroCharacter::OnZoomOut);
