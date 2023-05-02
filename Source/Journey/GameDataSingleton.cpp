@@ -9,6 +9,7 @@ UGameDataSingleton::UGameDataSingleton()
 {
     SavedPos = FVector(0, 0, 0);
     TownSpawnPos = FVector(-2000, -28940, 500);
+  
 }
 
 UGameDataSingleton* UGameDataSingleton::GetInstance()
@@ -17,6 +18,13 @@ UGameDataSingleton* UGameDataSingleton::GetInstance()
     {
         Instance = NewObject<UGameDataSingleton>();
     }
+
+    return Instance;
+}
+
+UGameDataSingleton* UGameDataSingleton::ResetInstance()
+{
+    Instance = NewObject<UGameDataSingleton>();
 
     return Instance;
 }

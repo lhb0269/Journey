@@ -23,6 +23,9 @@
 AHeroCharacter::AHeroCharacter()
 {
 
+	isAttack = false;
+	isDeath = false;
+
 	WorldCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("WorldCameraBoom"));
 	WorldCameraBoom->SetupAttachment(RootComponent);
 	WorldCameraBoom->TargetArmLength = 800.0f;
@@ -180,10 +183,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				worldCube->isVisited = true;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				SwitchToFollowCamera();
-				//FollowCamera->SetActive(true);
-				//WorldFollowCamera->SetActive(false);
-				// Load the next level
-				//UGameplayStatics::OpenLevel(this, "Town", true);
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
@@ -191,18 +190,14 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			}
 			else
 			{
-				worldCube->isVisited = true;
+	/*			worldCube->isVisited = true;
 				worldCube->isKey = false;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				SwitchToFollowCamera();
-				//FollowCamera->SetActive(true);
-				//WorldFollowCamera->SetActive(false);
-				// Load the next level
-				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
-				bUseControllerRotationYaw = true;
+				bUseControllerRotationYaw = true;*/
 			}
 
 			
@@ -293,38 +288,38 @@ void AHeroCharacter::BeginPlay()
 
 void AHeroCharacter::OnLeftClick()
 {
-	FVector2D ScreenPosition;
-	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
-	{
-		FVector WorldLocation;
-		FVector WorldDirection;
-		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
-		{
-			FHitResult HitResult;
-			FVector StartLocation = WorldLocation;
-			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
+	//FVector2D ScreenPosition;
+	//if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
+	//{
+	//	FVector WorldLocation;
+	//	FVector WorldDirection;
+	//	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
+	//	{
+	//		FHitResult HitResult;
+	//		FVector StartLocation = WorldLocation;
+	//		FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
-			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
-			{
+	//		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+	//		{
 
-				AActor* HitActor = HitResult.GetActor();
+	//			AActor* HitActor = HitResult.GetActor();
 
-				AWorldCubeBase* WCube = dynamic_cast<AWorldCubeBase*>(HitActor);
+	//			AWorldCubeBase* WCube = dynamic_cast<AWorldCubeBase*>(HitActor);
 
-				// 캐스팅 결과 확인하기
-				if (WCube != nullptr)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("MONSTER Power %d"), WCube->monsterPower);
-					UE_LOG(LogTemp, Warning, TEXT("MONSTER Level %d"), WCube->monsterLevel);
-					UE_LOG(LogTemp, Warning, TEXT("MONSTER Type %d"), WCube->monsterType);
-				}
-				else
-				{
-					
-				}
-			}
-		}
-	}
+	//			// 캐스팅 결과 확인하기
+	//			if (WCube != nullptr)
+	//			{
+	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Power %d"), WCube->monsterPower);
+	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Level %d"), WCube->monsterLevel);
+	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Type %d"), WCube->monsterType);
+	//			}
+	//			else
+	//			{
+	//				
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void AHeroCharacter::OnRightClick()
