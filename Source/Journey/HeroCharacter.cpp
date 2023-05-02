@@ -122,6 +122,7 @@ void AHeroCharacter::GoToWorldMap()
 	//FollowCamera->SetActive(false);
 	//WorldFollowCamera->SetActive(true);
 	SwitchToWorldFollowCamera();
+	//WorldFollowCamera->SetActive(false);
 	isTown=false;
 }
 
