@@ -83,7 +83,6 @@ public:
 	int32 Armour;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 gold;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
 	bool isAttack;
 
@@ -92,6 +91,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
 	bool isInBattle;
+	
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	bool isTown;
 	
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);

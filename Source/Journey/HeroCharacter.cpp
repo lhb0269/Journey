@@ -56,8 +56,10 @@ AHeroCharacter::AHeroCharacter()
 	shop->Capacity = 20;
 
 	hp = 50;
+	Armour = 200;
 	gold=200;
-	
+
+	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 }
@@ -132,6 +134,7 @@ void AHeroCharacter::SaveGame()
 
 void AHeroCharacter::GoToWorldMap()
 {
+	SetActorRotation(FRotator(0,0,0));
 	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
 	PlayerController->bShowMouseCursor = true;
 	bUseControllerRotationPitch = false;
@@ -140,6 +143,8 @@ void AHeroCharacter::GoToWorldMap()
 	//FollowCamera->SetActive(false);
 	//WorldFollowCamera->SetActive(true);
 	SwitchToWorldFollowCamera();
+	//WorldFollowCamera->SetActive(false);
+	isTown=false;
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
@@ -200,24 +205,28 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			{
 				//ChangeController(false);
 				worldCube->isVisited = true;
+				SetActorRotation(FRotator(0,0,0));
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				SwitchToFollowCamera();
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
 				bUseControllerRotationYaw = true;
+				isTown = true;
 			}
 			else
 			{
 				//ChangeController(true);
 				worldCube->isVisited = true;
 				worldCube->isKey = false;
+				SetActorRotation(FRotator(0,0,0));
 				SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
-				//SwitchToFollowCamera();
-				//PlayerController->SetInputMode(FInputModeGameOnly());
-				//PlayerController->bShowMouseCursor=false;
-				bUseControllerRotationPitch = false;
-				bUseControllerRotationYaw = false;
+				SwitchToFollowCamera();
+				PlayerController->SetInputMode(FInputModeGameOnly());
+				PlayerController->bShowMouseCursor=false;
+				bUseControllerRotationPitch = true;
+				bUseControllerRotationYaw = true;
+				isTown = true;
 			}
 
 			
@@ -354,23 +363,27 @@ void AHeroCharacter::OnLeftClick()
 
 void AHeroCharacter::OnRightClick()
 {
+	UE_LOG(LogTemp,Warning,TEXT("rightclick"));
 	FVector2D ScreenPosition;
 	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
 	{
+		UE_LOG(LogTemp,Warning,TEXT("rightclick2"));
 		FVector WorldLocation;
 		FVector WorldDirection;
 		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
 		{
+			UE_LOG(LogTemp,Warning,TEXT("rightclick3"));
 			FHitResult HitResult;
 			FVector StartLocation = WorldLocation;
 			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
 			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
 			{
+				UE_LOG(LogTemp,Warning,TEXT("rightclick4"));
 				FVector TargetLocation = HitResult.Location;
 				if (PlayerController)
 				{
-					
+					UE_LOG(LogTemp,Warning,TEXT("rightclick5"));
 					UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
 				}
 			}
