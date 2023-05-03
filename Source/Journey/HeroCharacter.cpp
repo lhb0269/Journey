@@ -55,6 +55,7 @@ AHeroCharacter::AHeroCharacter()
 	shop->Capacity = 20;
 
 	hp = 50;
+	Armour = 200;
 	gold=200;
 
 	isTown = false;
@@ -114,6 +115,7 @@ void AHeroCharacter::SaveGame()
 
 void AHeroCharacter::GoToWorldMap()
 {
+	SetActorRotation(FRotator(0,0,0));
 	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
 	PlayerController->bShowMouseCursor = true;
 	bUseControllerRotationPitch = false;
@@ -178,6 +180,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			if (worldCube->isTown)
 			{
 				worldCube->isVisited = true;
+				SetActorRotation(FRotator(0,0,0));
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				SwitchToFollowCamera();
 				//FollowCamera->SetActive(true);
@@ -194,6 +197,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			{
 				worldCube->isVisited = true;
 				worldCube->isKey = false;
+				SetActorRotation(FRotator(0,0,0));
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				SwitchToFollowCamera();
 				//FollowCamera->SetActive(true);
