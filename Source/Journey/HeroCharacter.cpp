@@ -11,7 +11,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
-#include "HeroAIController.h"
+#include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameDataSingleton.h"
 #include "Items/Item.h"
@@ -95,10 +95,28 @@ void AHeroCharacter::UseItem(UItem* Item)
 
 void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
 {
-	AHeroAIController* AIController = Cast<AHeroAIController>(GetController());
 	if (AIController)
 	{
 		AIController->MoveToLocation(DestLocation);
+	}
+}
+
+void AHeroCharacter::ChangeController(bool isAI)
+{
+	AController* currentController = GetController();
+	currentController->UnPossess();
+
+	if (isAI)
+	{
+		//PlayerController->UnPossess();
+		AIController->Possess(this);
+		isInBattle = true;
+	}
+	else
+	{
+		//AIController->UnPossess();
+		PlayerController->Possess(this);
+		isInBattle = false;
 	}
 }
 
@@ -180,6 +198,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
 			if (worldCube->isTown)
 			{
+				//ChangeController(false);
 				worldCube->isVisited = true;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				SwitchToFollowCamera();
@@ -190,14 +209,15 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			}
 			else
 			{
-	/*			worldCube->isVisited = true;
+				//ChangeController(true);
+				worldCube->isVisited = true;
 				worldCube->isKey = false;
-				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
-				SwitchToFollowCamera();
-				PlayerController->SetInputMode(FInputModeGameOnly());
-				PlayerController->bShowMouseCursor=false;
-				bUseControllerRotationPitch = true;
-				bUseControllerRotationYaw = true;*/
+				SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
+				//SwitchToFollowCamera();
+				//PlayerController->SetInputMode(FInputModeGameOnly());
+				//PlayerController->bShowMouseCursor=false;
+				bUseControllerRotationPitch = false;
+				bUseControllerRotationYaw = false;
 			}
 
 			
@@ -281,9 +301,19 @@ void AHeroCharacter::OnZoomOut()
 void AHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	PlayerController = Cast<APlayerController>(GetController());
 	PlayerController->bShowMouseCursor = true;
 	PlayerController->SetInputMode(FInputModeGameAndUI());
+
+	AIController = Cast<AHeroAIController>(GetController());
+
+	//AIController->UnPossess();
+	PlayerController->Possess(this);
+
+	isAttack = false;
+	isDeath = false;
+	isInBattle = false;
 }
 
 void AHeroCharacter::OnLeftClick()

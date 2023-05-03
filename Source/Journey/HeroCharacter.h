@@ -9,6 +9,7 @@
 #include "Engine/DataTable.h"
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
+#include "HeroAIController.h"
 #include "ProceduralNoiseGenerator.h"
 #include "HeroCharacter.generated.h"
 
@@ -88,6 +89,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
 	bool isDeath;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
+	bool isInBattle;
 	
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
@@ -95,13 +99,27 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
 
+	// CONTROLLER 
+	UPROPERTY()
+	APlayerController* PlayerController;
+
+	UPROPERTY()
+	AHeroAIController* AIController;
+	// Battle 관련 정보
+
+
+	void ChangeController(bool isAI);
+
+
+	
+
     int32 mapcode =0;//0 world 1 town 2 battle
 	float TurnRate =50.f;
 	//UJourneySaveGame* MySaveGame;
 	// 월드맵 정보
 	ACellularAutomata* CellularActor;
 	AProceduralNoiseGenerator* ProceduralActor;
-	APlayerController* PlayerController;
+
 	void LoadGame();
 	void SaveGame();
 

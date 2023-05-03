@@ -27,7 +27,7 @@ public:
     FVector SavedPos;
 
     FVector TownSpawnPos;
-    
+    FVector BattleSpawnPos;
     
 
 private:
