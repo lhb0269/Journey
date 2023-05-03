@@ -19,11 +19,17 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UGameDataSingleton")
         static UGameDataSingleton* GetInstance();
 
+    UFUNCTION(BlueprintCallable, Category = "UGameDataSingleton")
+        static UGameDataSingleton* ResetInstance();
+
     // tile TArray
     TArray<FCAStruct> TileInfos;
     FVector SavedPos;
 
     FVector TownSpawnPos;
+    FVector BattleSpawnPos;
+    
+
 private:
     UGameDataSingleton();
 

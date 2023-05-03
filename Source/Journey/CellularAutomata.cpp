@@ -34,6 +34,9 @@ ACellularAutomata::ACellularAutomata()
 void ACellularAutomata::BeginPlay()
 {
 	Super::BeginPlay();
+
+	UGameDataSingleton::ResetInstance();
+
 	UWorld* world = GetWorld();
 	bool Original = false;
 	float wall = 0;

@@ -11,7 +11,7 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
-#include "HeroAIController.h"
+#include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameDataSingleton.h"
 #include "Items/Item.h"
@@ -20,10 +20,11 @@
 #include "Kismet/GameplayStatics.h"
 
 
-#
-
 AHeroCharacter::AHeroCharacter()
 {
+
+	isAttack = false;
+	isDeath = false;
 
 	WorldCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("WorldCameraBoom"));
 	WorldCameraBoom->SetupAttachment(RootComponent);
@@ -94,10 +95,28 @@ void AHeroCharacter::UseItem(UItem* Item)
 
 void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
 {
-	AHeroAIController* AIController = Cast<AHeroAIController>(GetController());
 	if (AIController)
 	{
 		AIController->MoveToLocation(DestLocation);
+	}
+}
+
+void AHeroCharacter::ChangeController(bool isAI)
+{
+	AController* currentController = GetController();
+	currentController->UnPossess();
+
+	if (isAI)
+	{
+		//PlayerController->UnPossess();
+		AIController->Possess(this);
+		isInBattle = true;
+	}
+	else
+	{
+		//AIController->UnPossess();
+		PlayerController->Possess(this);
+		isInBattle = false;
 	}
 }
 
@@ -139,6 +158,11 @@ void AHeroCharacter::ChangeCamera(bool isWorld)
 	}
 }
 
+void AHeroCharacter::ChangeGameMode()
+{
+
+}
+
 void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	// Check if the overlapped actor has a specific tag
@@ -174,13 +198,10 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
 			if (worldCube->isTown)
 			{
+				//ChangeController(false);
 				worldCube->isVisited = true;
 				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
 				SwitchToFollowCamera();
-				//FollowCamera->SetActive(true);
-				//WorldFollowCamera->SetActive(false);
-				// Load the next level
-				//UGameplayStatics::OpenLevel(this, "Town", true);
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
@@ -188,18 +209,15 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			}
 			else
 			{
+				//ChangeController(true);
 				worldCube->isVisited = true;
 				worldCube->isKey = false;
-				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
-				SwitchToFollowCamera();
-				//FollowCamera->SetActive(true);
-				//WorldFollowCamera->SetActive(false);
-				// Load the next level
-				//UGameplayStatics::OpenLevel(this, "AIMAP", true);
-				PlayerController->SetInputMode(FInputModeGameOnly());
-				PlayerController->bShowMouseCursor=false;
-				bUseControllerRotationPitch = true;
-				bUseControllerRotationYaw = true;
+				SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
+				//SwitchToFollowCamera();
+				//PlayerController->SetInputMode(FInputModeGameOnly());
+				//PlayerController->bShowMouseCursor=false;
+				bUseControllerRotationPitch = false;
+				bUseControllerRotationYaw = false;
 			}
 
 			
@@ -241,6 +259,8 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
 	PlayerInputComponent->BindAction(TEXT("LeftClick"), IE_Pressed, this, &AHeroCharacter::OnLeftClick);
 
+
+
 	PlayerInputComponent->BindAction("MouseWheelUp", IE_Pressed, this, &AHeroCharacter::OnZoomIn);
 	PlayerInputComponent->BindAction("MouseWheelDown", IE_Pressed, this, &AHeroCharacter::OnZoomOut);
 
@@ -281,45 +301,55 @@ void AHeroCharacter::OnZoomOut()
 void AHeroCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
 	PlayerController = Cast<APlayerController>(GetController());
 	PlayerController->bShowMouseCursor = true;
 	PlayerController->SetInputMode(FInputModeGameAndUI());
+
+	AIController = Cast<AHeroAIController>(GetController());
+
+	//AIController->UnPossess();
+	PlayerController->Possess(this);
+
+	isAttack = false;
+	isDeath = false;
+	isInBattle = false;
 }
 
 void AHeroCharacter::OnLeftClick()
 {
-	FVector2D ScreenPosition;
-	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
-	{
-		FVector WorldLocation;
-		FVector WorldDirection;
-		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
-		{
-			FHitResult HitResult;
-			FVector StartLocation = WorldLocation;
-			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
+	//FVector2D ScreenPosition;
+	//if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
+	//{
+	//	FVector WorldLocation;
+	//	FVector WorldDirection;
+	//	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
+	//	{
+	//		FHitResult HitResult;
+	//		FVector StartLocation = WorldLocation;
+	//		FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
-			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
-			{
+	//		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+	//		{
 
-				AActor* HitActor = HitResult.GetActor();
+	//			AActor* HitActor = HitResult.GetActor();
 
-				AWorldCubeBase* WCube = dynamic_cast<AWorldCubeBase*>(HitActor);
+	//			AWorldCubeBase* WCube = dynamic_cast<AWorldCubeBase*>(HitActor);
 
-				// 캐스팅 결과 확인하기
-				if (WCube != nullptr)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("MONSTER Power %d"), WCube->monsterPower);
-					UE_LOG(LogTemp, Warning, TEXT("MONSTER Level %d"), WCube->monsterLevel);
-					UE_LOG(LogTemp, Warning, TEXT("MONSTER Type %d"), WCube->monsterType);
-				}
-				else
-				{
-					
-				}
-			}
-		}
-	}
+	//			// 캐스팅 결과 확인하기
+	//			if (WCube != nullptr)
+	//			{
+	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Power %d"), WCube->monsterPower);
+	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Level %d"), WCube->monsterLevel);
+	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Type %d"), WCube->monsterType);
+	//			}
+	//			else
+	//			{
+	//				
+	//			}
+	//		}
+	//	}
+	//}
 }
 
 void AHeroCharacter::OnRightClick()
