@@ -28,6 +28,18 @@ ACellularAutomata::ACellularAutomata()
 	//CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	//CameraComponent->SetupAttachment(RootComponent);
 
+	MapPos.Add(FVector(-67120.000000,-29210.000000,540.000000));
+	MapPos.Add(FVector(-67120.000000,-62930.000000,540.000000));
+	MapPos.Add(FVector(-67120.000000,-94320.000000,540.000000));
+	MapPos.Add(FVector(-67120.000000,-136950.000000,540.000000));
+	MapPos.Add(FVector(-1410.000000,-30100.000000,540.000000));
+	MapPos.Add(FVector(-1410.000000,-61840.000000,540.000000));
+	MapPos.Add(FVector(-560.000000,-93480.000000,540.000000));
+	MapPos.Add(FVector(-250.000000,-137220.000000,540.000000));
+	MapPos.Add(FVector(35280.000000,-30100.000000,540.000000));
+	MapPos.Add(FVector(35280.000000,-62120.000000,540.000000));
+	MapPos.Add(FVector(36250.000000,-93420.000000,540.000000));
+	MapPos.Add(FVector(35830.000000,-137090.000000,540.000000));
 }
 
 // Called when the game starts or when spawned
@@ -203,7 +215,7 @@ void ACellularAutomata::BeginPlay()
 	// ????꾨즺 ???ㅻ?寃?댁뀡 ?ㅼ떆 鍮??
 	RebuildNavigationMesh();
 
-
+	
 
 	// 생성 완료 후 UGameDataSingleton 에 추가
 	if(UGameDataSingleton::GetInstance()->TileInfos.IsEmpty())
@@ -568,7 +580,10 @@ void ACellularAutomata::GenMapData()
 					Tile1->monsterLevel = MainTileInfos[j + i * Max2].monsterLevel;
 					Tile1->monsterType = MainTileInfos[j + i * Max2].monsterType;
 					Tile1->monsterPower = MainTileInfos[j + i * Max2].monsterPower;
-
+					if(Tile1->isTown)
+					{
+						Tile1->Location = MapPos.Pop();
+					}
 					AArray.Add(Tile1);
 
 

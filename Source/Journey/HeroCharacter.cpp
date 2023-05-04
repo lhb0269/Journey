@@ -206,7 +206,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				//ChangeController(false);
 				worldCube->isVisited = true;
 				SetActorRotation(FRotator(0,0,0));
-				SetActorLocation(UGameDataSingleton::GetInstance()->TownSpawnPos);
+				SetActorLocation(worldCube->Location);
 				SwitchToFollowCamera();
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
