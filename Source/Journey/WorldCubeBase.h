@@ -46,4 +46,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int monsterLevel;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FVector Location;
 };

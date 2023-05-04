@@ -87,6 +87,7 @@ public:
 	TArray<AWorldCubeBase*>AArray;
 	vector<int32>width;
 
+	TArray<FVector>MapPos;
 
 	vector<vector<int32>>height;
 
