@@ -6,13 +6,14 @@
 #include "NavigationSystem.h"
 #include "Journey/InventoryComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
+#include "Camera/CameraActor.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
 #include "Engine/World.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "EngineUtils.h"
 #include "GameDataSingleton.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
@@ -25,26 +26,16 @@ AHeroCharacter::AHeroCharacter()
 
 	isAttack = false;
 	isDeath = false;
-
-	WorldCameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("WorldCameraBoom"));
-	WorldCameraBoom->SetupAttachment(RootComponent);
-	WorldCameraBoom->TargetArmLength = 800.0f;
-	//WorldCameraBoom->bUsePawnControlRotation = true;
-
-	WorldFollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("WorldFollowCamera"));
-	WorldFollowCamera->SetupAttachment(WorldCameraBoom, USpringArmComponent::SocketName);
-	//WorldFollowCamera->bUsePawnControlRotation = true;
 	
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(RootComponent);
 	FollowCamera->bUsePawnControlRotation = true;
 
-	WorldFollowCamera->bAutoActivate = false;
 	FollowCamera->bAutoActivate = true;
 
 
 	FollowCamera->SetActive(true);
-	WorldFollowCamera->SetActive(true);
+	//WorldFollowCamera->SetActive(true);
 
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -103,6 +94,40 @@ void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
 	}
 }
 
+void AHeroCharacter::ChangeToWorldMapCamera()
+{
+	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+
+	PController->SetViewTargetWithBlend(WorldMapCamera, 0.5f);
+	if (PController != nullptr && WorldMapCamera != nullptr)
+	{
+		if (PController->GetViewTarget() != WorldMapCamera)
+		{
+		}
+	}
+}
+
+void AHeroCharacter::ChangeToBattleCamera()
+{
+	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+
+	PController->SetViewTargetWithBlend(BattleCamera, 0.5f);
+	if (PController != nullptr && BattleCamera != nullptr)
+	{
+		if (PController->GetViewTarget() != BattleCamera)
+		{
+		}
+	}
+}
+
+void AHeroCharacter::ChangeToTownCamera()
+{
+	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+
+	AActor* CameraOwner = FollowCamera->GetOwner();
+	PlayerController->SetViewTargetWithBlend(CameraOwner, 0.5f);		
+}
+
 void AHeroCharacter::ChangeController(bool isAI)
 {
 	AController* currentController = GetController();
@@ -139,28 +164,29 @@ void AHeroCharacter::GoToWorldMap()
 	PlayerController->bShowMouseCursor = true;
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
+	ChangeToWorldMapCamera();
 	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
 	//FollowCamera->SetActive(false);
 	//WorldFollowCamera->SetActive(true);
-	SwitchToWorldFollowCamera();
+	//SwitchToWorldFollowCamera();
 	//WorldFollowCamera->SetActive(false);
 	isTown=false;
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
 {
-	CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
+	//CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
 
-	if (isWorld)
-	{
-		WorldFollowCamera->SetActive(true);
-		FollowCamera->SetActive(false);
-	}
-	else
-	{
-		WorldFollowCamera->SetActive(false);
-		//FollowCamera->SetActive(true);
-	}
+	//if (isWorld)
+	//{
+	//	WorldFollowCamera->SetActive(true);
+	//	FollowCamera->SetActive(false);
+	//}
+	//else
+	//{
+	//	WorldFollowCamera->SetActive(false);
+	//	//FollowCamera->SetActive(true);
+	//}
 }
 
 void AHeroCharacter::ChangeGameMode()
@@ -207,7 +233,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				worldCube->isVisited = true;
 				SetActorRotation(FRotator(0,0,0));
 				SetActorLocation(worldCube->Location);
-				SwitchToFollowCamera();
+				//SwitchToFollowCamera();
+				ChangeToTownCamera();
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
@@ -221,7 +248,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				worldCube->isKey = false;
 				SetActorRotation(FRotator(0,0,0));
 				SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
-				SwitchToFollowCamera();
+				ChangeToBattleCamera();
+				//SwitchToFollowCamera();
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor=false;
 				bUseControllerRotationPitch = true;
@@ -240,7 +268,7 @@ void AHeroCharacter::SwitchToFollowCamera()
 {
 
 	// Activate the FollowCamera
-	WorldFollowCamera->SetActive(false);
+	//WorldFollowCamera->SetActive(false);
 	FollowCamera->SetActive(true);
 }
 
@@ -248,7 +276,7 @@ void AHeroCharacter::SwitchToWorldFollowCamera()
 {
 	// Activate the WorldFollowCamera
 	FollowCamera->SetActive(false);
-	WorldFollowCamera->SetActive(true);
+	//WorldFollowCamera->SetActive(true);
 
 
 
@@ -277,15 +305,15 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 void AHeroCharacter::OnZoomIn()
 {
-	float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView - 5.f, 20.f, 180.f);
+	//float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView - 5.f, 20.f, 180.f);
 
 	// Set the new field of view
-	WorldFollowCamera->SetFieldOfView(NewFieldOfView);
+	//WorldFollowCamera->SetFieldOfView(NewFieldOfView);
 
 	// Adjust the spring arm's length to compensate for the new field of view
-	float CameraDistance = WorldCameraBoom->TargetArmLength;
-	float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
-	WorldCameraBoom->TargetArmLength = NewCameraDistance;
+	//float CameraDistance = WorldCameraBoom->TargetArmLength;
+	//float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
+	//WorldCameraBoom->TargetArmLength = NewCameraDistance;
 
 	// Increase the camera's field of view to zoom out
 	//WorldFollowCamera->SetFieldOfView(WorldFollowCamera->FieldOfView + 5.f);
@@ -293,15 +321,15 @@ void AHeroCharacter::OnZoomIn()
 
 void AHeroCharacter::OnZoomOut()
 {
-	float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView + 5.f, 20.f, 180.f);
+	//float NewFieldOfView = FMath::Clamp(WorldFollowCamera->FieldOfView + 5.f, 20.f, 180.f);
 
 	// Set the new field of view
-	WorldFollowCamera->SetFieldOfView(NewFieldOfView);
+	//WorldFollowCamera->SetFieldOfView(NewFieldOfView);
 
 	// Adjust the spring arm's length to compensate for the new field of view
-	float CameraDistance = WorldCameraBoom->TargetArmLength;
-	float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
-	WorldCameraBoom->TargetArmLength = NewCameraDistance;
+	//float CameraDistance = WorldCameraBoom->TargetArmLength;
+	//float NewCameraDistance = CameraDistance / (NewFieldOfView / WorldFollowCamera->FieldOfView);
+	//WorldCameraBoom->TargetArmLength = NewCameraDistance;
 
 	// Decrease the camera's field of view to zoom in
 	//WorldFollowCamera->SetFieldOfView(WorldFollowCamera->FieldOfView - 5.f);
@@ -323,6 +351,34 @@ void AHeroCharacter::BeginPlay()
 	isAttack = false;
 	isDeath = false;
 	isInBattle = false;
+
+	// CAMERA
+	// Bttle camera 와 world camera를 확한다.
+	for (TActorIterator<ACameraActor> It(GetWorld()); It; ++It)
+	{
+		ACameraActor* CameraActor = *It;
+
+		if (IsValid(CameraActor) && CameraActor->ActorHasTag(FName("BattleCamera")))
+		{
+			BattleCamera = CameraActor;
+		}
+
+		if (IsValid(CameraActor) && CameraActor->ActorHasTag(FName("WorldCamera")))
+		{
+			WorldMapCamera = CameraActor;
+		}
+
+		if (IsValid(CameraActor) && CameraActor->ActorHasTag(FName("PlayerCamera")))
+		{
+			PlayerCamera = CameraActor;
+		}
+	}
+
+	// FollowCamera가 있는 액터를 가져옵니다.
+	AActor* OwnerActor = FollowCamera->GetOwner();
+
+	// 시작시 월드맵 카메라로 전환 
+	ChangeToWorldMapCamera();
 }
 
 void AHeroCharacter::OnLeftClick()

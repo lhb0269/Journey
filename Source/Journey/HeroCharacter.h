@@ -10,6 +10,8 @@
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
 #include "HeroAIController.h"
+#include "Camera/CameraComponent.h"
+#include "Camera/PlayerCameraManager.h"
 #include "ProceduralNoiseGenerator.h"
 #include "HeroCharacter.generated.h"
 
@@ -64,11 +66,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* FollowCamera;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class USpringArmComponent* WorldCameraBoom;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
-	class UCameraComponent* WorldFollowCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
 	class UInventoryComponent* Inventory;
@@ -108,6 +105,26 @@ public:
 	UPROPERTY()
 	AHeroAIController* AIController;
 	// Battle 관련 정보
+
+
+	// CAMERA
+	// worldmap camera 와 battlemap camera
+	// + player가 가지고 있는 카메라
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	ACameraActor* BattleCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	ACameraActor* WorldMapCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	ACameraActor* PlayerCamera;
+
+
+	// Camera 전환 함수
+	void ChangeToWorldMapCamera();
+	void ChangeToBattleCamera();
+	void ChangeToTownCamera();
+
 
 
 	void ChangeController(bool isAI);

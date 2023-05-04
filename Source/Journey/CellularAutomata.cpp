@@ -551,6 +551,7 @@ void ACellularAutomata::GenMapData()
 		}
 	}
 
+	MainTileInfos[0].isVisited = true;
 	// 4. Spawn Vector 잡아준다.
 	int Max2 = Tilemax * 2;
 	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
