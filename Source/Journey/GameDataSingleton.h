@@ -22,6 +22,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UGameDataSingleton")
         static UGameDataSingleton* ResetInstance();
 
+    int TotalKeyNum;
+    int NowKeyNum;
+
     // tile TArray
     TArray<FCAStruct> TileInfos;
     FVector SavedPos;
@@ -29,6 +32,7 @@ public:
     FVector TownSpawnPos;
     FVector BattleSpawnPos;
     
+
 
 private:
     UGameDataSingleton();

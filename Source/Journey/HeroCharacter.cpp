@@ -70,7 +70,7 @@ void AHeroCharacter::UseItem(UItem* Item)
 				{
 					Inventory->AddItem(Item);
 					shop->RemoveItem(Item);
-					UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
+					//UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
 					gold-=Item->cost;
 					//Item->OnUse(this);
 				}
@@ -244,6 +244,10 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			else
 			{
 				//ChangeController(true);
+				if (worldCube->isKey)
+				{
+					UGameDataSingleton::GetInstance()->NowKeyNum += 1;
+				}
 				worldCube->isVisited = true;
 				worldCube->isKey = false;
 				SetActorRotation(FRotator(0,0,0));
@@ -419,27 +423,27 @@ void AHeroCharacter::OnLeftClick()
 
 void AHeroCharacter::OnRightClick()
 {
-	UE_LOG(LogTemp,Warning,TEXT("rightclick"));
+	//UE_LOG(LogTemp,Warning,TEXT("rightclick"));
 	FVector2D ScreenPosition;
 	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
 	{
-		UE_LOG(LogTemp,Warning,TEXT("rightclick2"));
+		//UE_LOG(LogTemp,Warning,TEXT("rightclick2"));
 		FVector WorldLocation;
 		FVector WorldDirection;
 		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
 		{
-			UE_LOG(LogTemp,Warning,TEXT("rightclick3"));
+			//UE_LOG(LogTemp,Warning,TEXT("rightclick3"));
 			FHitResult HitResult;
 			FVector StartLocation = WorldLocation;
 			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
 			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
 			{
-				UE_LOG(LogTemp,Warning,TEXT("rightclick4"));
+				//UE_LOG(LogTemp,Warning,TEXT("rightclick4"));
 				FVector TargetLocation = HitResult.Location;
 				if (PlayerController)
 				{
-					UE_LOG(LogTemp,Warning,TEXT("rightclick5"));
+					//UE_LOG(LogTemp,Warning,TEXT("rightclick5"));
 					UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
 				}
 			}

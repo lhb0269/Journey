@@ -189,7 +189,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		{
 			height[x][y] = 5;
 			IsMotel = true;
-			UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
+			//UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
 		}
 	}
 	while(!IsShop)
@@ -200,7 +200,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		{
 			height[x][y] = 6;
 			IsShop = true;
-			UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
+			//UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
 		}
 	}
 	//

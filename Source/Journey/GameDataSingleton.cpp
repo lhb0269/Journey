@@ -11,7 +11,9 @@ UGameDataSingleton::UGameDataSingleton()
 
     BattleSpawnPos = FVector(14949, 49643, 94);
     TownSpawnPos = FVector(-2000, -28940, 500);
- 
+
+    NowKeyNum = 0;
+    TotalKeyNum = 0;
 }
 
 UGameDataSingleton* UGameDataSingleton::GetInstance()
