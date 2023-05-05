@@ -82,6 +82,8 @@ public:
 		TSubclassOf<class AWorldCubeBase> River;
 	UPROPERTY(EditAnywhere)
 		int32 Time = 2;
+	UPROPERTY(EditAnywhere)
+		bool isPortalExist;
 
 	
 	TArray<AWorldCubeBase*>AArray;

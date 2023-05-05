@@ -49,6 +49,8 @@ void ACellularAutomata::BeginPlay()
 
 	UGameDataSingleton::ResetInstance();
 
+	isPortalExist = false;
+
 	UWorld* world = GetWorld();
 	bool Original = false;
 	float wall = 0;
@@ -623,5 +625,6 @@ void ACellularAutomata::GenMapData()
 			}
 		}
 	}
+
 }
 
