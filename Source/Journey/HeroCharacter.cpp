@@ -210,31 +210,31 @@ void AHeroCharacter::MoveCamera(float DeltaTime)
 	FVector2D MouseDelta = FVector2D(MouseX, MouseY) - FVector2D(GEngine->GameViewport->Viewport->GetSizeXY()) * 0.5f;
 	FVector CameraMoveDirection = FVector(-MouseDelta.Y, MouseDelta.X, 0.0f).GetSafeNormal();
 
-	APlayerController* PC = Cast<APlayerController>(GetController());
+	/*APlayerController* PC = Cast<APlayerController>(GetController());
 	ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
 
 	FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
-	CameraActor->SetActorLocation(NewLocation);
+	CameraActor->SetActorLocation(NewLocation);*/
 	
 
-	//// PlayerController로부터 카메라 액터를 가져옵니다.
-	//if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	//{
-	//	ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
+	// PlayerController로부터 카메라 액터를 가져옵니다.
+	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	{
+		ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
 
-	//	if (CameraActor == WorldMapCamera)
-	//	{
-	//		FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
-	//		CameraActor->SetActorLocation(NewLocation);
-	//	}
+		if (CameraActor == WorldMapCamera)
+		{
+			FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
+			CameraActor->SetActorLocation(NewLocation);
+		}
 
-	//	// 카메라 액터가 있는 경우 카메라 위치를 변경합니다.
-	//	if (CameraActor == BossMapCamera)
-	//	{
-	//		FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
-	//		CameraActor->SetActorLocation(NewLocation);
-	//	}
-	//}
+		// 카메라 액터가 있는 경우 카메라 위치를 변경합니다.
+		if (CameraActor == BossMapCamera)
+		{
+			FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
+			CameraActor->SetActorLocation(NewLocation);
+		}
+	}
 }
 
 void AHeroCharacter::LoadGame()
