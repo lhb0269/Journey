@@ -6,6 +6,7 @@
 #include "ProceduralNoiseGenerator.h"
 #include "ProceduralMeshComponent.h"
 #include "HeroCharacter.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -50,16 +51,6 @@ void AProceduralNoiseGenerator::Tick(float DeltaTime)
 void AProceduralNoiseGenerator::OnConstruction(const FTransform& transform)
 {
 	Super::OnConstruction(transform);
-	for (auto It = AAray.CreateIterator(); It; It++)
-	{
-		(*It)->Destroy();
-	}
-	AAray.Empty();
-	RegisterAllComponents();
-
-	Vertices.Reset();
-	Triangles.Reset();
-	UV0.Reset();
 
 	//CreateVertices();
 	//CreateTriangles();
@@ -189,7 +180,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		{
 			height[x][y] = 5;
 			IsMotel = true;
-			//UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
+
 		}
 	}
 	while(!IsShop)
@@ -200,7 +191,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		{
 			height[x][y] = 6;
 			IsShop = true;
-			//UE_LOG(LogTemp,Warning,TEXT("%d %d"),x,y);
+
 		}
 	}
 	//
