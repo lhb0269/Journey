@@ -106,7 +106,7 @@ void AHeroCharacter::ChangeToWorldMapCamera()
 		}
 	}
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
-	CameraManager->SetFOV(90);
+	CameraManager->SetFOV(60);
 }
 
 void AHeroCharacter::ChangeToBossWorldMapCamera()
@@ -404,7 +404,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			UGameDataSingleton::GetInstance()->SavedPos = worldCube->GetActorLocation();
+			UGameDataSingleton::GetInstance()->SavedPos = FVector( worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 30 );
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -428,7 +428,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			UGameDataSingleton::GetInstance()->SavedPos = worldCube->GetActorLocation();
+			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 30);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -450,8 +450,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 			worldCube->isVisited = true;
 
-
-			UGameDataSingleton::GetInstance()->SavedPos = worldCube->GetActorLocation();
+			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 30);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
