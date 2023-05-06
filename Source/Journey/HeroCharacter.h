@@ -161,6 +161,7 @@ public:
 	void LoadGame();
 	void SaveGame();
 
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void GoToWorldMap();
 
 	void ChangeCamera(bool isWorld);
