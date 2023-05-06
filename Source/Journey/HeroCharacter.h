@@ -114,17 +114,36 @@ public:
 	ACameraActor* BattleCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	ACameraActor* BossBattleCamera;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	ACameraActor* WorldMapCamera;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	ACameraActor* BossMapCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	ACameraActor* PlayerCamera;
 
+	float DefaultFOV;
+
 
 	// Camera 전환 함수
 	void ChangeToWorldMapCamera();
+	void ChangeToBossWorldMapCamera();
 	void ChangeToBattleCamera();
+	void ChangeToBossBattleCamera();
 	void ChangeToTownCamera();
 
+	// 마우스 휠 클릭 이벤트 처리를 위한 함수
+	void OnMouseWheelClicked();
+	void OnMouseWheelReleased();
+	// 카메라 이동을 처리하는 함수
+	void MoveCamera(float DeltaTime);
+
+	// 마우스 휠 클릭 상태를 저장하는 변수
+	bool bIsMouseWheelClicked;
 
 
 	void ChangeController(bool isAI);
@@ -161,6 +180,7 @@ public:
 protected:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	void MoveForward(float value);
 	void MoveRight(float value);
 	void Turn_Right(float value);
@@ -169,6 +189,9 @@ protected:
 	void OnRightClick();
 	void OnZoomIn();
 	void OnZoomOut();
+	void OnMouseWheelButtonDown();
+	
+	void createPortal();
 
 	void SwitchToFollowCamera();
 	void SwitchToWorldFollowCamera();

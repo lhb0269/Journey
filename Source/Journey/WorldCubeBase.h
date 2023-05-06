@@ -48,4 +48,7 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FVector Location;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool isPortal;
 };

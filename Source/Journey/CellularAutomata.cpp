@@ -49,6 +49,8 @@ void ACellularAutomata::BeginPlay()
 
 	UGameDataSingleton::ResetInstance();
 
+	isPortalExist = false;
+
 	UWorld* world = GetWorld();
 	bool Original = false;
 	float wall = 0;
@@ -303,7 +305,7 @@ void ACellularAutomata::GenRandomkeyTown()
 				CATileInfos[NewRandomNumber].isTown = true;
 				AArray[NewRandomNumber]->isTown = true;
 				AArray[NewRandomNumber]->resetCubeState();
-				UE_LOG(LogTemp, Warning, TEXT("town: %d"), NewRandomNumber);
+				//(LogTemp, Warning, TEXT("town: %d"), NewRandomNumber);
 			}
 		}
 	}
@@ -342,8 +344,9 @@ void ACellularAutomata::GenRandomkeyTown()
 				RandomNumbers[i] = NewRandomNumber;
 				CATileInfos[NewRandomNumber].isKey = true;
 				AArray[NewRandomNumber]->isKey = true;
+
 				AArray[NewRandomNumber]->resetCubeState();
-				UE_LOG(LogTemp, Warning, TEXT("Key: %d"), NewRandomNumber);
+				//UE_LOG(LogTemp, Warning, TEXT("Key: %d"), NewRandomNumber);
 			}
 		}
 	}
@@ -528,12 +531,14 @@ void ACellularAutomata::GenMapData()
 						{
 							RandomNumbers[i] = NewRandomNumber;
 							TileInfos[NewRandomNumber].isKey = true;
+							UGameDataSingleton::GetInstance()->TotalKeyNum += 1;
+							UE_LOG(LogTemp, Warning, TEXT("totalKeyNum: %d"), UGameDataSingleton::GetInstance()->TotalKeyNum);
 							//AArray[NewRandomNumber]->isKey = true;
 						}
 					}
 				}
 			}
-			// 생성 후 vector에 추가한다.
+			// 생성 후 vector에 추가한다.S
 			CATileVector.push_back(TileInfos);
 		}
 	}
@@ -620,5 +625,6 @@ void ACellularAutomata::GenMapData()
 			}
 		}
 	}
+
 }
 

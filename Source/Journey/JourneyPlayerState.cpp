@@ -46,7 +46,9 @@ void AJourneyPlayerState::SavePlayerData()
 
 	//if (false == UGameplayStatics::SaveGameToSlot(NewPlayerData, SaveSlotName, 0))
 	//{
-	//	UE_LOG(LogClass, Warning, TEXT("SaveGame Error!"));
+	//	
+	// 
+	// (LogClass, Warning, TEXT("SaveGame Error!"));
 	//}
 }
 

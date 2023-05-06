@@ -22,13 +22,20 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UGameDataSingleton")
         static UGameDataSingleton* ResetInstance();
 
+    int TotalKeyNum;
+    int NowKeyNum;
+
+    bool isBossWorld;
+
     // tile TArray
     TArray<FCAStruct> TileInfos;
     FVector SavedPos;
 
     FVector TownSpawnPos;
     FVector BattleSpawnPos;
-    
+
+    FVector BossBattleSpawnPos;
+    FVector BossWorldSpawnPos;
 
 private:
     UGameDataSingleton();
