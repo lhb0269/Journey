@@ -40,6 +40,10 @@ public:
 	TSubclassOf<class AActor>Shop;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>motel;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>NPC_Child;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>NPC_Guard;
 	TArray<AActor*>AAray;
 	vector<int32>width;
 	vector<vector<int32>>height;
