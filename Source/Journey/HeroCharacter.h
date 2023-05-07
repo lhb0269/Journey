@@ -80,6 +80,10 @@ public:
 	int32 Armour;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 gold;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero")
+	int nowKeyNum;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero")
+	int maxKeyNum;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float fatigue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")

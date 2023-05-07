@@ -20,24 +20,24 @@ struct FCAStruct
 	GENERATED_BODY()
 public:
 	UPROPERTY()
-	FVector tilePos;
+	FVector tilePos = FVector(-1, -1, -1);
 	UPROPERTY()
-	int32 tileType;
+	int32 tileType = -1;
 	UPROPERTY()
-	bool isVisited;
+	bool isVisited = false;
 	UPROPERTY()
-	bool isTown;
+	bool isTown = false;
 	UPROPERTY()
-	bool isKey;
+	bool isKey= false;
 
 	UPROPERTY()
-	int monsterType;
+	int monsterType = -1;
 
 	UPROPERTY()
-	int monsterPower;
+	int monsterPower = -1;
 
 	UPROPERTY()
-	int monsterLevel;
+	int monsterLevel = -1;
 
 };
 

@@ -382,6 +382,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 						if (worldCube->isKey)
 						{
 							UGameDataSingleton::GetInstance()->NowKeyNum += 1;
+							maxKeyNum = UGameDataSingleton::GetInstance()->TotalKeyNum;
+							nowKeyNum += 1;
 						}
 						worldCube->isVisited = true;
 						worldCube->isKey = false;
@@ -670,6 +672,9 @@ void AHeroCharacter::BeginPlay()
 	isAttack = false;
 	isDeath = false;
 	isInBattle = false;
+
+	maxKeyNum = 0;
+	nowKeyNum  = 0;
 
 	// CAMERA
 	// Bttle camera 와 world camera를 확한다.
