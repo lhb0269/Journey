@@ -326,6 +326,11 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 
 			// �ƴϸ� �湮 �ߴٰ� üũ
+			if (!UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("IsValid WCUBE Index %d"), worldCube->cubeNumber);
+				return;
+			}
  			UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
 			UGameDataSingleton::GetInstance()->SavedPos = OtherActor->GetActorLocation();
 			//CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
@@ -395,7 +400,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 						if(!(*It)->isBossSystem)
 							battleSystem = *It;
 					}
-					battleSystem->resetBattleField(worldCube->monsterPower);
+					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel);
 
 					ChangeToBattleCamera();
 					//PlayerController->SetInputMode(FInputModeGameOnly());

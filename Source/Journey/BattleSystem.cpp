@@ -20,7 +20,8 @@ void ABattleSystem::SpawnHeroInWorld(UWorld* World,  FVector SpawnLocation,  FRo
 
         if (Player)
         {
-            SpawnLocation.Y -= 300;
+            SpawnLocation.X -= 200;
+            SpawnLocation.Y -= 500;
             SpawnLocation.Z += 100;
 
             SpawnedHero = World->SpawnActor<AActor>(Player, SpawnLocation, SpawnRotation);
@@ -34,19 +35,25 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 {
 
     // enemyPower에 따라 생성되는 골렘 수 변경
+    
+    int spawnNum = enemyPower / 100;
 
     if (World)
     {
-        AActor* SpawnedMonster = nullptr;
-
-        if (Monster)
+        for (int i = 0; i < spawnNum; i++)
         {
-            SpawnLocation.Y += 300;
-            SpawnLocation.Z += 100;
+            if (Monster)
+            {
+                SpawnLocation.X += FMath::RandRange(-300, 600);
+                SpawnLocation.Y += FMath::RandRange(-50, 150);
+                SpawnLocation.Z += 100;
 
-            SpawnedMonster = World->SpawnActor<AActor>(Monster, SpawnLocation, SpawnRotation);
-            Monsters.Add(SpawnedMonster);
+                AActor* SpawnedMonster = World->SpawnActor<AActor>(Monster, SpawnLocation, SpawnRotation);
+                Monsters.Add(SpawnedMonster);
+            }
         }
+
+   
     }
 }
 
@@ -81,7 +88,7 @@ void ABattleSystem::resetBattleField(int monsterPower)
     UWorld* World = GetWorld();
     FVector centerPos = GetActorLocation();
 
-    SpawnHeroInWorld(World, centerPos, FRotator(0, -90, 0));
+    SpawnHeroInWorld(World, centerPos, FRotator(0, 90, 0));
     SpawnMonsterInWorld(World, centerPos, FRotator(0, -90, 0));
 }
 

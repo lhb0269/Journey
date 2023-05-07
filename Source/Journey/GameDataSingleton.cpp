@@ -9,7 +9,7 @@ UGameDataSingleton::UGameDataSingleton()
 {
     SavedPos = FVector(0, 0, 0);
 
-    BattleSpawnPos = FVector(14949, 49643, 94);
+    BattleSpawnPos = FVector(14949, 49000, 94);
     TownSpawnPos = FVector(-2000, -28940, 500);
 
     NowKeyNum = 0;
@@ -17,7 +17,7 @@ UGameDataSingleton::UGameDataSingleton()
 
     isBossWorld = false;
 
-    BossBattleSpawnPos = FVector(-43980, 49643, 94);
+    BossBattleSpawnPos = FVector(-43980, 49000, 94);
     BossWorldSpawnPos = FVector(-15300, 780, 20);
 }
 
