@@ -60,6 +60,12 @@ public:
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	bool isTown;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	bool isShop;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
+	bool isMotel;
 	
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
