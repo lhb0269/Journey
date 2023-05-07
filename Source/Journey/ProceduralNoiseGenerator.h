@@ -42,7 +42,10 @@ public:
 	TSubclassOf<class AActor>motel;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Tower;
-    	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>Fontain;
+
+	UPROPERTY(EditAnywhere)
     	
 	TSubclassOf<class AActor>NPC_Child;
 	UPROPERTY(EditAnywhere)

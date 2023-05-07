@@ -196,6 +196,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	}
 	//
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
+		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
 				FActorSpawnParameters SpawnParams;
@@ -225,9 +226,23 @@ void AProceduralNoiseGenerator::CellularAutomata()
 						}
 					case 1:
 						{
-							AActor* TowerTile = world->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
-							AAray.Add(TowerTile);
-							break;
+							if(cnt <=4)
+							{
+								if(cnt == 3)
+								{
+									AActor* FountainTile = world->SpawnActor<AActor>(Fontain, SpawnLocation, rotator, SpawnParams);
+									AAray.Add(FountainTile);
+									cnt++;
+									break;
+								}
+								else
+								{
+									AActor* TowerTile = world->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
+									AAray.Add(TowerTile);
+									cnt++;
+									break;
+								}
+							}
 						}
 					}
 				}
