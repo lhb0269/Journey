@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "TileInfo.h"
+#include "Blueprint/UserWidget.h"
 #include "BattleSystem.generated.h"
 
 UCLASS()
@@ -25,14 +26,33 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class ATileInfo> TileInfo;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	TSubclassOf<class UUserWidget> BattleEndWidgetClass;
+
+	UPROPERTY()
+	TArray<AActor*> Heroes;
+
+	UPROPERTY()
+	TArray<AActor*> Monsters;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	bool isBossSystem;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	int RewardGold;
 
-	
-	void resetBattleField();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	int enemyPower;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	bool isBattleStart;
+
+	void SpawnHeroInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
+	void SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
+
+	void resetBattleField(int monsterPower);
+
+	void ShowBattleEndWidget();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
