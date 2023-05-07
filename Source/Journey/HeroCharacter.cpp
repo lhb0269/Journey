@@ -455,11 +455,11 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					SetActorRotation(FRotator(0, 0, 0));
 					SetActorLocation(worldCube->Location);
 					//SwitchToFollowCamera();
-					ChangeToTownCamera();
 					PlayerController->SetInputMode(FInputModeGameOnly());
 					PlayerController->bShowMouseCursor = false;
 					bUseControllerRotationPitch = true;
 					bUseControllerRotationYaw = true;
+					ChangeToTownCamera();
 					isTown = true;
 				}
 				else
@@ -474,8 +474,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 						SetActorRotation(FRotator(0, 0, 0));
 						SetActorLocation(UGameDataSingleton::GetInstance()->BossWorldSpawnPos);
-						ChangeToBossWorldMapCamera();
 						UGameDataSingleton::GetInstance()->isBossWorld = true;
+						ChangeToBossWorldMapCamera();
 					}
 					else
 					{
@@ -489,7 +489,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 						worldCube->isKey = false;
 						SetActorRotation(FRotator(0, 0, 0));
 						SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
-						//SwitchToFollowCamera();
 						PlayerController->bEnableMouseOverEvents = true;
 						PlayerController->bShowMouseCursor = true;
 						bUseControllerRotationPitch = false;
@@ -508,7 +507,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 						ChangeToBattleCamera();
 						//PlayerController->SetInputMode(FInputModeGameOnly());
 
-						isTown = true;
+						//isTown = true;
 					}
 
 
@@ -548,7 +547,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			bUseControllerRotationYaw = false;
 
 			ChangeToBossBattleCamera();
-			isTown = true;
+			//isTown = true;
 		}
 		
 	}
@@ -572,7 +571,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			PlayerController->bShowMouseCursor = false;
 			bUseControllerRotationPitch = true;
 			bUseControllerRotationYaw = true;
-			isTown = true;
+			//isTown = true;
 		}
 	}
 
@@ -594,7 +593,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			PlayerController->bShowMouseCursor = false;
 			bUseControllerRotationPitch = true;
 			bUseControllerRotationYaw = true;
-			isTown = true;
+			//isTown = true;
 		}
 	}
 
