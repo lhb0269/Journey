@@ -195,7 +195,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		}
 	}
 	//
-	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr) {
+	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
 				FActorSpawnParameters SpawnParams;
@@ -214,9 +214,22 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				}
 				else if (height[i][j] == 3) {
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
-					AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
-					//HouseTile->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					AAray.Add(HouseTile);
+					int32 num = FMath::RandRange(0,1);
+					switch (num)
+					{
+					case 0:
+						{
+							AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
+							AAray.Add(HouseTile);
+							break;
+						}
+					case 1:
+						{
+							AActor* TowerTile = world->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
+							AAray.Add(TowerTile);
+							break;
+						}
+					}
 				}
 				else if (height[i][j] == 5) { //여관생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
