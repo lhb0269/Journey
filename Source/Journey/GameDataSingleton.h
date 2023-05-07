@@ -20,9 +20,12 @@ public:
         static UGameDataSingleton* GetInstance();
 
     UFUNCTION(BlueprintCallable, Category = "UGameDataSingleton")
-        static UGameDataSingleton* ResetInstance();
+     static UGameDataSingleton* ResetInstance();
 
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int TotalKeyNum;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int NowKeyNum;
 
     bool isBossWorld;

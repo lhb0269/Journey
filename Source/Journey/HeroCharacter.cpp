@@ -50,6 +50,7 @@ AHeroCharacter::AHeroCharacter()
 	hp = 50;
 	Armour = 200;
 	gold=200;
+	fatigue = 0;
 
 	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
@@ -266,11 +267,31 @@ void AHeroCharacter::GoToWorldMap()
 		ChangeToBossWorldMapCamera();
 
 		UE_LOG(LogTemp, Warning, TEXT("goto pos: %s"), *UGameDataSingleton::GetInstance()->SavedPos.ToString());
+	}
+	else
+	{
+		SetActorRotation(FRotator(0, 0, 0));
+		SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
 
-		return;
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = true;
+		bUseControllerRotationPitch = false;
+		bUseControllerRotationYaw = false;
+		ChangeToWorldMapCamera();
 	}
 
-	SetActorRotation(FRotator(0,0,0));
+
+	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
+	//FollowCamera->SetActive(false);
+	//WorldFollowCamera->SetActive(true);
+	//SwitchToWorldFollowCamera();
+	//WorldFollowCamera->SetActive(false);
+	isTown=false;
+}
+
+void AHeroCharacter::GoToWorld()
+{
+	SetActorRotation(FRotator(0, 0, 0));
 	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
 
 	PlayerController->SetInputMode(FInputModeGameOnly());
@@ -278,12 +299,6 @@ void AHeroCharacter::GoToWorldMap()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
-	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
-	//FollowCamera->SetActive(false);
-	//WorldFollowCamera->SetActive(true);
-	//SwitchToWorldFollowCamera();
-	//WorldFollowCamera->SetActive(false);
-	isTown=false;
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
@@ -326,90 +341,78 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 
 			// �ƴϸ� �湮 �ߴٰ� üũ
-			if (!UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber))
+			if (UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("IsValid WCUBE Index %d"), worldCube->cubeNumber);
-				return;
-			}
- 			UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
-			UGameDataSingleton::GetInstance()->SavedPos = OtherActor->GetActorLocation();
-			//CellularActor->CATileInfos[worldCube->cubeNumber].isVisited = true;
+				UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
+				UGameDataSingleton::GetInstance()->SavedPos = OtherActor->GetActorLocation();
 
-			//MySaveGame->SavedPos = OtherActor->GetActorLocation();
-			//MySaveGame->CADatas = CellularActor->CATileInfos;
-			//MySaveGame->tileMax = CellularActor->Tilemax;
-			//MySaveGame->PlayerName = "TESTNAME";
-
-
-			// ������ġ�� �����ؾ��Ѵ�.
-			// ������ ���� ������ Ȯ��
-
-			// �ƴϸ� ���� ����
-			//SaveGame();
-
-			// check town or battle
-			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
-			if (worldCube->isTown)
-			{
-				//ChangeController(false);
-				worldCube->isVisited = true;
-				SetActorRotation(FRotator(0,0,0));
-				SetActorLocation(worldCube->Location);
-				//SwitchToFollowCamera();
-				ChangeToTownCamera();
-				PlayerController->SetInputMode(FInputModeGameOnly());
-				PlayerController->bShowMouseCursor=false;
-				bUseControllerRotationPitch = true;
-				bUseControllerRotationYaw = true;
-				isTown = true;
-			}
-			else
-			{
-				//ChangeController(true);
-				// 해당 타일이 포털일때
-				if (worldCube->isPortal)
+				// check town or battle
+				// 0403 일단 무조건 Town 쪽으로 이동하게 설정
+				if (worldCube->isTown)
 				{
+					//ChangeController(false);
 					worldCube->isVisited = true;
-
 					SetActorRotation(FRotator(0, 0, 0));
-					SetActorLocation(UGameDataSingleton::GetInstance()->BossWorldSpawnPos);
-					ChangeToBossWorldMapCamera();
-					UGameDataSingleton::GetInstance()->isBossWorld = true;
+					SetActorLocation(worldCube->Location);
+					//SwitchToFollowCamera();
+					ChangeToTownCamera();
+					PlayerController->SetInputMode(FInputModeGameOnly());
+					PlayerController->bShowMouseCursor = false;
+					bUseControllerRotationPitch = true;
+					bUseControllerRotationYaw = true;
+					isTown = true;
 				}
 				else
 				{
-					if (worldCube->isKey)
-					{
-						UGameDataSingleton::GetInstance()->NowKeyNum += 1;
-					}
-					worldCube->isVisited = true;
-					worldCube->isKey = false;
-					SetActorRotation(FRotator(0, 0, 0));
-					SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
-					//SwitchToFollowCamera();
-					PlayerController->bEnableMouseOverEvents = true;
-					PlayerController->bShowMouseCursor = true;
-					bUseControllerRotationPitch = false;
-					bUseControllerRotationYaw = false;
+					fatigue += 1;
 
-					// 전투맵 세팅
-					UWorld* World = GetWorld();
-					ABattleSystem* battleSystem = nullptr;
-					for (TActorIterator<ABattleSystem> It(World); It; ++It)
+					//ChangeController(true);
+					// 해당 타일이 포털일때
+					if (worldCube->isPortal)
 					{
-						if(!(*It)->isBossSystem)
-							battleSystem = *It;
-					}
-					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel);
+						worldCube->isVisited = true;
 
-					ChangeToBattleCamera();
-					//PlayerController->SetInputMode(FInputModeGameOnly());
-			
-					isTown = true;
+						SetActorRotation(FRotator(0, 0, 0));
+						SetActorLocation(UGameDataSingleton::GetInstance()->BossWorldSpawnPos);
+						ChangeToBossWorldMapCamera();
+						UGameDataSingleton::GetInstance()->isBossWorld = true;
+					}
+					else
+					{
+						if (worldCube->isKey)
+						{
+							UGameDataSingleton::GetInstance()->NowKeyNum += 1;
+						}
+						worldCube->isVisited = true;
+						worldCube->isKey = false;
+						SetActorRotation(FRotator(0, 0, 0));
+						SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
+						//SwitchToFollowCamera();
+						PlayerController->bEnableMouseOverEvents = true;
+						PlayerController->bShowMouseCursor = true;
+						bUseControllerRotationPitch = false;
+						bUseControllerRotationYaw = false;
+
+						// 전투맵 세팅
+						UWorld* World = GetWorld();
+						ABattleSystem* battleSystem = nullptr;
+						for (TActorIterator<ABattleSystem> It(World); It; ++It)
+						{
+							if (!(*It)->isBossSystem)
+								battleSystem = *It;
+						}
+						battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel);
+
+						ChangeToBattleCamera();
+						//PlayerController->SetInputMode(FInputModeGameOnly());
+
+						isTown = true;
+					}
+
+
 				}
-
-				
 			}
+ 			
 
 			
 		}

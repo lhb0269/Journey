@@ -80,6 +80,8 @@ public:
 	int32 Armour;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 gold;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float fatigue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
 	bool isAttack;
 
@@ -163,6 +165,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void GoToWorldMap();
+
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
+	void GoToWorld();
 
 	void ChangeCamera(bool isWorld);
 
