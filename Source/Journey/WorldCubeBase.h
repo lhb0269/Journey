@@ -38,6 +38,9 @@ public:
 	int32 cubeNumber;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int ThemeCode;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	int monsterType;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

@@ -408,6 +408,7 @@ void ACellularAutomata::GenMapData()
 	MainTileInfos[0].isVisited = true;
 	// 4. Spawn Vector 잡아준다.
 	int Max2 = Tilemax * 2;
+	int themcnt = 0;
 	if (Tile != nullptr && Mountain != nullptr && River != nullptr) {
 		for (int i = 0; i < Max2; ++i) {
 			for (int j = 0; j < Max2; ++j) {
@@ -438,6 +439,8 @@ void ACellularAutomata::GenMapData()
 					if(Tile1->isTown)
 					{
 						Tile1->Location = MapPos.Pop();
+						Tile1->ThemeCode = (themcnt / 4) + 1;
+						themcnt++;
 					}
 					AArray.Add(Tile1);
 

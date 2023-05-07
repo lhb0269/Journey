@@ -735,7 +735,7 @@ void AHeroCharacter::createPortal()
 
 	while (IsDuplicate)
 	{
-		int32 NewRandomNumber = FMath::RandRange(1, (tilemax * tilemax - 1));
+		int32 NewRandomNumber = FMath::RandRange(1, 143);
 
 		if (UGameDataSingleton::GetInstance()->TileInfos[NewRandomNumber].tileType == 0)
 		{
