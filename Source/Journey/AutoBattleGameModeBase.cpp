@@ -22,12 +22,6 @@ void AAutoBattleGameModeBase::StartBattle()
 
 void AAutoBattleGameModeBase::SpawnUnits()
 {
-    for (AActor* SpawnPoint : SpawnPoints)
-    {
-        FVector Location = SpawnPoint->GetActorLocation();
-        FRotator Rotation = SpawnPoint->GetActorRotation();
-
-        AMonsterCharacter* Monster = GetWorld()->SpawnActor<AMonsterCharacter>(MonsterClass, Location, Rotation);
-    }
+ 
 }
 

@@ -17,6 +17,8 @@ AWorldCubeBase::AWorldCubeBase()
 	monsterPower=10;
 	monsterLevel=5;
 	monsterType=1;
+	cubeNumber = 0;
+	Location = FVector(0, 0, 0);
 }
 
 // Called when the game starts or when spawned

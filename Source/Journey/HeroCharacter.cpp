@@ -98,70 +98,70 @@ void AHeroCharacter::MoveToLocation(const FVector& DestLocation)
 
 void AHeroCharacter::ChangeToWorldMapCamera()
 {
-	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
-	PController->SetViewTargetWithBlend(WorldMapCamera, 0.5f);
-	if (PController != nullptr && WorldMapCamera != nullptr)
-	{
-		if (PController->GetViewTarget() != WorldMapCamera)
-		{
-		}
-	}
+	PlayerController->SetViewTargetWithBlend(WorldMapCamera, 0.5f);
+	//if (PController != nullptr && WorldMapCamera != nullptr)
+	//{
+	//	if (PController->GetViewTarget() != WorldMapCamera)
+	//	{
+	//	}
+	//}
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CameraManager->SetFOV(60);
 }
 
 void AHeroCharacter::ChangeToBossWorldMapCamera()
 {
-	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
-	PController->SetViewTargetWithBlend(BossMapCamera, 0.5f);
-	if (PController != nullptr && BossMapCamera != nullptr)
-	{
-		if (PController->GetViewTarget() != BossMapCamera)
-		{
-		}
-	}
+	PlayerController->SetViewTargetWithBlend(BossMapCamera, 0.5f);
+	//if (PController != nullptr && BossMapCamera != nullptr)
+	//{
+	//	if (PController->GetViewTarget() != BossMapCamera)
+	//	{
+	//	}
+	//}
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CameraManager->SetFOV(90);
 }
 
 void AHeroCharacter::ChangeToBattleCamera()
 {
-	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
-	PController->bEnableMouseOverEvents = true;
-	PController->bShowMouseCursor = true;
+	PlayerController->bEnableMouseOverEvents = true;
+	PlayerController->bShowMouseCursor = true;
 
-	PController->SetViewTargetWithBlend(BattleCamera, 0.5f);
-	if (PController != nullptr && BattleCamera != nullptr)
-	{
-		if (PController->GetViewTarget() != BattleCamera)
-		{
-		}
-	}
+	PlayerController->SetViewTargetWithBlend(BattleCamera, 0.5f);
+	//if (PController != nullptr && BattleCamera != nullptr)
+	//{
+	//	if (PController->GetViewTarget() != BattleCamera)
+	//	{
+	//	}
+	//}
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CameraManager->SetFOV(90);
 }
 
 void AHeroCharacter::ChangeToBossBattleCamera()
 {
-	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
-	PController->SetViewTargetWithBlend(BossBattleCamera, 0.5f);
-	if (PController != nullptr && BossBattleCamera != nullptr)
-	{
-		if (PController->GetViewTarget() != BossBattleCamera)
-		{
-		}
-	}
+	PlayerController->SetViewTargetWithBlend(BossBattleCamera, 0.5f);
+	//if (PController != nullptr && BossBattleCamera != nullptr)
+	//{
+	//	if (PController->GetViewTarget() != BossBattleCamera)
+	//	{
+	//	}
+	//}
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CameraManager->SetFOV(90);
 }
 
 void AHeroCharacter::ChangeToTownCamera()
 {
-	APlayerController* PController = GetWorld()->GetFirstPlayerController();
+	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
 	AActor* CameraOwner = FollowCamera->GetOwner();
 	PlayerController->SetViewTargetWithBlend(CameraOwner, 0.5f);	\
@@ -206,10 +206,10 @@ void AHeroCharacter::MoveCamera(float DeltaTime)
 
 	// 마우스 이동 값을 가져옵니다.
 	float MouseX, MouseY;
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		PC->GetMousePosition(MouseX, MouseY);
-	}
+	//if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	//{
+		PlayerController->GetMousePosition(MouseX, MouseY);
+	//}
 
 	// 마우스 이동 값으로부터 카메라 이동 방향을 계산합니다.
 	FVector2D MouseDelta = FVector2D(MouseX, MouseY) - FVector2D(GEngine->GameViewport->Viewport->GetSizeXY()) * 0.5f;
@@ -223,9 +223,10 @@ void AHeroCharacter::MoveCamera(float DeltaTime)
 	
 
 	// PlayerController로부터 카메라 액터를 가져옵니다.
-	if (APlayerController* PC = Cast<APlayerController>(GetController()))
+	//if (APlayerController* PC = Cast<APlayerController>(GetController()))
 	{
-		ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
+		//ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
+		ACameraActor* CameraActor = Cast<ACameraActor>(PlayerController->GetViewTarget());
 
 		if (CameraActor == WorldMapCamera)
 		{
@@ -254,31 +255,61 @@ void AHeroCharacter::SaveGame()
 
 void AHeroCharacter::GoToWorldMap()
 {
-	if (UGameDataSingleton::GetInstance()->isBossWorld)
+	// 혹시 모를 남아있을 monster, player 모두 제거
+	UWorld* World = GetWorld();
+	ABattleSystem* battleSystem = nullptr;
+	for (TActorIterator<ABattleSystem> It(World); It; ++It)
 	{
-		SetActorRotation(FRotator(0, 0, 0));
-		SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
-
-		PlayerController->SetInputMode(FInputModeGameOnly());
-		PlayerController->bEnableMouseOverEvents = true;
-		PlayerController->bShowMouseCursor = true;
-		bUseControllerRotationPitch = false;
-		bUseControllerRotationYaw = false;
-		ChangeToBossWorldMapCamera();
-
-		UE_LOG(LogTemp, Warning, TEXT("goto pos: %s"), *UGameDataSingleton::GetInstance()->SavedPos.ToString());
+		if (!(*It)->isBossSystem)
+			battleSystem = *It;
 	}
-	else
+	battleSystem->isBattleStart = false;
+	if (World)
 	{
-		SetActorRotation(FRotator(0, 0, 0));
-		SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+		// 게임 월드에 있는 모든 액터를 찾습니다.
+		for (TActorIterator<AActor> ActorItr(World); ActorItr; ++ActorItr)
+		{
+			AActor* Actor = *ActorItr;
 
-		PlayerController->SetInputMode(FInputModeGameOnly());
-		PlayerController->bShowMouseCursor = true;
-		bUseControllerRotationPitch = false;
-		bUseControllerRotationYaw = false;
-		ChangeToWorldMapCamera();
+			// 해당 태그를 가진 액터만 선택합니다.
+			if (Actor->ActorHasTag("BP_MONSTER"))
+			{
+				Actor->Destroy();
+			}
+
+			if (Actor->ActorHasTag("BP_HERO"))
+			{
+				Actor->Destroy();
+			}
+		}
 	}
+
+
+	//if (UGameDataSingleton::GetInstance()->isBossWorld)
+	//{
+	//	SetActorRotation(FRotator(0, 0, 0));
+	//	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+
+	//	PlayerController->SetInputMode(FInputModeGameOnly());
+	//	PlayerController->bEnableMouseOverEvents = true;
+	//	PlayerController->bShowMouseCursor = true;
+	//	bUseControllerRotationPitch = false;
+	//	bUseControllerRotationYaw = false;
+	//	ChangeToBossWorldMapCamera();
+
+	//	UE_LOG(LogTemp, Warning, TEXT("goto pos: %s"), *UGameDataSingleton::GetInstance()->SavedPos.ToString());
+	//}
+	//else
+	
+	SetActorRotation(FRotator(0, 0, 0));
+	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+
+	PlayerController->SetInputMode(FInputModeGameOnly());
+	PlayerController->bShowMouseCursor = true;
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationYaw = false;
+	ChangeToWorldMapCamera();
+	
 
 
 	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
@@ -291,6 +322,35 @@ void AHeroCharacter::GoToWorldMap()
 
 void AHeroCharacter::GoToWorld()
 {
+	// 혹시 모를 남아있을 monster, player 모두 제거
+	UWorld* World = GetWorld();
+	ABattleSystem* battleSystem = nullptr;
+	for (TActorIterator<ABattleSystem> It(World); It; ++It)
+	{
+		if (!(*It)->isBossSystem)
+			battleSystem = *It;
+	}
+	battleSystem->isBattleStart = false;
+	if (World)
+	{
+		// 게임 월드에 있는 모든 액터를 찾습니다.
+		for (TActorIterator<AActor> ActorItr(World); ActorItr; ++ActorItr)
+		{
+			AActor* Actor = *ActorItr;
+
+			// 해당 태그를 가진 액터만 선택합니다.
+			if (Actor->ActorHasTag("BP_MONSTER"))
+			{
+				Actor->Destroy();
+			}
+
+			if (Actor->ActorHasTag("BP_HERO"))
+			{
+				Actor->Destroy();
+			}
+		}
+	}
+
 	SetActorRotation(FRotator(0, 0, 0));
 	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
 
@@ -336,10 +396,16 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 		AWorldCubeBase *worldCube = Cast<AWorldCubeBase>(OtherActor);
 
+		if (worldCube->cubeNumber < 0 || worldCube->cubeNumber > 143)
+		{
+			int nowIndex = worldCube->cubeNumber;
+			bool v = UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber);
+		}
+
 		// �湮�ߴ������� üũ
 		if (!worldCube->isVisited)
 		{
-
+			TArray<FCAStruct> MainTileInfos = UGameDataSingleton::GetInstance()->TileInfos;
 			// �ƴϸ� �湮 �ߴٰ� üũ
 			if (UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber))
 			{

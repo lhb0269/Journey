@@ -16,43 +16,6 @@
 #include "HeroCharacter.generated.h"
 
 
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FCharacterInfo :public FTableRowBase
-{
-	GENERATED_BODY()
-public:
-	FCharacterInfo()
-	{
-
-	}
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 hp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 mp;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 power;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 armor;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 as;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 skill1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 skill2;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 skill3;
-	// ������
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 satiety;
-	// �Ƿε�
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	int32 fatigue;
-
-};
-
 UCLASS()
 class JOURNEY_API AHeroCharacter : public ABasicCharacter
 {
