@@ -26,7 +26,15 @@ void AWorldCubeBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-
+	isPortal = false;
+	isVisited = false;
+	isTown = false;
+	isKey = false;
+	monsterPower = 10;
+	monsterLevel = 5;
+	monsterType = 1;
+	cubeNumber = 0;
+	Location = FVector(0, 0, 0);
 
 
 

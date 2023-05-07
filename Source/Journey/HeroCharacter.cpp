@@ -178,6 +178,8 @@ void AHeroCharacter::OnMouseWheelClicked()
 void AHeroCharacter::OnMouseWheelReleased()
 {
 	bIsMouseWheelClicked = false;
+
+
 }
 
 void AHeroCharacter::ChangeController(bool isAI)
@@ -201,46 +203,73 @@ void AHeroCharacter::ChangeController(bool isAI)
 
 void AHeroCharacter::MoveCamera(float DeltaTime)
 {
-	// 원하는 카메라 이동 속도를 설정합니다. 적절한 값을 선택하십시오.
-	const float CameraMoveSpeed = 10000.0f;
+	float mouseX, mouseY;
+	PlayerController->GetMousePosition(mouseX, mouseY);
+	const FVector2D MousePosition = FVector2D(mouseX, mouseY);
+	const FVector2D ViewportSize = FVector2D(GEngine->GameViewport->Viewport->GetSizeXY());
 
-	// 마우스 이동 값을 가져옵니다.
-	float MouseX, MouseY;
-	//if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	//{
-		PlayerController->GetMousePosition(MouseX, MouseY);
-	//}
+	ACameraActor* CameraActor = Cast<ACameraActor>(PlayerController->GetViewTarget());
 
-	// 마우스 이동 값으로부터 카메라 이동 방향을 계산합니다.
-	FVector2D MouseDelta = FVector2D(MouseX, MouseY) - FVector2D(GEngine->GameViewport->Viewport->GetSizeXY()) * 0.5f;
-	FVector CameraMoveDirection = FVector(-MouseDelta.Y, MouseDelta.X, 0.0f).GetSafeNormal();
+	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 
-	/*APlayerController* PC = Cast<APlayerController>(GetController());
-	ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
 
-	FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
-	CameraActor->SetActorLocation(NewLocation);*/
+	if (CameraActor == WorldMapCamera)
+	{
+		if (MousePosition.X < ViewportSize.X / 2)
+		{
+			// 왼쪽으로 카메라 이동
+			FVector loc = CameraActor->GetActorLocation();
+			loc.Y -= 20;
+
+			CameraActor->SetActorLocation(loc);
+		}
+
+		else
+		{
+			// 오른쪽으로 카메라 이동
+			FVector loc = CameraActor->GetActorLocation();
+			loc.Y += 20;
+			CameraActor->SetActorLocation(loc);
+		}
+
+		if (MousePosition.Y < ViewportSize.Y / 2)
+		{
+			// 위쪽으로 카메라 이동
+			FVector loc = CameraActor->GetActorLocation();
+			loc.X += 20;
+		
+			CameraActor->SetActorLocation(loc);
+		}
+		else
+		{
+			// 아래쪽으로 카메라 이동
+	
+			FVector loc = CameraActor->GetActorLocation();
+			loc.X -= 20;
+			CameraActor->SetActorLocation(loc);
+		}
+	}
 	
 
 	// PlayerController로부터 카메라 액터를 가져옵니다.
 	//if (APlayerController* PC = Cast<APlayerController>(GetController()))
-	{
-		//ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
-		ACameraActor* CameraActor = Cast<ACameraActor>(PlayerController->GetViewTarget());
+	//{
+	//	//ACameraActor* CameraActor = Cast<ACameraActor>(PC->GetViewTarget());
+	//	ACameraActor* CameraActor = Cast<ACameraActor>(PlayerController->GetViewTarget());
 
-		if (CameraActor == WorldMapCamera)
-		{
-			FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
-			CameraActor->SetActorLocation(NewLocation);
-		}
+	//	if (CameraActor == WorldMapCamera)
+	//	{
+	//		FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
+	//		CameraActor->SetActorLocation(NewLocation);
+	//	}
 
-		// 카메라 액터가 있는 경우 카메라 위치를 변경합니다.
-		if (CameraActor == BossMapCamera)
-		{
-			FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
-			CameraActor->SetActorLocation(NewLocation);
-		}
-	}
+	//	// 카메라 액터가 있는 경우 카메라 위치를 변경합니다.
+	//	if (CameraActor == BossMapCamera)
+	//	{
+	//		FVector NewLocation = CameraActor->GetActorLocation() + CameraMoveDirection * CameraMoveSpeed * DeltaTime;
+	//		CameraActor->SetActorLocation(NewLocation);
+	//	}
+	//}
 }
 
 void AHeroCharacter::LoadGame()
@@ -384,9 +413,14 @@ void AHeroCharacter::ChangeGameMode()
 
 void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-
 	PlayerController->StopMovement();
 
+
+	if (OtherActor == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("OtherActor IS NULLPTR"));
+		return;
+	}
 
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
