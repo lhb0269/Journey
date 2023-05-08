@@ -24,10 +24,9 @@
 
 AHeroCharacter::AHeroCharacter()
 {
-
 	isAttack = false;
 	isDeath = false;
-	
+
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(RootComponent);
 	FollowCamera->bUsePawnControlRotation = true;
@@ -49,7 +48,7 @@ AHeroCharacter::AHeroCharacter()
 
 	hp = 50;
 	Armour = 200;
-	gold=200;
+	gold = 200;
 	fatigue = 0;
 
 	isTown = false;
@@ -59,25 +58,25 @@ AHeroCharacter::AHeroCharacter()
 
 void AHeroCharacter::UseItem(UItem* Item)
 {
-		if(Item)
+	if (Item)
+	{
+		if (Item->OwingInventory != nullptr && Item->OwningShop == nullptr)
 		{
-			if(Item->OwingInventory!=nullptr && Item-> OwningShop == nullptr)
+			Item->Use(this);
+			Item->OnUse(this);
+		}
+		if (Item->OwingInventory == nullptr && Item->OwningShop != nullptr) //사는거
+		{
+			if (gold >= Item->cost)
 			{
-				Item->Use(this);
-				Item->OnUse(this);
-			}
-			if(Item->OwingInventory==nullptr && Item-> OwningShop != nullptr)//사는거
-			{
-				if(gold >= Item->cost)
-				{
-					Inventory->AddItem(Item);
-					shop->RemoveItem(Item);
-					//UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
-					gold-=Item->cost;
-					//Item->OnUse(this);
-				}
+				Inventory->AddItem(Item);
+				shop->RemoveItem(Item);
+				//UE_LOG(LogTemp,Warning,TEXT("%d"),gold);
+				gold -= Item->cost;
+				//Item->OnUse(this);
 			}
 		}
+	}
 }
 
 // void AHeroCharacter::BuyItem(UItem* Item, UInventoryComponent* Inventory)
@@ -164,7 +163,7 @@ void AHeroCharacter::ChangeToTownCamera()
 	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
 	AActor* CameraOwner = FollowCamera->GetOwner();
-	PlayerController->SetViewTargetWithBlend(CameraOwner, 0.5f);	\
+	PlayerController->SetViewTargetWithBlend(CameraOwner, 0.5f);
 
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CameraManager->SetFOV(90);
@@ -178,8 +177,6 @@ void AHeroCharacter::OnMouseWheelClicked()
 void AHeroCharacter::OnMouseWheelReleased()
 {
 	bIsMouseWheelClicked = false;
-
-
 }
 
 void AHeroCharacter::ChangeController(bool isAI)
@@ -237,19 +234,19 @@ void AHeroCharacter::MoveCamera(float DeltaTime)
 			// 위쪽으로 카메라 이동
 			FVector loc = CameraActor->GetActorLocation();
 			loc.X += 20;
-		
+
 			CameraActor->SetActorLocation(loc);
 		}
 		else
 		{
 			// 아래쪽으로 카메라 이동
-	
+
 			FVector loc = CameraActor->GetActorLocation();
 			loc.X -= 20;
 			CameraActor->SetActorLocation(loc);
 		}
 	}
-	
+
 
 	// PlayerController로부터 카메라 액터를 가져옵니다.
 	//if (APlayerController* PC = Cast<APlayerController>(GetController()))
@@ -274,12 +271,10 @@ void AHeroCharacter::MoveCamera(float DeltaTime)
 
 void AHeroCharacter::LoadGame()
 {
-
 }
 
 void AHeroCharacter::SaveGame()
 {
-
 }
 
 void AHeroCharacter::GoToWorldMap()
@@ -329,7 +324,7 @@ void AHeroCharacter::GoToWorldMap()
 	//	UE_LOG(LogTemp, Warning, TEXT("goto pos: %s"), *UGameDataSingleton::GetInstance()->SavedPos.ToString());
 	//}
 	//else
-	
+
 	SetActorRotation(FRotator(0, 0, 0));
 	SetActorLocation(SavedPos);
 
@@ -338,7 +333,6 @@ void AHeroCharacter::GoToWorldMap()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
-	
 
 
 	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
@@ -346,7 +340,7 @@ void AHeroCharacter::GoToWorldMap()
 	//WorldFollowCamera->SetActive(true);
 	//SwitchToWorldFollowCamera();
 	//WorldFollowCamera->SetActive(false);
-	isTown=false;
+	isTown = false;
 }
 
 void AHeroCharacter::GoToWorld()
@@ -408,10 +402,11 @@ void AHeroCharacter::ChangeCamera(bool isWorld)
 
 void AHeroCharacter::ChangeGameMode()
 {
-
 }
 
-void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+                                    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+                                    const FHitResult& SweepResult)
 {
 	PlayerController->StopMovement();
 
@@ -428,7 +423,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		// CellularAutomata �������� 
 		//CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
 
-		AWorldCubeBase *worldCube = Cast<AWorldCubeBase>(OtherActor);
+		AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
 
 		if (worldCube->cubeNumber < 0 || worldCube->cubeNumber > 143)
 		{
@@ -443,7 +438,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			// �ƴϸ� �湮 �ߴٰ� üũ
 
 			//UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
-			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
+			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
+			                   worldCube->GetActorLocation().Z + 60);
 
 			// check town or battle
 			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
@@ -508,24 +504,17 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 					//isTown = true;
 				}
-
-		
 			}
- 			
-
-			
 		}
 	}
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("BossBox1"))
 	{
-
 	}
 
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("BossBox2"))
 	{
-
 		AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
 
 		if (!worldCube->isVisited)
@@ -533,7 +522,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			SavedPos = FVector( worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60 );
+			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
+			                   worldCube->GetActorLocation().Z + 60);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -547,7 +537,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			ChangeToBossBattleCamera();
 			//isTown = true;
 		}
-		
 	}
 
 	// Check if the overlapped actor has a specific tag
@@ -559,7 +548,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
+			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
+			                   worldCube->GetActorLocation().Z + 60);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -581,7 +571,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 			worldCube->isVisited = true;
 
-			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
+			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
+			                   worldCube->GetActorLocation().Z + 60);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -594,12 +585,10 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			//isTown = true;
 		}
 	}
-
 }
 
 void AHeroCharacter::SwitchToFollowCamera()
 {
-
 	// Activate the FollowCamera
 	//WorldFollowCamera->SetActive(false);
 	FollowCamera->SetActive(true);
@@ -610,9 +599,6 @@ void AHeroCharacter::SwitchToWorldFollowCamera()
 	// Activate the WorldFollowCamera
 	FollowCamera->SetActive(false);
 	//WorldFollowCamera->SetActive(true);
-
-
-
 }
 
 
@@ -623,7 +609,7 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("MoveRight", this, &AHeroCharacter::MoveRight);
 	PlayerInputComponent->BindAxis("Look Up", this, &AHeroCharacter::Pitch_Up);
 	PlayerInputComponent->BindAxis("Turn Right", this, &AHeroCharacter::Turn_Right);
-	
+
 	PlayerInputComponent->BindAction(TEXT("Jump"), EInputEvent::IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction(TEXT("Save"), EInputEvent::IE_Pressed, this, &AHeroCharacter::GoToWorldMap);
 	PlayerInputComponent->BindAction(TEXT("RightClick"), IE_Pressed, this, &AHeroCharacter::OnRightClick);
@@ -632,13 +618,11 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction(TEXT("CreateBossWorld"), IE_Pressed, this, &AHeroCharacter::createPortal);
 
 
-
 	PlayerInputComponent->BindAction("MouseWheelUp", IE_Pressed, this, &AHeroCharacter::OnZoomIn);
 	PlayerInputComponent->BindAction("MouseWheelDown", IE_Pressed, this, &AHeroCharacter::OnZoomOut);
-	
+
 	PlayerInputComponent->BindAction("MouseWheelClick", IE_Pressed, this, &AHeroCharacter::OnMouseWheelClicked);
 	PlayerInputComponent->BindAction("MouseWheelClick", IE_Released, this, &AHeroCharacter::OnMouseWheelReleased);
-
 }
 
 void AHeroCharacter::OnZoomIn()
@@ -654,7 +638,7 @@ void AHeroCharacter::OnZoomIn()
 			if (CameraManager == nullptr) return;
 
 			float ZoomDelta = 1 * -3.f;
-			float  MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
+			float MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
 			CameraManager->SetFOV(MyFOV);
 		}
 
@@ -665,13 +649,10 @@ void AHeroCharacter::OnZoomIn()
 			if (CameraManager == nullptr) return;
 
 			float ZoomDelta = 1 * -3.f;
-			float  MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
+			float MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
 			CameraManager->SetFOV(MyFOV);
 		}
 	}
-
-	
-
 }
 
 void AHeroCharacter::Tick(float DeltaTime)
@@ -697,7 +678,7 @@ void AHeroCharacter::OnZoomOut()
 			if (CameraManager == nullptr) return;
 
 			float ZoomDelta = 1 * 3.f;
-			float  MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
+			float MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
 			CameraManager->SetFOV(MyFOV);
 		}
 
@@ -708,7 +689,7 @@ void AHeroCharacter::OnZoomOut()
 			if (CameraManager == nullptr) return;
 
 			float ZoomDelta = 1 * 3.f;
-			float  MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
+			float MyFOV = FMath::Clamp(CameraManager->GetFOVAngle() + ZoomDelta, 10.0f, 170.0f);
 			CameraManager->SetFOV(MyFOV);
 		}
 	}
@@ -721,34 +702,33 @@ void AHeroCharacter::createPortal()
 
 	if (!CellularActor)
 	{
-		CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
-
+		CellularActor = Cast<ACellularAutomata>(
+			UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
 	}
-	int tilemax =  CellularActor->Tilemax * 2;
+	int tilemax = CellularActor->Tilemax * 2;
 
 	if (CellularActor->isPortalExist)
 		return;
 
 	bool IsDuplicate = true;
-
-	while (IsDuplicate)
+	// 게임 월드에 있는 모든 액터를 찾습니다.
+	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
-		int32 NewRandomNumber = FMath::RandRange(1, 143);
+		AActor* Actor = *ActorItr;
 
-		if (UGameDataSingleton::GetInstance()->TileInfos[NewRandomNumber].tileType == 0)
+		// 해당 태그를 가진 액터만 선택합니다.
+		if (Actor->ActorHasTag("TownBox"))
 		{
-			if (UGameDataSingleton::GetInstance()->TileInfos[NewRandomNumber].isTown == false)
+			AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(Actor);
+			if (!worldCube->isTown)
 			{
-				CellularActor->AArray[NewRandomNumber]->isPortal = true;
+				worldCube->isVisited = false;
+				worldCube->isPortal=true;
 				CellularActor->isPortalExist = true;
-				IsDuplicate = false;
 				break;
 			}
 		}
-		
-		
 	}
-	
 }
 
 void AHeroCharacter::BeginPlay()
@@ -771,14 +751,14 @@ void AHeroCharacter::BeginPlay()
 	isInBattle = false;
 
 	maxKeyNum = 0;
-	nowKeyNum  = 0;
+	nowKeyNum = 0;
 
 	// CAMERA
 	// Bttle camera 와 world camera를 확한다.
 	for (TActorIterator<ACameraActor> It(GetWorld()); It; ++It)
 	{
 		ACameraActor* CameraActor = *It;
-	
+
 
 		if (IsValid(CameraActor) && CameraActor->ActorHasTag(FName("BattleCamera")))
 		{
@@ -858,14 +838,16 @@ void AHeroCharacter::OnRightClick()
 		//UE_LOG(LogTemp,Warning,TEXT("rightclick2"));
 		FVector WorldLocation;
 		FVector WorldDirection;
-		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
+		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(
+			ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
 		{
 			//UE_LOG(LogTemp,Warning,TEXT("rightclick3"));
 			FHitResult HitResult;
 			FVector StartLocation = WorldLocation;
 			FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
-			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+			if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation,
+			                                         ECollisionChannel::ECC_Visibility))
 			{
 				//UE_LOG(LogTemp,Warning,TEXT("rightclick4"));
 				FVector TargetLocation = HitResult.Location;
@@ -874,7 +856,6 @@ void AHeroCharacter::OnRightClick()
 					//UE_LOG(LogTemp,Warning,TEXT("rightclick5"));
 					if (!isInBattle || !isTown)
 					{
-
 						UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
 					}
 				}
