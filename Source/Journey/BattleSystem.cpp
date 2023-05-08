@@ -20,9 +20,9 @@ void ABattleSystem::SpawnHeroInWorld(UWorld* World,  FVector SpawnLocation,  FRo
 
         if (Player)
         {
-            SpawnLocation.X -= 200;
-            SpawnLocation.Y -= 500;
-            SpawnLocation.Z += 100;
+            SpawnLocation.X += 200;
+            SpawnLocation.Y -= 750;
+            SpawnLocation.Z += 200;
 
             SpawnedHero = World->SpawnActor<AActor>(Player, SpawnLocation, SpawnRotation);
             Heroes.Add(SpawnedHero);
@@ -38,13 +38,17 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
     
     int spawnNum = enemyPower / 100;
 
+    // 弥措 积己 利篮 5付府
+    if (spawnNum > 5)
+        spawnNum = 5;
+
     if (World)
     {
         for (int i = 0; i < spawnNum; i++)
         {
             if (Monster)
             {
-                SpawnLocation.X += FMath::RandRange(-300, 600);
+                SpawnLocation.X += FMath::RandRange(-200, 450);
                 SpawnLocation.Y += FMath::RandRange(-50, 150);
                 SpawnLocation.Z += 100;
 

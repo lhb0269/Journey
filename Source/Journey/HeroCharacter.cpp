@@ -444,7 +444,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			if (UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber))
 			{
 				UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
-				UGameDataSingleton::GetInstance()->SavedPos = OtherActor->GetActorLocation();
+				UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
 
 				// check town or battle
 				// 0403 일단 무조건 Town 쪽으로 이동하게 설정
@@ -535,7 +535,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			UGameDataSingleton::GetInstance()->SavedPos = FVector( worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 30 );
+			UGameDataSingleton::GetInstance()->SavedPos = FVector( worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60 );
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -561,7 +561,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 30);
+			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -583,7 +583,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 			worldCube->isVisited = true;
 
-			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 30);
+			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
