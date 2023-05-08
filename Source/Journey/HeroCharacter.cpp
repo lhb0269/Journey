@@ -331,7 +331,7 @@ void AHeroCharacter::GoToWorldMap()
 	//else
 	
 	SetActorRotation(FRotator(0, 0, 0));
-	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+	SetActorLocation(SavedPos);
 
 	PlayerController->SetInputMode(FInputModeGameOnly());
 	PlayerController->bShowMouseCursor = true;
@@ -381,7 +381,7 @@ void AHeroCharacter::GoToWorld()
 	}
 
 	SetActorRotation(FRotator(0, 0, 0));
-	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
+	SetActorLocation(SavedPos);
 
 	PlayerController->SetInputMode(FInputModeGameOnly());
 	PlayerController->bShowMouseCursor = true;
@@ -433,85 +433,83 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		if (worldCube->cubeNumber < 0 || worldCube->cubeNumber > 143)
 		{
 			int nowIndex = worldCube->cubeNumber;
-			bool v = UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber);
+			//bool v = UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber);
 		}
 
 		// �湮�ߴ������� üũ
 		if (!worldCube->isVisited)
 		{
-			TArray<FCAStruct> MainTileInfos = UGameDataSingleton::GetInstance()->TileInfos;
+			//TArray<FCAStruct> MainTileInfos = UGameDataSingleton::GetInstance()->TileInfos;
 			// �ƴϸ� �湮 �ߴٰ� üũ
-			if (UGameDataSingleton::GetInstance()->TileInfos.IsValidIndex(worldCube->cubeNumber))
-			{
-				UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
-				UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
 
-				// check town or battle
-				// 0403 일단 무조건 Town 쪽으로 이동하게 설정
-				if (worldCube->isTown)
+			//UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
+			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
+
+			// check town or battle
+			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
+			if (worldCube->isTown)
+			{
+				//ChangeController(false);
+				worldCube->isVisited = true;
+				SetActorRotation(FRotator(0, 0, 0));
+				SetActorLocation(worldCube->Location);
+				//SwitchToFollowCamera();
+				PlayerController->SetInputMode(FInputModeGameOnly());
+				PlayerController->bShowMouseCursor = false;
+				bUseControllerRotationPitch = true;
+				bUseControllerRotationYaw = true;
+				ChangeToTownCamera();
+				isTown = true;
+			}
+			else
+			{
+				fatigue += 1;
+
+				//ChangeController(true);
+				// 해당 타일이 포털일때
+				if (worldCube->isPortal)
 				{
-					//ChangeController(false);
 					worldCube->isVisited = true;
+
 					SetActorRotation(FRotator(0, 0, 0));
-					SetActorLocation(worldCube->Location);
-					//SwitchToFollowCamera();
-					PlayerController->SetInputMode(FInputModeGameOnly());
-					PlayerController->bShowMouseCursor = false;
-					bUseControllerRotationPitch = true;
-					bUseControllerRotationYaw = true;
-					ChangeToTownCamera();
-					isTown = true;
+					SetActorLocation(UGameDataSingleton::GetInstance()->BossWorldSpawnPos);
+					//UGameDataSingleton::GetInstance()->isBossWorld = true;
+					ChangeToBossWorldMapCamera();
 				}
 				else
 				{
-					fatigue += 1;
-
-					//ChangeController(true);
-					// 해당 타일이 포털일때
-					if (worldCube->isPortal)
+					if (worldCube->isKey)
 					{
-						worldCube->isVisited = true;
-
-						SetActorRotation(FRotator(0, 0, 0));
-						SetActorLocation(UGameDataSingleton::GetInstance()->BossWorldSpawnPos);
-						UGameDataSingleton::GetInstance()->isBossWorld = true;
-						ChangeToBossWorldMapCamera();
+						UGameDataSingleton::GetInstance()->NowKeyNum += 1;
+						maxKeyNum = UGameDataSingleton::GetInstance()->TotalKeyNum;
+						nowKeyNum += 1;
 					}
-					else
+					worldCube->isVisited = true;
+					worldCube->isKey = false;
+					SetActorRotation(FRotator(0, 0, 0));
+					SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
+					PlayerController->bEnableMouseOverEvents = true;
+					PlayerController->bShowMouseCursor = true;
+					bUseControllerRotationPitch = false;
+					bUseControllerRotationYaw = false;
+
+					// 전투맵 세팅
+					UWorld* World = GetWorld();
+					ABattleSystem* battleSystem = nullptr;
+					for (TActorIterator<ABattleSystem> It(World); It; ++It)
 					{
-						if (worldCube->isKey)
-						{
-							UGameDataSingleton::GetInstance()->NowKeyNum += 1;
-							maxKeyNum = UGameDataSingleton::GetInstance()->TotalKeyNum;
-							nowKeyNum += 1;
-						}
-						worldCube->isVisited = true;
-						worldCube->isKey = false;
-						SetActorRotation(FRotator(0, 0, 0));
-						SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
-						PlayerController->bEnableMouseOverEvents = true;
-						PlayerController->bShowMouseCursor = true;
-						bUseControllerRotationPitch = false;
-						bUseControllerRotationYaw = false;
-
-						// 전투맵 세팅
-						UWorld* World = GetWorld();
-						ABattleSystem* battleSystem = nullptr;
-						for (TActorIterator<ABattleSystem> It(World); It; ++It)
-						{
-							if (!(*It)->isBossSystem)
-								battleSystem = *It;
-						}
-						battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel);
-
-						ChangeToBattleCamera();
-						//PlayerController->SetInputMode(FInputModeGameOnly());
-
-						//isTown = true;
+						if (!(*It)->isBossSystem)
+							battleSystem = *It;
 					}
+					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel);
 
+					ChangeToBattleCamera();
+					//PlayerController->SetInputMode(FInputModeGameOnly());
 
+					//isTown = true;
 				}
+
+		
 			}
  			
 
@@ -535,7 +533,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			UGameDataSingleton::GetInstance()->SavedPos = FVector( worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60 );
+			SavedPos = FVector( worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60 );
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -561,7 +559,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			worldCube->isVisited = true;
 
 
-			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
+			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -583,7 +581,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		{
 			worldCube->isVisited = true;
 
-			UGameDataSingleton::GetInstance()->SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
+			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y, worldCube->GetActorLocation().Z + 60);
 
 			SetActorRotation(FRotator(0, 0, 0));
 			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
@@ -874,7 +872,11 @@ void AHeroCharacter::OnRightClick()
 				if (PlayerController)
 				{
 					//UE_LOG(LogTemp,Warning,TEXT("rightclick5"));
-					UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
+					if (!isInBattle || !isTown)
+					{
+
+						UAIBlueprintHelperLibrary::SimpleMoveToLocation(PlayerController, TargetLocation);
+					}
 				}
 			}
 		}

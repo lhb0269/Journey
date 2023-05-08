@@ -39,8 +39,8 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
     int spawnNum = enemyPower / 100;
 
     // 弥措 积己 利篮 5付府
-    if (spawnNum > 5)
-        spawnNum = 5;
+    if (spawnNum > 3)
+        spawnNum = 3;
 
     if (World)
     {

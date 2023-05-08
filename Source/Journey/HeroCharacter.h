@@ -81,6 +81,7 @@ public:
 	AHeroAIController* AIController;
 	// Battle 관련 정보
 
+	FVector SavedPos;
 
 	// CAMERA
 	// worldmap camera 와 battlemap camera
