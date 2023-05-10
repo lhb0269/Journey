@@ -26,7 +26,9 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 void AProceduralNoiseGenerator::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	XSize = FMath::RandRange(75,150);
+	YSize = FMath::RandRange(75,150);
 	CreateVertices();
 	CreateTriangles();
 
