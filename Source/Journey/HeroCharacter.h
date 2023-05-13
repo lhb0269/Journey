@@ -47,6 +47,8 @@ public:
 	int nowKeyNum;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero")
 	int maxKeyNum;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero")
+	int SpecialBuilingcode;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float fatigue;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AIBattle")
