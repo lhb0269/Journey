@@ -37,19 +37,16 @@ public:
     int64 Seed;
     TArray<TArray<float>> heightMap;
 public:
-    // Called when the game starts or when spawned
+
     virtual void BeginPlay() override;
 
-    // Called every frame
     virtual void Tick(float DeltaTime) override;
 
-    // Functions to generate Perlin Noise
     float Noise(int x, int y);
     float SmoothNoise(int x, int y);
     float InterpolatedNoise(float x, float y);
     float Interpolate(float a, float b, float x);
 
-    // Functions to generate the terrain and towns
     void GenerateTerrain();
     void GenerateTowns();
 };

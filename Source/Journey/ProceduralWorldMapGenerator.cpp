@@ -3,17 +3,14 @@
 
 #include "ProceduralWorldMapGenerator.h"
 
-// Sets default values
+
 AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+ 		PrimaryActorTick.bCanEverTick = true;
 
 }
 
 
-
-// Called when the game starts or when spawned
 void AProceduralWorldMapGenerator::BeginPlay()
 {
 	Super::BeginPlay();
@@ -25,7 +22,6 @@ void AProceduralWorldMapGenerator::BeginPlay()
 	
 }
 
-// Called every frame
 void AProceduralWorldMapGenerator::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -79,7 +75,7 @@ float AProceduralWorldMapGenerator::Interpolate(float a, float b, float x)
 
 void AProceduralWorldMapGenerator::GenerateTerrain()
 {
-    float scale = 0.7f; // Noise scale
+    float scale = 0.7f; 
 
     heightMap.SetNum(width);
     for (int i = 0; i < width; i++)
@@ -97,15 +93,14 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
         for (int j = 0; j < height; j++)
         {
             float heightValue = heightMap[i][j];
-            // You can map the height value to a suitable range for your game
             FVector location(i * 100, j * 100, heightValue * heightVolume);
 
-            // If heightValue is less than sea level, it's sea
+
             if (heightValue < seaLevel)
             {
                 GetWorld()->SpawnActor<AActor>(Sea, location, FRotator::ZeroRotator);
             }
-            else // Otherwise, it's land
+            else 
             {
                 GetWorld()->SpawnActor<AActor>(Land, location, FRotator::ZeroRotator);
             }
