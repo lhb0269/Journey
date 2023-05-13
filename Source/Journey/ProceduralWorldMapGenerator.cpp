@@ -19,6 +19,7 @@ void AProceduralWorldMapGenerator::BeginPlay()
 
     GenerateTerrain();
     GenerateTowns();
+    GenerateMonsters();
 	
 }
 
@@ -75,7 +76,7 @@ float AProceduralWorldMapGenerator::Interpolate(float a, float b, float x)
 
 void AProceduralWorldMapGenerator::GenerateTerrain()
 {
-    float scale = 0.7f; 
+    float scale = 0.5f; 
 
     heightMap.SetNum(width);
     for (int i = 0; i < width; i++)
@@ -98,7 +99,7 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
 
             if (heightValue < seaLevel)
             {
-                GetWorld()->SpawnActor<AActor>(Sea, location, FRotator::ZeroRotator);
+               // GetWorld()->SpawnActor<AActor>(Sea, location, FRotator::ZeroRotator);
             }
             else 
             {
@@ -127,5 +128,31 @@ void AProceduralWorldMapGenerator::GenerateTowns()
         }
     }
   
+}
+
+void AProceduralWorldMapGenerator::GenerateMonsters()
+{
+    for (int i = 1; i < width - 1; i++)
+    {
+        for (int j = 1; j < height - 1; j++)
+        {
+            float heightValue = heightMap[i][j];
+            if (heightValue >= seaLevel)
+            {
+                if (FMath::FRand() < monsterFrequency)
+                {
+                    FVector location(i * 100, j * 100, heightValue * heightVolume + 80);
+                    AWorldCubeBase *wc = GetWorld()->SpawnActor<AWorldCubeBase>(GolemBase, location, FRotator::ZeroRotator);
+                    wc->monsterLevel = 1;
+                    wc->monsterType = 1;
+                    wc->monsterPower = 1000;
+                    wc->isKey = false;
+                    wc->isTown = false;
+                    wc->isVisited = false;
+                }
+
+            }
+        }
+    }
 }
 

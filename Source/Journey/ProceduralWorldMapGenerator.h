@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WorldCubeBase.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralWorldMapGenerator.generated.h"
 
@@ -23,6 +24,9 @@ public:
     TSubclassOf<class AActor> Town;
 
     UPROPERTY(EditAnywhere)
+    TSubclassOf<class AWorldCubeBase> GolemBase;
+
+    UPROPERTY(EditAnywhere)
     int width = 50;
     UPROPERTY(EditAnywhere)
     int height = 50;
@@ -30,6 +34,8 @@ public:
     float seaLevel = 0.02f;
     UPROPERTY(EditAnywhere)
     float townFrequency = 0.01f;
+    UPROPERTY(EditAnywhere)
+    float monsterFrequency = 0.01f;
     UPROPERTY(EditAnywhere)
     float heightVolume = 100;
 
@@ -49,4 +55,5 @@ public:
 
     void GenerateTerrain();
     void GenerateTowns();
+    void GenerateMonsters();
 };
