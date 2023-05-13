@@ -75,6 +75,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
 
+	
 	// CONTROLLER 
 	UPROPERTY()
 	APlayerController* PlayerController;
@@ -103,7 +104,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	ACameraActor* PlayerCamera;
-
+	
 	float DefaultFOV;
 
 
@@ -136,6 +137,8 @@ public:
 	ACellularAutomata* CellularActor;
 	AProceduralNoiseGenerator* ProceduralActor;
 
+	vector<FString>townname;
+	int32 townnamecnt;
 	void LoadGame();
 	void SaveGame();
 
