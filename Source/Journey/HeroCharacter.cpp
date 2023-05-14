@@ -3,6 +3,7 @@
 
 #include "HeroCharacter.h"
 #include "Engine/World.h"
+
 #include "NavigationSystem.h"
 #include "Journey/InventoryComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -17,6 +18,7 @@
 #include "GameDataSingleton.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
+#include "ProceduralWorldMapGenerator.h"
 #include "BattleSystem.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -386,8 +388,6 @@ void AHeroCharacter::GoToWorld()
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
 {
-	//CellularActor = Cast<ACellularAutomata>(UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
-
 	//if (isWorld)
 	//{
 	//	WorldFollowCamera->SetActive(true);
@@ -663,6 +663,13 @@ void AHeroCharacter::Tick(float DeltaTime)
 	{
 		MoveCamera(DeltaTime);
 	}
+
+	if (PlayerController->GetViewTarget() == WorldMapCamera)
+	{
+		FVector loc = GetActorLocation();
+		WorldMapCamera->SetActorLocation(FVector(loc.X - 400, loc.Y, loc.Z + 800));
+	}
+
 }
 
 
@@ -791,6 +798,10 @@ void AHeroCharacter::BeginPlay()
 
 	// 시작시 월드맵 카메라로 전환 
 	ChangeToWorldMapCamera();
+
+	// 위치
+	AProceduralWorldMapGenerator* generator = Cast<AProceduralWorldMapGenerator>(UGameplayStatics::GetActorOfClass(GetWorld(), AProceduralWorldMapGenerator::StaticClass()));
+	SetActorLocation(generator->playerSpawnPos);
 }
 
 void AHeroCharacter::OnLeftClick()

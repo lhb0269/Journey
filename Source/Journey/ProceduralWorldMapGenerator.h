@@ -7,6 +7,23 @@
 #include "GameFramework/Actor.h"
 #include "ProceduralWorldMapGenerator.generated.h"
 
+
+USTRUCT()
+// CellularAutomata로 생성한 타일 정보를 저장합니다.
+struct FWTile
+{
+    GENERATED_BODY()
+public:
+    UPROPERTY()
+        float heightVal = -1;
+
+
+    // tileType
+    // 0 = grass , 1 = desrt, 2 = snow, 3 = mountain
+    UPROPERTY()
+        int32 tileType = -1;
+};
+
 UCLASS()
 class JOURNEY_API AProceduralWorldMapGenerator : public AActor
 {
@@ -17,14 +34,26 @@ public:
 	AProceduralWorldMapGenerator();
 
     UPROPERTY(EditAnywhere)
-    TSubclassOf<class AActor> Land;
+    TSubclassOf<class AActor> GrassLand;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AActor> DesertLand;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AActor> MountainLand;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AActor> SnowLand;
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AActor> Sea;
     UPROPERTY(EditAnywhere)
-    TSubclassOf<class AActor> Town;
+    TSubclassOf<class AWorldCubeBase> SnowTown;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AWorldCubeBase> DesertTown;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AWorldCubeBase> GrassTown;
 
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AWorldCubeBase> GolemBase;
+
+    TArray<FVector>MapPos;
 
     UPROPERTY(EditAnywhere)
     int width = 50;
@@ -35,13 +64,15 @@ public:
     UPROPERTY(EditAnywhere)
     float townFrequency = 0.01f;
     UPROPERTY(EditAnywhere)
-    float monsterFrequency = 0.01f;
+    float monsterFrequency = 0.1f;
     UPROPERTY(EditAnywhere)
     float heightVolume = 100;
 
+    bool isPlayerMove;
+    FVector playerSpawnPos;
 
     int64 Seed;
-    TArray<TArray<float>> heightMap;
+    TArray<TArray<FWTile>> heightMap;
 public:
 
     virtual void BeginPlay() override;
