@@ -18,7 +18,6 @@
 #include "GameDataSingleton.h"
 #include "Items/Item.h"
 #include "CellularAutomata.h"
-#include "ProceduralWorldMapGenerator.h"
 #include "BattleSystem.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Kismet/GameplayStatics.h"
@@ -748,6 +747,8 @@ void AHeroCharacter::BeginPlay()
 
 	AIController = Cast<AHeroAIController>(GetController());
 
+	
+	
 	//AIController->UnPossess();
 	PlayerController->Possess(this);
 
@@ -755,10 +756,13 @@ void AHeroCharacter::BeginPlay()
 
 	isAttack = false;
 	isDeath = false;
+	landClick = false;
+	oceanClick = false;
 	isInBattle = false;
 
 	maxKeyNum = 0;
 	nowKeyNum = 0;
+
 
 	// CAMERA
 	// Bttle camera 와 world camera를 확한다.
@@ -799,45 +803,73 @@ void AHeroCharacter::BeginPlay()
 	// 시작시 월드맵 카메라로 전환 
 	ChangeToWorldMapCamera();
 
-	// 위치
-	AProceduralWorldMapGenerator* generator = Cast<AProceduralWorldMapGenerator>(UGameplayStatics::GetActorOfClass(GetWorld(), AProceduralWorldMapGenerator::StaticClass()));
-	SetActorLocation(generator->playerSpawnPos);
+
+	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		AActor* Actor = *ActorItr;
+		// 해당 태그를 가진 액터만 선택합니다.
+		if (Actor->ActorHasTag("TownBox"))
+		{
+			SetActorLocation(Actor->GetActorLocation());
+			break;
+		}
+	}
+
+	
 }
 
 void AHeroCharacter::OnLeftClick()
 {
-	//FVector2D ScreenPosition;
-	//if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
-	//{
-	//	FVector WorldLocation;
-	//	FVector WorldDirection;
-	//	if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
-	//	{
-	//		FHitResult HitResult;
-	//		FVector StartLocation = WorldLocation;
-	//		FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
+	if (!isInBattle)
+	{
+		FVector2D ScreenPosition;
+		if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetMousePosition(ScreenPosition.X, ScreenPosition.Y))
+		{
+			FVector WorldLocation;
+			FVector WorldDirection;
+			if (UGameplayStatics::GetPlayerController(GetWorld(), 0)->DeprojectScreenPositionToWorld(ScreenPosition.X, ScreenPosition.Y, WorldLocation, WorldDirection))
+			{
+				FHitResult HitResult;
+				FVector StartLocation = WorldLocation;
+				FVector EndLocation = StartLocation + WorldDirection * 10000.0f; // Adjust the distance as needed
 
-	//		if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
-	//		{
+				if (GetWorld()->LineTraceSingleByChannel(HitResult, StartLocation, EndLocation, ECollisionChannel::ECC_Visibility))
+				{
 
-	//			AActor* HitActor = HitResult.GetActor();
+					AActor* HitActor = HitResult.GetActor();
+					UE_LOG(LogTemp, Warning, TEXT("object name %s"), *HitActor->GetActorNameOrLabel());
 
-	//			AWorldCubeBase* WCube = dynamic_cast<AWorldCubeBase*>(HitActor);
+					AWorldCubeBase* WCube = dynamic_cast<AWorldCubeBase*>(HitActor);
 
-	//			// 캐스팅 결과 확인하기
-	//			if (WCube != nullptr)
-	//			{
-	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Power %d"), WCube->monsterPower);
-	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Level %d"), WCube->monsterLevel);
-	//				UE_LOG(LogTemp, Warning, TEXT("MONSTER Type %d"), WCube->monsterType);
-	//			}
-	//			else
-	//			{
-	//				
-	//			}
-	//		}
-	//	}
-	//}
+					if (HitActor->ActorHasTag("Ocean"))
+					{
+						LandOceanPos = FVector(HitResult.Location.X, HitResult.Location.Y, HitResult.Location.Z + 100);
+						oceanClick = true;
+
+					}
+
+					if (HitActor->ActorHasTag("Land"))
+					{
+						LandOceanPos = FVector(HitResult.Location.X, HitResult.Location.Y, HitResult.Location.Z + 100);
+						landClick = true;
+					}
+
+					// 캐스팅 결과 확인하기
+					if (WCube != nullptr)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("MONSTER Power %d"), WCube->monsterPower);
+						UE_LOG(LogTemp, Warning, TEXT("MONSTER Level %d"), WCube->monsterLevel);
+						UE_LOG(LogTemp, Warning, TEXT("MONSTER Type %d"), WCube->monsterType);
+					}
+					else
+					{
+
+					}
+				}
+			}
+		}
+	}
+	
 }
 
 void AHeroCharacter::OnRightClick()

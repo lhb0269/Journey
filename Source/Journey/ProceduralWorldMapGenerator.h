@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "WorldCubeBase.h"
 #include "GameFramework/Actor.h"
+#include "WorldCubeBase.h"
 #include "ProceduralWorldMapGenerator.generated.h"
 
 

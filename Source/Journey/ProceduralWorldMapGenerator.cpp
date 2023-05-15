@@ -1,9 +1,9 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GameFramework/PlayerController.h"
-#include "HeroCharacter.h"
 #include "ProceduralWorldMapGenerator.h"
+#include "GameDataSingleton.h"
+#include "GameFramework/PlayerController.h"
 
 
 AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
@@ -191,7 +191,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         if (heightMap[i][j].tileType == 0 && GrassCount < 4)
                         {
                             AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassTown, location, FRotator::ZeroRotator);
-                            wc->Location = MapPos[4 + GrassCount];
+                            wc->Location = MapPos[3 + GrassCount];
                             wc->isVisited = false;
                             wc->isTown = true;
                             GrassCount += 1;
@@ -200,7 +200,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         if (heightMap[i][j].tileType == 1 && DesertCount < 4)
                         {
                             AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertTown, location, FRotator::ZeroRotator);
-                            wc->Location = MapPos[8 + GrassCount];
+                            wc->Location = MapPos[7 + GrassCount];
                             wc->isVisited = false;
                             wc->isTown = true;
                             DesertCount += 1;
@@ -227,7 +227,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
             }
         }
     }
-  
+    
 }
 
 void AProceduralWorldMapGenerator::GenerateMonsters()

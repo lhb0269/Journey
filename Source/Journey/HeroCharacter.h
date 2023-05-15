@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "BasicCharacter.h"
 #include "InventoryComponent.h"
-#include"ShopComponent.h"
+#include "ShopComponent.h"
 #include "Engine/DataTable.h"
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
@@ -104,6 +104,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	ACameraActor* PlayerCamera;
 
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	FVector LandOceanPos;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	bool landClick;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	bool oceanClick;
+
 	float DefaultFOV;
 
 
@@ -144,6 +153,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void GoToWorld();
+
+
+	
 
 	void ChangeCamera(bool isWorld);
 
