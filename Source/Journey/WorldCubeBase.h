@@ -54,4 +54,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isPortal;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FString townname;
 };
