@@ -110,7 +110,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		height.push_back(width);
 		width.clear();
 	}
-	//Check Forest
+	//Check Forest 1st
 	int32 tilecount = 0;
 	for (int num = 0; num < Tilemax; ++num) {
 		for (int i = 0; i < XSize; ++i) {
@@ -141,7 +141,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 			}
 		}
 	}
-	//Check Village
+	//Check Village 2nd
 	for (int i = 0; i < XSize; ++i) {
 		for (int j = 0; j < YSize; ++j) {
 			int32 count = 0;
@@ -159,42 +159,79 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				}
 			}
 			if (count >= 33) {
-				for (int k = 1; k <= 4; ++k) {
-					height[i - k][j - k] = 4;
-					height[i - k][j] = 4;
-					height[i - k][j + k] = 4;
-					height[i][j - k] = 4;
-					height[i][j + k] = 4;
-					height[i + k][j - k] = 4;
-					height[i + k][j] = 4;
-					height[i + k][j + k] = 4;
+				if(i<XSize/2 && j<YSize/2)
+				{
+					height[i][j] = 6;
+					for (int k = 1; k <= 8; ++k)
+					{
+						if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+							height[i - k][j - k] = 4;
+							height[i - k][j] = 4;
+							height[i - k][j + k] = 4;
+							height[i][j - k] = 4;
+							height[i][j + k] = 4;
+							height[i + k][j - k] = 4;
+							height[i + k][j] = 4;
+							height[i + k][j + k] = 4;
+						}
+					}
 				}
-				height[i][j] = 3;
+				else if(i>=XSize/2 && j<YSize/2)
+				{
+					height[i][j] = 5;
+					for (int k = 1; k <= 8; ++k)
+					{
+						if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+							height[i - k][j - k] = 4;
+							height[i - k][j] = 4;
+							height[i - k][j + k] = 4;
+							height[i][j - k] = 4;
+							height[i][j + k] = 4;
+							height[i + k][j - k] = 4;
+							height[i + k][j] = 4;
+							height[i + k][j + k] = 4;
+						}
+					}
+				}
+				else if(j>=YSize/2)
+				{
+					height[i][j] = 3;
+					for (int k = 1; k <= 4; ++k) {
+						height[i - k][j - k] = 4;
+						height[i - k][j] = 4;
+						height[i - k][j + k] = 4;
+						height[i][j - k] = 4;
+						height[i][j + k] = 4;
+						height[i + k][j - k] = 4;
+						height[i + k][j] = 4;
+						height[i + k][j + k] = 4;
+					}
+				}
 			}
 		}
 	}
-	while(!IsMotel)
-	{
-		int32 x = FMath::RandRange(12,37);
-		int32 y = FMath::RandRange(12,37);
-		if(height[x][y] == 3)
-		{
-			height[x][y] = 5;
-			IsMotel = true;
-
-		}
-	}
-	while(!IsShop)
-	{
-		int32 x = FMath::RandRange(12,37);
-		int32 y = FMath::RandRange(12,37);
-		if(height[x][y] == 3)
-		{
-			height[x][y] = 6;
-			IsShop = true;
-
-		}
-	}
+	// while(!IsMotel)
+	// {
+	// 	int32 x = FMath::RandRange(12,37);
+	// 	int32 y = FMath::RandRange(12,37);
+	// 	if(height[x][y] == 3)
+	// 	{
+	// 		height[x][y] = 5;
+	// 		IsMotel = true;
+	//
+	// 	}
+	// }
+	// while(!IsShop)
+	// {
+	// 	int32 x = FMath::RandRange(12,37);
+	// 	int32 y = FMath::RandRange(12,37);
+	// 	if(height[x][y] == 3)
+	// 	{
+	// 		height[x][y] = 6;
+	// 		IsShop = true;
+	//
+	// 	}
+	// }
 	//
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		int32 cnt = 0;
