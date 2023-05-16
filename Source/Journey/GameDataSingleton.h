@@ -40,6 +40,8 @@ public:
     FVector BossBattleSpawnPos;
     FVector BossWorldSpawnPos;
 
+    FVector playerSpawnPos;
+
 private:
     UGameDataSingleton();
 

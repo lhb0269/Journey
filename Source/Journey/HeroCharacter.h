@@ -105,6 +105,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	ACameraActor* PlayerCamera;
 	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		FVector LandOceanPos;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		bool landClick;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+		bool oceanClick;
+
 	float DefaultFOV;
 
 
