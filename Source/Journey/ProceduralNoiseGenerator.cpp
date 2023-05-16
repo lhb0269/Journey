@@ -16,8 +16,9 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	ProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>("ProceduralMesh");
+	ProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("ProceduralMesh"));
 	ProceduralMesh->SetupAttachment(GetRootComponent());
+	
 	IsMotel = false;
 	IsShop = false;
 }

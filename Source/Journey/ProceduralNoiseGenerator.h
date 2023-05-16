@@ -4,6 +4,7 @@
 
 #include<vector>
 #include "CoreMinimal.h"
+#include "NiagaraComponent.h"
 #include "GameFramework/Actor.h"
 #include "ProceduralNoiseGenerator.generated.h"
 
@@ -44,9 +45,7 @@ public:
 	TSubclassOf<class AActor>Tower;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Fontain;
-
 	UPROPERTY(EditAnywhere)
-    	
 	TSubclassOf<class AActor>NPC_Child;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>NPC_Guard;
