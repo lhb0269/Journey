@@ -21,13 +21,16 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 	
 	IsMotel = false;
 	IsShop = false;
+
+	
 }
 
 // Called when the game starts or when spawned
 void AProceduralNoiseGenerator::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	XSize = FMath::RandRange(100,125);
+	YSize = FMath::RandRange(100,125);
 	CreateVertices();
 	CreateTriangles();
 
