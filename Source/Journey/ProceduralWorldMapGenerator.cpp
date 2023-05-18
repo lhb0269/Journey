@@ -11,18 +11,15 @@ AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
  	PrimaryActorTick.bCanEverTick = true;
     isPlayerMove = false;
 
-    MapPos.Add(FVector(-67120.000000, -29210.000000, 540.000000));
-    MapPos.Add(FVector(-67120.000000, -62930.000000, 540.000000));
-    MapPos.Add(FVector(-67120.000000, -94320.000000, 540.000000));
-    MapPos.Add(FVector(-67120.000000, -136950.000000, 540.000000));
-    MapPos.Add(FVector(-1410.000000, -30100.000000, 540.000000));
-    MapPos.Add(FVector(-1410.000000, -61840.000000, 540.000000));
-    MapPos.Add(FVector(-560.000000, -93480.000000, 540.000000));
-    MapPos.Add(FVector(-250.000000, -137220.000000, 540.000000));
-    MapPos.Add(FVector(35280.000000, -30100.000000, 540.000000));
-    MapPos.Add(FVector(35280.000000, -62120.000000, 540.000000));
-    MapPos.Add(FVector(36250.000000, -93420.000000, 540.000000));
-    MapPos.Add(FVector(35830.000000, -137090.000000, 540.000000));
+    MapPos.Add(FVector(-60200.0, -46870.0, 540.000000));
+    MapPos.Add(FVector(-60200.0, -79570.0, 540.000000));
+    MapPos.Add(FVector(-60200.0, -110445.0, 540.000000));
+    MapPos.Add(FVector(6205.0, -110445.0, 540.000000));
+    MapPos.Add(FVector(5430.0, -79565.0, 540.000000));
+    MapPos.Add(FVector(3320.0, -46950.0, 540.000000));
+    MapPos.Add(FVector(40550.0, -44885.0, 540.000000));
+    MapPos.Add(FVector(40550.0, -79765.0, 540.000000));
+    MapPos.Add(FVector(40550.0, -110770.0, 540.000000));
 }
 
 
@@ -187,7 +184,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         else
                             location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
 
-                        // ´« ÃÊ¿ø »ç¸·
+                        // ï¿½ï¿½ ï¿½Ê¿ï¿½ ï¿½ç¸·
                         if (heightMap[i][j].tileType == 0 && GrassCount < 4)
                         {
                             AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassTown, location, FRotator::ZeroRotator);
