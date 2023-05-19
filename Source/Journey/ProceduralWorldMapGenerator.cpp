@@ -29,9 +29,9 @@ void AProceduralWorldMapGenerator::BeginPlay()
 
     Seed = FDateTime::Now().GetTicks();
 
-    GenerateTerrain();
+  /*  GenerateTerrain();
     GenerateTowns();
-    GenerateMonsters();
+    GenerateMonsters();*/
 	
 
 }
@@ -185,7 +185,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
 
                         // �� �ʿ� �縷
-                        if (heightMap[i][j].tileType == 0 && GrassCount < 4)
+                        if (heightMap[i][j].tileType == 0 && GrassCount < 3)
                         {
                             AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassTown, location, FRotator::ZeroRotator);
                             wc->Location = MapPos[3 + GrassCount];
@@ -194,10 +194,10 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             GrassCount += 1;
 
                         }
-                        if (heightMap[i][j].tileType == 1 && DesertCount < 4)
+                        if (heightMap[i][j].tileType == 1 && DesertCount < 3)
                         {
                             AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertTown, location, FRotator::ZeroRotator);
-                            wc->Location = MapPos[7 + GrassCount];
+                            wc->Location = MapPos[6 + DesertCount];
                             wc->isVisited = false;
                             wc->isTown = true;
                             DesertCount += 1;
@@ -208,10 +208,10 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                                 isPlayerMove = true;
                             }
                         }
-                        if (heightMap[i][j].tileType == 2 && SnowCount < 4)
+                        if (heightMap[i][j].tileType == 2 && SnowCount < 3)
                         {
                             AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowTown, location, FRotator::ZeroRotator);
-                            wc->Location = MapPos[GrassCount];
+                            wc->Location = MapPos[SnowCount];
                             wc->isVisited = false;
                             wc->isTown = true;
                             SnowCount += 1;

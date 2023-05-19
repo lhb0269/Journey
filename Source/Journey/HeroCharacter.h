@@ -115,6 +115,8 @@ public:
 
 	float DefaultFOV;
 
+	bool isCutsceneEnd;
+
 
 	// Camera 전환 함수
 	void ChangeToWorldMapCamera();
@@ -135,8 +137,7 @@ public:
 
 	void ChangeController(bool isAI);
 
-
-	
+	void cutSceneEnd();
 
     int32 mapcode =0;//0 world 1 town 2 battle
 	float TurnRate =50.f;
@@ -183,6 +184,9 @@ protected:
 	void OnZoomIn();
 	void OnZoomOut();
 	void OnMouseWheelButtonDown();
+
+	// 컷씬 시작 부분
+
 	
 	void createPortal();
 

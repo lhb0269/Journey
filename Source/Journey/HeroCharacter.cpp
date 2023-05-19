@@ -245,6 +245,22 @@ void AHeroCharacter::ChangeController(bool isAI)
 	}
 }
 
+void AHeroCharacter::cutSceneEnd()
+{
+	isCutsceneEnd = true;
+
+	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		AActor* Actor = *ActorItr;
+		// 해당 태그를 가진 액터만 선택합니다.
+		if (Actor->ActorHasTag("TownBox"))
+		{
+			SetActorLocation(Actor->GetActorLocation());
+			break;
+		}
+	}
+}
+
 void AHeroCharacter::MoveCamera(float DeltaTime)
 {
 	float mouseX, mouseY;
@@ -705,18 +721,19 @@ void AHeroCharacter::OnZoomIn()
 void AHeroCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (bIsMouseWheelClicked)
+	if (isCutsceneEnd)
 	{
-		MoveCamera(DeltaTime);
-	}
+		if (bIsMouseWheelClicked)
+		{
+			MoveCamera(DeltaTime);
+		}
 
-	if (PlayerController->GetViewTarget() == WorldMapCamera)
-	{
-		FVector loc = GetActorLocation();
-		WorldMapCamera->SetActorLocation(FVector(loc.X - 400, loc.Y, loc.Z + 800));
+		if (PlayerController->GetViewTarget() == WorldMapCamera)
+		{
+			FVector loc = GetActorLocation();
+			WorldMapCamera->SetActorLocation(FVector(loc.X - 400, loc.Y, loc.Z + 800));
+		}
 	}
-
 }
 
 
@@ -845,24 +862,16 @@ void AHeroCharacter::BeginPlay()
 		}
 	}
 
-	// FollowCamera가 있는 액터를 가져옵니다.
-	AActor* OwnerActor = FollowCamera->GetOwner();
-
-	// 시작시 월드맵 카메라로 전환 
+	//// 시작시 월드맵 카메라로 전환 
 	ChangeToWorldMapCamera();
 
 
-	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		AActor* Actor = *ActorItr;
-		// 해당 태그를 가진 액터만 선택합니다.
-		if (Actor->ActorHasTag("TownBox"))
-		{
-			SetActorLocation(Actor->GetActorLocation());
-			break;
-		}
-	}
 
+
+	isCutsceneEnd = false;
+
+	FTimerHandle CutsceneTimerHandle;
+	GetWorldTimerManager().SetTimer(CutsceneTimerHandle, this, &AHeroCharacter::cutSceneEnd, 16.0f, false);
 	
 }
 

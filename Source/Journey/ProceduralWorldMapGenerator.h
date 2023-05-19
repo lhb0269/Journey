@@ -55,6 +55,10 @@ public:
 
     TArray<FVector>MapPos;
 
+    FTimerHandle SpawnTimerHandle;
+
+
+
     UPROPERTY(EditAnywhere)
     int width = 50;
     UPROPERTY(EditAnywhere)
@@ -84,7 +88,10 @@ public:
     float InterpolatedNoise(float x, float y);
     float Interpolate(float a, float b, float x);
 
+    UFUNCTION(BlueprintCallable, Category = "Create")
     void GenerateTerrain();
+    UFUNCTION(BlueprintCallable, Category = "Create")
     void GenerateTowns();
+    UFUNCTION(BlueprintCallable, Category = "Create")
     void GenerateMonsters();
 };
