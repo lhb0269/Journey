@@ -34,6 +34,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 Tilemax = 5;
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor> castle;
+	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor> Tree;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor>House;
