@@ -146,7 +146,7 @@ void AHeroCharacter::ChangeToWorldMapCamera()
 {
 	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
-	PlayerController->SetViewTargetWithBlend(WorldMapCamera, 0.5f);
+	PlayerController->SetViewTargetWithBlend(WorldMapCamera, 0);
 	//if (PController != nullptr && WorldMapCamera != nullptr)
 	//{
 	//	if (PController->GetViewTarget() != WorldMapCamera)
@@ -161,7 +161,7 @@ void AHeroCharacter::ChangeToBossWorldMapCamera()
 {
 	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
-	PlayerController->SetViewTargetWithBlend(BossMapCamera, 0.5f);
+	PlayerController->SetViewTargetWithBlend(BossMapCamera, 0);
 	//if (PController != nullptr && BossMapCamera != nullptr)
 	//{
 	//	if (PController->GetViewTarget() != BossMapCamera)
@@ -179,7 +179,7 @@ void AHeroCharacter::ChangeToBattleCamera()
 	PlayerController->bEnableMouseOverEvents = true;
 	PlayerController->bShowMouseCursor = true;
 
-	PlayerController->SetViewTargetWithBlend(BattleCamera, 0.5f);
+	PlayerController->SetViewTargetWithBlend(BattleCamera, 0);
 	//if (PController != nullptr && BattleCamera != nullptr)
 	//{
 	//	if (PController->GetViewTarget() != BattleCamera)
@@ -194,7 +194,7 @@ void AHeroCharacter::ChangeToBossBattleCamera()
 {
 	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
-	PlayerController->SetViewTargetWithBlend(BossBattleCamera, 0.5f);
+	PlayerController->SetViewTargetWithBlend(BossBattleCamera, 0);
 	//if (PController != nullptr && BossBattleCamera != nullptr)
 	//{
 	//	if (PController->GetViewTarget() != BossBattleCamera)
@@ -210,7 +210,7 @@ void AHeroCharacter::ChangeToTownCamera()
 	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
 
 	AActor* CameraOwner = FollowCamera->GetOwner();
-	PlayerController->SetViewTargetWithBlend(CameraOwner, 0.5f);
+	PlayerController->SetViewTargetWithBlend(CameraOwner, 0);
 
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CameraManager->SetFOV(90);

@@ -356,11 +356,6 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					AActor* Shoptile = world->SpawnActor<AActor>(Shop, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(Shoptile);
 				}
-				else if (height[i][j] == 8) { //성생성
-					rotator.Yaw = 90 * FMath::RandRange(0, 3);
-					AActor* castletile = world->SpawnActor<AActor>(castle, SpawnLocation, rotator, SpawnParams);
-					AAray.Add(castletile);
-				}
 			}
 		}
 	}
