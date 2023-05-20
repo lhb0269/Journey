@@ -64,6 +64,11 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	void CreateHouses();
+	void CreateTrees();
+	void CreateSpecial();
+	void CreateCastle();
 private:
 	UProceduralMeshComponent* ProceduralMesh;
 	TArray<FVector>Vertices;
@@ -77,4 +82,6 @@ private:
 	void CreateVertices();
 	void CreateTriangles();
 	void CellularAutomata();
+
+
 };

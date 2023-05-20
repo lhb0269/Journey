@@ -149,7 +149,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		}
 	}
 	
-	height[(XSize/4)*3][(YSize/4)*3] = 8;
+	
 	//Check Village 2nd
 	for (int i = 0; i < XSize; ++i) {
 		for (int j = 0; j < YSize; ++j) {
@@ -219,6 +219,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 			}
 		}
 	}
+	height[(XSize / 4) * 3][(YSize / 4) * 3] = 8;
 	// while(!IsMotel)
 	// {
 	// 	int32 x = FMath::RandRange(12,37);
@@ -242,6 +243,12 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	// 	}
 	// }
 	//
+	
+}
+
+void AProceduralNoiseGenerator::CreateHouses()
+{
+	UWorld* world = GetWorld();
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
@@ -252,7 +259,64 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				FVector SpawnLocation;
 				SpawnLocation.X = i * 100 + GetActorLocation().X;
 				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
 				SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+				rotator.Roll = 0;
+	
+				if (height[i][j] == 3) {
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					int32 num = FMath::RandRange(0, 1);
+					switch (num)
+					{
+					case 0:
+					{
+						AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
+						AAray.Add(HouseTile);
+						break;
+					}
+					case 1:
+					{
+						if (cnt <= 4)
+						{
+							if (cnt == 3)
+							{
+								AActor* FountainTile = world->SpawnActor<AActor>(Fontain, SpawnLocation, rotator, SpawnParams);
+								AAray.Add(FountainTile);
+								cnt++;
+								break;
+							}
+							else
+							{
+								AActor* TowerTile = world->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
+								AAray.Add(TowerTile);
+								cnt++;
+								break;
+							}
+						}
+					}
+					}
+				}
+			
+			}
+		}
+	}
+}
+
+void AProceduralNoiseGenerator::CreateTrees()
+{
+	UWorld* world = GetWorld();
+	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
+		int32 cnt = 0;
+		for (int i = XSize - 1; i >= 0; --i) {
+			for (int j = YSize - 1; j >= 0; --j) {
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				FRotator rotator;
+				FVector SpawnLocation;
+				SpawnLocation.X = i * 100 + GetActorLocation().X;
+				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+				SpawnLocation.Z = GetActorLocation().Z - 10;
 				rotator.Roll = 0;
 				if (height[i][j] == 1) {
 					rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
@@ -260,40 +324,28 @@ void AProceduralNoiseGenerator::CellularAutomata()
 					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 					AAray.Add(Tile1);
 				}
-				else if (height[i][j] == 3) {
-					rotator.Yaw = 90 * FMath::RandRange(0, 3);
-					int32 num = FMath::RandRange(0,1);
-					switch (num)
-					{
-					case 0:
-						{
-							AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
-							AAray.Add(HouseTile);
-							break;
-						}
-					case 1:
-						{
-							if(cnt <=4)
-							{
-								if(cnt == 3)
-								{
-									AActor* FountainTile = world->SpawnActor<AActor>(Fontain, SpawnLocation, rotator, SpawnParams);
-									AAray.Add(FountainTile);
-									cnt++;
-									break;
-								}
-								else
-								{
-									AActor* TowerTile = world->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
-									AAray.Add(TowerTile);
-									cnt++;
-									break;
-								}
-							}
-						}
-					}
-				}
-				else if (height[i][j] == 5) { //여관생성
+			}
+		}
+	}
+}
+
+void AProceduralNoiseGenerator::CreateSpecial()
+{
+	UWorld* world = GetWorld();
+	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
+		int32 cnt = 0;
+		for (int i = XSize - 1; i >= 0; --i) {
+			for (int j = YSize - 1; j >= 0; --j) {
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				FRotator rotator;
+				FVector SpawnLocation;
+				SpawnLocation.X = i * 100 + GetActorLocation().X;
+				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+				SpawnLocation.Z =  GetActorLocation().Z - 10;
+				rotator.Roll = 0;
+				if (height[i][j] == 5) { //여관생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
 					AActor* MotelTile = world->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);
@@ -305,6 +357,33 @@ void AProceduralNoiseGenerator::CellularAutomata()
 					AAray.Add(Shoptile);
 				}
 				else if (height[i][j] == 8) { //성생성
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					AActor* castletile = world->SpawnActor<AActor>(castle, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(castletile);
+				}
+			}
+		}
+	}
+}
+
+void AProceduralNoiseGenerator::CreateCastle()
+{
+	UWorld* world = GetWorld();
+	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
+		int32 cnt = 0;
+		for (int i = XSize - 1; i >= 0; --i) {
+			for (int j = YSize - 1; j >= 0; --j) {
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				FRotator rotator;
+				FVector SpawnLocation;
+				SpawnLocation.X = i * 100 + GetActorLocation().X;
+				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+				SpawnLocation.Z =  GetActorLocation().Z - 10;
+				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+				rotator.Roll = 0;
+			
+				if (height[i][j] == 8) { //성생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					AActor* castletile = world->SpawnActor<AActor>(castle, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(castletile);

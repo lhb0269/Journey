@@ -26,6 +26,11 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	AProceduralWorldMapGenerator* worldMap;
+
+
+	UPROPERTY(EditAnywhere)
+	AProceduralNoiseGenerator* townMap[9];
+
 	UPROPERTY(EditAnywhere, Category = "Cutscenes")
 	ULevelSequence* IntroSequence;
 	UPROPERTY(EditAnywhere)

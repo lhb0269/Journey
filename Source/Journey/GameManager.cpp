@@ -42,6 +42,27 @@ void AGameManager::Tick(float DeltaTime)
 void AGameManager::createTown()
 {
 
+	FTimerHandle TreesTimerHandle[9];
+	FTimerHandle HousesTimerHandle[9];
+	FTimerHandle SpecialTimerHandle[9];
+	FTimerHandle CastleTimerHandle[9];
+	float count = 0.f;
+	for (int i = 0; i < 9; i++)
+	{
+		float time;
+		time = 6.5f + (count / 3.f);
+		GetWorldTimerManager().SetTimer(TreesTimerHandle[i], townMap[i], &AProceduralNoiseGenerator::CreateTrees, time, false);
+
+		time = 7.5f + (count / 3.f);
+		GetWorldTimerManager().SetTimer(HousesTimerHandle[i], townMap[i], &AProceduralNoiseGenerator::CreateHouses, time, false);
+		
+		time = 8.5f + (count / 3.f);
+		GetWorldTimerManager().SetTimer(SpecialTimerHandle[i], townMap[i], &AProceduralNoiseGenerator::CreateSpecial, time, false);
+
+		time = 9.5f + (count / 3.f);
+		GetWorldTimerManager().SetTimer(CastleTimerHandle[i], townMap[i], &AProceduralNoiseGenerator::CreateCastle, time, false);
+		count += 3.f;
+	}
 }
 
 void AGameManager::createWorldMap()
