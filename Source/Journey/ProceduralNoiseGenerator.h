@@ -44,6 +44,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>motel;
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>DummyShop;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>Dummymotel;
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Tower;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Fontain;
