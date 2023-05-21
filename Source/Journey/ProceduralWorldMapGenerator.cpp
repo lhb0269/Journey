@@ -315,7 +315,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         if (heightMap[i][j].tileType == 0 && GrassCount < 3 && heightMap[i][j].isPossible)
                         {
                             AWorldCubeBase* wc ;                         
-                            GrassCount += 1;
+                         
                             FTimerDelegate TimerDelegate;
                             TimerDelegate.BindLambda([=, &wc]() {
                                 wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassTown, location, FRotator::ZeroRotator);
@@ -326,7 +326,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                                 });
                             FTimerHandle TimerHandle;
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
-
+                            GrassCount += 1;
                             heightMap[i][j].isPossible = false;
                             townnamecnt++;
 
@@ -334,7 +334,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         if (heightMap[i][j].tileType == 1 && DesertCount < 3 && heightMap[i][j].isPossible)
                         {
                             AWorldCubeBase* wc;
-                            DesertCount += 1;
+                        
                             FTimerDelegate TimerDelegate;
                             TimerDelegate.BindLambda([=, &wc]()
                                 {
@@ -355,7 +355,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                                 playerSpawnPos = FVector(location.X, location.Y, location.Z );
                                 isPlayerMove = true;
                             }
-
+                            DesertCount += 1;
                             heightMap[i][j].isPossible = false;
                             townnamecnt++;
 
@@ -363,8 +363,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         if (heightMap[i][j].tileType == 2 && SnowCount < 3 && heightMap[i][j].isPossible)
                         {
                             heightMap[i][j].isPossible = false;
-                            AWorldCubeBase* wc;
-                            SnowCount += 1;
+                            AWorldCubeBase* wc;                         
                             FTimerDelegate TimerDelegate;
                             TimerDelegate.BindLambda([=, &wc]() {
                                 wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowTown, location, FRotator::ZeroRotator);; 
