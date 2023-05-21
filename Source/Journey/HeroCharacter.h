@@ -103,7 +103,10 @@ public:
 	ACameraActor* BossMapCamera;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
-	ACameraActor* PlayerCamera;
+		ACameraActor* PlayerCamera;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	ACameraActor* MinimapCamera;
 	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
@@ -120,6 +123,7 @@ public:
 
 	// Camera 전환 함수
 	void ChangeToWorldMapCamera();
+	void ChangeToMiniMapCamera();
 	void ChangeToBossWorldMapCamera();
 	void ChangeToBattleCamera();
 	void ChangeToBossBattleCamera();

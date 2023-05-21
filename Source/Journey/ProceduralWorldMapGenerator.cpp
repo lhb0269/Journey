@@ -336,7 +336,8 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             AWorldCubeBase* wc;
                             DesertCount += 1;
                             FTimerDelegate TimerDelegate;
-                            TimerDelegate.BindLambda([=, &wc]() {
+                            TimerDelegate.BindLambda([=, &wc]()
+                                {
                                 wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertTown, location, FRotator::ZeroRotator);
                             wc->Location = MapPos[6 + DesertCount];
                             wc->isVisited = false;
@@ -357,7 +358,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
 
                             heightMap[i][j].isPossible = false;
                             townnamecnt++;
-=
+
                         }
                         if (heightMap[i][j].tileType == 2 && SnowCount < 3 && heightMap[i][j].isPossible)
                         {

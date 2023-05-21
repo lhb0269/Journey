@@ -119,6 +119,19 @@ void AHeroCharacter::ChangeToWorldMapCamera()
 	CameraManager->SetFOV(60);
 }
 
+void AHeroCharacter::ChangeToMiniMapCamera()
+{
+	PlayerController->SetViewTargetWithBlend(MinimapCamera, 0);
+	//if (PController != nullptr && BossMapCamera != nullptr)
+	//{
+	//	if (PController->GetViewTarget() != BossMapCamera)
+	//	{
+	//	}
+	//}
+	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+	CameraManager->SetFOV(90);
+}
+
 void AHeroCharacter::ChangeToBossWorldMapCamera()
 {
 	//APlayerController* PController = GetWorld()->GetFirstPlayerController();
@@ -650,6 +663,9 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("MouseWheelClick", IE_Pressed, this, &AHeroCharacter::OnMouseWheelClicked);
 	PlayerInputComponent->BindAction("MouseWheelClick", IE_Released, this, &AHeroCharacter::OnMouseWheelReleased);
+
+	PlayerInputComponent->BindAction("GoToMinimap", IE_Released, this, &AHeroCharacter::ChangeToMiniMapCamera);
+	PlayerInputComponent->BindAction("GoToWorld", IE_Released, this, &AHeroCharacter::ChangeToWorldMapCamera);
 }
 
 void AHeroCharacter::OnZoomIn()
@@ -823,6 +839,11 @@ void AHeroCharacter::BeginPlay()
 		if (IsValid(CameraActor) && CameraActor->ActorHasTag(FName("PlayerCamera")))
 		{
 			PlayerCamera = CameraActor;
+		}
+
+		if (IsValid(CameraActor) && CameraActor->ActorHasTag(FName("MiniMapCamera")))
+		{
+			MinimapCamera = CameraActor;
 		}
 	}
 
