@@ -171,9 +171,15 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				}
 			}
 			if (count >= 33) {
-				if(i<XSize/2 && j<YSize/2)
+				if(i<XSize/2 && j<YSize/2)//더미 상점
 				{
-					height[i][j] = 6;
+					if(!IsShop)
+					{
+						height[i][j] = 9;
+						IsShop = true;
+					}
+					else if(IsShop)
+						height[i][j] = 6;
 					for (int k = 1; k <= 8; ++k)
 					{
 						if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
@@ -188,9 +194,15 @@ void AProceduralNoiseGenerator::CellularAutomata()
 						}
 					}
 				}
-				else if(i>=XSize/2 && j<YSize/2)
+				else if(i>=XSize/2 && j<YSize/2)//더미여관
 				{
-					height[i][j] = 5;
+					if(!IsMotel)
+					{
+						height[i][j]=10;
+						IsMotel = true;
+					}
+					else if(IsMotel)
+						height[i][j] = 5;
 					for (int k = 1; k <= 8; ++k)
 					{
 						if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
@@ -384,22 +396,33 @@ void AProceduralNoiseGenerator::CreateSpecial()
 				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
 				SpawnLocation.Z =  GetActorLocation().Z - 10;
 				rotator.Roll = 0;
-				if (height[i][j] == 5) { //여관생성
+				if (height[i][j] == 5) { //더미여관생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
 					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
-
 					FTimerDelegate TimerDelegate;
 					AActor* MotelTile;
 					TimerDelegate.BindLambda([=, &MotelTile]() {
-						MotelTile = GetWorld()->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);					
+						MotelTile = GetWorld()->SpawnActor<AActor>(Dummymotel, SpawnLocation, rotator, SpawnParams);					
 					AAray.Add(MotelTile);
 						});
 					FTimerHandle TimerHandle;
 					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
 
 				}
-				else if (height[i][j] == 6) { //상점생성
+				else if (height[i][j] == 6) { //더미상점생성
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					rotator.Pitch = 0;
+					FTimerDelegate TimerDelegate;
+					AActor* Shoptile;
+					TimerDelegate.BindLambda([=, &Shoptile]() {
+						Shoptile = GetWorld()->SpawnActor<AActor>(DummyShop, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(Shoptile);
+						});
+					FTimerHandle TimerHandle;
+					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
+				}
+				else if (height[i][j] == 9) { //상점생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
 					FTimerDelegate TimerDelegate;
@@ -407,6 +430,18 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					TimerDelegate.BindLambda([=, &Shoptile]() {
 						Shoptile = GetWorld()->SpawnActor<AActor>(Shop, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(Shoptile);
+						});
+					FTimerHandle TimerHandle;
+					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
+				}
+				else if (height[i][j] == 10) { //여관생성
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					rotator.Pitch = 0;
+					FTimerDelegate TimerDelegate;
+					AActor* moteltile;
+					TimerDelegate.BindLambda([=, &moteltile]() {
+						moteltile = GetWorld()->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(moteltile);
 						});
 					FTimerHandle TimerHandle;
 					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
