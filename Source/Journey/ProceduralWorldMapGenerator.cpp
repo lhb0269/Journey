@@ -53,15 +53,15 @@ AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
     std::mt19937 g(rd());
     std::shuffle(townname.begin(),townname.end(),g);
     
-    MapPos.Add(FVector(-60200.0, -46870.0, 540.000000));
-    MapPos.Add(FVector(-60200.0, -79570.0, 540.000000));
-    MapPos.Add(FVector(-60200.0, -110445.0, 540.000000));
-    MapPos.Add(FVector(6205.0, -110445.0, 540.000000));
-    MapPos.Add(FVector(5430.0, -79565.0, 540.000000));
-    MapPos.Add(FVector(3320.0, -46950.0, 540.000000));
-    MapPos.Add(FVector(40550.0, -44885.0, 540.000000));
-    MapPos.Add(FVector(40550.0, -79765.0, 540.000000));
-    MapPos.Add(FVector(40550.0, -110770.0, 540.000000));
+    MapPos.Add(FVector(-60590.4947, -47202.500954, 200.000000));
+    MapPos.Add(FVector(-61405.4947, -78552.500954, 200.000000));
+    MapPos.Add(FVector(-59745.4947, -114472.500954, 200.000000));
+    MapPos.Add(FVector(6895.0, -111259.0, 200.000000));
+    MapPos.Add(FVector(5200.0, -77764.0, 200.000000));
+    MapPos.Add(FVector(3910.0, -45094.0, 200.000000));
+    MapPos.Add(FVector(42055.0, -44885.0, 200.000000));
+    MapPos.Add(FVector(41365.0, -80249.0, 200.000000));
+    MapPos.Add(FVector(42765.0, -45204.0, 540.000000));
     MapPos.Add(FVector(40550.0, -110770.0, 540.000000));
     MapPos.Add(FVector(40550.0, -110770.0, 540.000000));
     MapPos.Add(FVector(40550.0, -110770.0, 540.000000));
