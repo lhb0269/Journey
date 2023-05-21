@@ -381,7 +381,7 @@ void ACellularAutomata::GenMapData()
 							RandomNumbers[i] = NewRandomNumber;
 							TileInfos[NewRandomNumber].isKey = true;
 							UGameDataSingleton::GetInstance()->TotalKeyNum += 1;
-							UE_LOG(LogTemp, Warning, TEXT("totalKeyNum: %d"), UGameDataSingleton::GetInstance()->TotalKeyNum);
+							//UE_LOG(LogTemp, Warning, TEXT("totalKeyNum: %d"), UGameDataSingleton::GetInstance()->TotalKeyNum);
 							//AArray[NewRandomNumber]->isKey = true;
 						}
 					}
