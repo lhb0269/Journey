@@ -61,45 +61,7 @@ AHeroCharacter::AHeroCharacter()
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 
-	townnamecnt=0;
-	townname.push_back("moriocho");
-	townname.push_back("Cape Canaveral");
-	townname.push_back("Neapolis");
-	townname.push_back("Eldoria");
-	townname.push_back("Misthaven");
-	townname.push_back("Emberwood");
-	townname.push_back("Silvercrest");
-	townname.push_back("Stormreach");
-	townname.push_back("Havenbrook");
-	townname.push_back("Dragon's Hollow");
-	townname.push_back("Oakshade");
-	townname.push_back("Serenity Falls");
-	townname.push_back("Ironhold");
-	townname.push_back("Whisperwind");
-	townname.push_back("Frostholm");
-	townname.push_back("Willowbrook");
-	townname.push_back("Shadowfen");
-	townname.push_back("Goldenleaf");
-	townname.push_back("Brightwater");
-	townname.push_back("Starhaven");
-	townname.push_back("Thornkeep");
-	townname.push_back("Moonshadow");
-	townname.push_back("Sunridge");
-	townname.push_back("DIO's World");
-	townname.push_back("Windmere");
-	townname.push_back("Twilight Glade");
-	townname.push_back("Maplehurst");
-	townname.push_back("Stormgaard");
-	townname.push_back("Frostfall");
-	townname.push_back("Duskwood");
-	townname.push_back("Stonemeadow");
-	townname.push_back("Evergreen");
-	townname.push_back("Ironforge");
-	townname.push_back("Silvermoon");
-	townname.push_back("Ravenstone");
-	std::random_device rd;
-	std::mt19937 g(rd());
-	std::shuffle(townname.begin(),townname.end(),g);
+	
 	
 }
 
@@ -508,7 +470,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			{
 				//ChangeController(false);
 				worldCube->isVisited = true;
-				worldCube->townname = townname[townnamecnt];
 				SetActorRotation(FRotator(0, 0, 0));
 				SetActorLocation(worldCube->Location);
 				//SwitchToFollowCamera();

@@ -5,11 +5,14 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "WorldCubeBase.h"
+#include<random>
+#include<algorithm>
+#include<vector>
 #include "ProceduralWorldMapGenerator.generated.h"
 
 
 USTRUCT()
-// CellularAutomata·Î »ý¼ºÇÑ Å¸ÀÏ Á¤º¸¸¦ ÀúÀåÇÕ´Ï´Ù.
+// CellularAutomataï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Å¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Õ´Ï´ï¿½.
 struct FWTile
 {
     GENERATED_BODY()
@@ -54,7 +57,8 @@ public:
     TSubclassOf<class AWorldCubeBase> GolemBase;
 
     TArray<FVector>MapPos;
-
+    std::vector<FString>townname;
+    int32 townnamecnt;
     FTimerHandle SpawnTimerHandle;
 
 
