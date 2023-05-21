@@ -871,7 +871,7 @@ void AHeroCharacter::BeginPlay()
 	isCutsceneEnd = false;
 
 	FTimerHandle CutsceneTimerHandle;
-	GetWorldTimerManager().SetTimer(CutsceneTimerHandle, this, &AHeroCharacter::cutSceneEnd, 16.0f, false);
+	GetWorldTimerManager().SetTimer(CutsceneTimerHandle, this, &AHeroCharacter::cutSceneEnd, 20.0f, false);
 	
 }
 

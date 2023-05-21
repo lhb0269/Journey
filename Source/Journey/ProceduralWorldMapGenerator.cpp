@@ -32,6 +32,10 @@ void AProceduralWorldMapGenerator::BeginPlay()
 
     Seed = FDateTime::Now().GetTicks();
 
+    terrainTime = 0.0f;
+    TownTime = 0.0f;
+    MonsterTime = 0.0f;
+
   /*  GenerateTerrain();
     GenerateTowns();
     GenerateMonsters();*/
@@ -126,11 +130,14 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
       
     }
 
+    terrainTime = 0.0f;
     // Generate the terrain
     for (int i = 0; i < width; i++)
     {
+
         for (int j = 0; j < height; j++)
         {
+            terrainTime += 0.001f;
             float heightValue = heightMap[i][j].heightVal;
             FVector location;
             if (j % 2 == 0)
@@ -147,16 +154,31 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
             {
                 if (heightMap[i][j].tileType == 0)
                 {
-                    GetWorld()->SpawnActor<AActor>(GrassLand, location, FRotator::ZeroRotator);
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(GrassLand, location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
 
                 }
                 if (heightMap[i][j].tileType == 1)
                 {
-                    GetWorld()->SpawnActor<AActor>(DesertLand, location, FRotator::ZeroRotator);
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(DesertLand, location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
                 }
                 if (heightMap[i][j].tileType == 2)
                 {
-                    GetWorld()->SpawnActor<AActor>(SnowLand, location, FRotator::ZeroRotator);
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(SnowLand, location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
                 }
 
               
@@ -171,10 +193,14 @@ void AProceduralWorldMapGenerator::GenerateTowns()
     int DesertCount = 0;
     int SnowCount = 0;
 
+    TownTime = terrainTime;
+
     for (int i = 1; i < width - 1; i++)
     {
         for (int j = 1; j < height - 1; j++)
         {
+            TownTime += 0.001f;
+
             float heightValue = heightMap[i][j].heightVal;
             if (heightValue >= seaLevel)
             {
@@ -187,23 +213,37 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         else
                             location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
 
+                    
+
                         // �� �ʿ� �縷
                         if (heightMap[i][j].tileType == 0 && GrassCount < 3)
                         {
-                            AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassTown, location, FRotator::ZeroRotator);
-                            wc->Location = MapPos[3 + GrassCount];
-                            wc->isVisited = false;
-                            wc->isTown = true;
+                            AWorldCubeBase* wc ;                         
                             GrassCount += 1;
+                            FTimerDelegate TimerDelegate;
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassTown, location, FRotator::ZeroRotator);
+                                wc->Location = MapPos[3 + GrassCount];
+                                wc->isVisited = false;
+                                wc->isTown = true;
+                                });
+                            FTimerHandle TimerHandle;
+                            GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
 
                         }
                         if (heightMap[i][j].tileType == 1 && DesertCount < 3)
                         {
-                            AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertTown, location, FRotator::ZeroRotator);
+                            AWorldCubeBase* wc;
+                            DesertCount += 1;
+                            FTimerDelegate TimerDelegate;
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertTown, location, FRotator::ZeroRotator);
                             wc->Location = MapPos[6 + DesertCount];
                             wc->isVisited = false;
                             wc->isTown = true;
-                            DesertCount += 1;
+                                });
+                            FTimerHandle TimerHandle;
+                            GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
 
                             if (!isPlayerMove)
                             {
@@ -213,11 +253,17 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                         }
                         if (heightMap[i][j].tileType == 2 && SnowCount < 3)
                         {
-                            AWorldCubeBase* wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowTown, location, FRotator::ZeroRotator);
+                            AWorldCubeBase* wc;
+                            SnowCount += 1;
+                            FTimerDelegate TimerDelegate;
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowTown, location, FRotator::ZeroRotator);; 
                             wc->Location = MapPos[SnowCount];
                             wc->isVisited = false;
                             wc->isTown = true;
-                            SnowCount += 1;
+                                });
+                            FTimerHandle TimerHandle;
+                            GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
                         }
 
                     
@@ -232,10 +278,13 @@ void AProceduralWorldMapGenerator::GenerateTowns()
 
 void AProceduralWorldMapGenerator::GenerateMonsters()
 {
+
+    MonsterTime = terrainTime;
     for (int i = 1; i < width - 1; i++)
     {
         for (int j = 1; j < height - 1; j++)
         {
+            MonsterTime += 0.001f;
             float heightValue = heightMap[i][j].heightVal;
             if (heightValue >= seaLevel)
             {
@@ -246,17 +295,28 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                         location = FVector(i * 180, j * 150, heightValue * heightVolume + 200);
                     else
                         location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
-                    AWorldCubeBase *wc = GetWorld()->SpawnActor<AWorldCubeBase>(GolemBase, location, FRotator::ZeroRotator);
-                    wc->monsterLevel = 1;
-                    wc->monsterType = 1;
-                    wc->monsterPower = 1000;
-                    wc->isKey = false;
-                    wc->isTown = false;
-                    wc->isVisited = false;
+                 
+                    AWorldCubeBase* wc;
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=, &wc]() {
+                        wc = GetWorld()->SpawnActor<AWorldCubeBase>(GolemBase, location, FRotator::ZeroRotator); 
+                        wc->monsterLevel = 1;
+                        wc->monsterType = 1;
+                        wc->monsterPower = 1000;
+                        wc->isKey = false;
+                        wc->isTown = false;
+                        wc->isVisited = false;
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
+
+           
                 }
 
             }
         }
     }
 }
+
+
 

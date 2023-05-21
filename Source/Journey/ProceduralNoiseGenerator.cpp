@@ -34,6 +34,9 @@ void AProceduralNoiseGenerator::BeginPlay()
 	CreateVertices();
 	CreateTriangles();
 
+	TreeTime = 0.0f;
+	TownTime = 0.0f;
+
 	//UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UV0, Normals, Tangents);
 
 	ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, TArray<FVector>(), UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
@@ -248,11 +251,13 @@ void AProceduralNoiseGenerator::CellularAutomata()
 
 void AProceduralNoiseGenerator::CreateHouses()
 {
+	TownTime = 0;
 	UWorld* world = GetWorld();
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
+				TownTime += 0.0005f;
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
 				FRotator rotator;
@@ -270,8 +275,15 @@ void AProceduralNoiseGenerator::CreateHouses()
 					{
 					case 0:
 					{
-						AActor* HouseTile = world->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
+						FTimerDelegate TimerDelegate;
+						AActor* HouseTile;
+						TimerDelegate.BindLambda([=, &HouseTile]() {
+							HouseTile = GetWorld()->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
 						AAray.Add(HouseTile);
+							});
+						FTimerHandle TimerHandle;
+						GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+
 						break;
 					}
 					case 1:
@@ -280,15 +292,30 @@ void AProceduralNoiseGenerator::CreateHouses()
 						{
 							if (cnt == 3)
 							{
-								AActor* FountainTile = world->SpawnActor<AActor>(Fontain, SpawnLocation, rotator, SpawnParams);
-								AAray.Add(FountainTile);
+								FTimerDelegate TimerDelegate;
+								AActor* FountainTile;
+								TimerDelegate.BindLambda([=, &FountainTile]() {
+									FountainTile = GetWorld()->SpawnActor<AActor>(Fontain, SpawnLocation, rotator, SpawnParams); 
+									AAray.Add(FountainTile);
+									});
+								FTimerHandle TimerHandle;
+								GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+
+								
 								cnt++;
 								break;
 							}
 							else
 							{
-								AActor* TowerTile = world->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
+								FTimerDelegate TimerDelegate;
+								AActor* TowerTile;
+								TimerDelegate.BindLambda([=, &TowerTile]() {
+									TowerTile = GetWorld()->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
 								AAray.Add(TowerTile);
+									});
+								FTimerHandle TimerHandle;
+								GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+
 								cnt++;
 								break;
 							}
@@ -304,11 +331,13 @@ void AProceduralNoiseGenerator::CreateHouses()
 
 void AProceduralNoiseGenerator::CreateTrees()
 {
+	
 	UWorld* world = GetWorld();
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
+				TreeTime += 0.0005f;
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
 				FRotator rotator;
@@ -320,9 +349,17 @@ void AProceduralNoiseGenerator::CreateTrees()
 				rotator.Roll = 0;
 				if (height[i][j] == 1) {
 					rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
-					AActor* Tile1 = world->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
-					Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-					AAray.Add(Tile1);
+
+					FTimerDelegate TimerDelegate;
+					AActor* Tile1 ;
+					TimerDelegate.BindLambda([=, &Tile1]() {
+						Tile1 = GetWorld()->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
+						Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+						AAray.Add(Tile1);
+					});
+					FTimerHandle TimerHandle;
+					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TreeTime, false);
+
 				}
 			}
 		}
@@ -331,11 +368,13 @@ void AProceduralNoiseGenerator::CreateTrees()
 
 void AProceduralNoiseGenerator::CreateSpecial()
 {
+	SpecialTime = 0.0f;
 	UWorld* world = GetWorld();
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
+				SpecialTime += 0.0005f;
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
 				FRotator rotator;
@@ -347,14 +386,30 @@ void AProceduralNoiseGenerator::CreateSpecial()
 				rotator.Roll = 0;
 				if (height[i][j] == 5) { //여관생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					rotator.Pitch = 0;
 					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z;
-					AActor* MotelTile = world->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);
+
+					FTimerDelegate TimerDelegate;
+					AActor* MotelTile;
+					TimerDelegate.BindLambda([=, &MotelTile]() {
+						MotelTile = GetWorld()->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);					
 					AAray.Add(MotelTile);
+						});
+					FTimerHandle TimerHandle;
+					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
+
 				}
 				else if (height[i][j] == 6) { //상점생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
-					AActor* Shoptile = world->SpawnActor<AActor>(Shop, SpawnLocation, rotator, SpawnParams);
+					rotator.Pitch = 0;
+					FTimerDelegate TimerDelegate;
+					AActor* Shoptile;
+					TimerDelegate.BindLambda([=, &Shoptile]() {
+						Shoptile = GetWorld()->SpawnActor<AActor>(Shop, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(Shoptile);
+						});
+					FTimerHandle TimerHandle;
+					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
 				}
 			}
 		}

@@ -83,5 +83,7 @@ private:
 	void CreateTriangles();
 	void CellularAutomata();
 
-
+	float TreeTime;
+	float TownTime;
+	float SpecialTime;
 };

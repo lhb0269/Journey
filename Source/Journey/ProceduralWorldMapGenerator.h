@@ -94,4 +94,8 @@ public:
     void GenerateTowns();
     UFUNCTION(BlueprintCallable, Category = "Create")
     void GenerateMonsters();
+
+    float terrainTime;
+    float TownTime;
+    float MonsterTime;
 };
