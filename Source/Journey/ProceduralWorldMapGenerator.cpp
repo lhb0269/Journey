@@ -341,7 +341,10 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             wc->Location = MapPos[6 + DesertCount];
                             wc->isVisited = false;
                             wc->isTown = true;
+
                             wc->townname = townname[townnamecnt];
+
+
                                 });
                             FTimerHandle TimerHandle;
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
@@ -351,8 +354,10 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                                 playerSpawnPos = FVector(location.X, location.Y, location.Z );
                                 isPlayerMove = true;
                             }
+
                             heightMap[i][j].isPossible = false;
                             townnamecnt++;
+=
                         }
                         if (heightMap[i][j].tileType == 2 && SnowCount < 3 && heightMap[i][j].isPossible)
                         {
