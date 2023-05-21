@@ -142,6 +142,7 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
 
     int tileVal = FMath::RandRange(0, 2);
 
+
     heightMap.SetNum(width);
     for (int i = 0; i < width; i++)
     {
@@ -149,31 +150,65 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
         for (int j = 0; j < height; j++)
         {
             heightMap[i][j].heightVal = InterpolatedNoise(i * scale, j * scale);
-           
+
+            // 보간할 가중치 계산
+            float t = static_cast<float>(i) / (width - 1);
+            float u = static_cast<float>(j) / (height - 1);
+
+            // 인접한 타일 유형 보간
+            int tileType1, tileType2, tileType3;
             if (i < width / 2 && j < height / 2)
             {
-                heightMap[i][j].tileType = tileVal%3;
+                tileType1 = tileVal % 3;
+                tileType2 = (tileVal + 1) % 3;
+                tileType3 = tileVal % 3;
             }
-
-
-            if (i >= width / 2 && j < height / 2)
+            else if (i >= width / 2 && j < height / 2)
             {
-                heightMap[i][j].tileType = (tileVal+1)%3;
+                tileType1 = (tileVal + 1) % 3;
+                tileType2 = (tileVal + 2) % 3;
+                tileType3 = (tileVal + 1) % 3;
             }
-
-            if ( j >= height / 2)
+            else if (j >= height / 2)
             {
-                heightMap[i][j].tileType = (tileVal + 2) % 3;
+                tileType1 = tileVal % 3;
+                tileType2 = (tileVal + 2) % 3;
+                tileType3 = (tileVal + 2) % 3;
             }
 
-
-        }
+            // 보간된 타일 유형 결정
+            heightMap[i][j].tileType = InterpolateTileType(tileType1, tileType2, tileType3, t, u);
 
       
+        }
+    }
+
+
+    for (int k = 0; k < 10; k++)
+    {
+        // 산 타일의 위치를 랜덤으로 지정
+        int mountainX = FMath::RandRange(0, width - 1);
+        int mountainY = FMath::RandRange(0, height - 1);
+
+        // 산 타일로 설정
+        heightMap[mountainX][mountainY].tileType = 3;
     }
 
     terrainTime = 0.0f;
     // Generate the terrain
+    for (int i = 0; i < width; i++)
+    {
+
+        for (int j = 0; j < height; j++)
+        {
+            if (heightMap[i][j].tileType == 3) // 산 타일인 경우
+            {
+                // 주변 타일들도 산 타일로 설정
+                SetSurroundingTilesAsMountain(i, j);
+            }
+        }
+    }
+
     for (int i = 0; i < width; i++)
     {
 
@@ -222,7 +257,26 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
                 }
-
+                if (heightMap[i][j].tileType == 3)
+                {
+                    location.Z += 150;
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(MountainLand, location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
+                }
+                if (heightMap[i][j].tileType == 4)
+                {
+                    location.Z += 100;
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(MountainLand, location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
+                }
               
             }
         }
@@ -258,7 +312,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                     
 
                         // �� �ʿ� �縷
-                        if (heightMap[i][j].tileType == 0 && GrassCount < 3)
+                        if (heightMap[i][j].tileType == 0 && GrassCount < 3 && heightMap[i][j].isPossible)
                         {
                             AWorldCubeBase* wc ;                         
                             GrassCount += 1;
@@ -273,11 +327,11 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             FTimerHandle TimerHandle;
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
 
-                            
+                            heightMap[i][j].isPossible = false;
                             townnamecnt++;
 
                         }
-                        if (heightMap[i][j].tileType == 1 && DesertCount < 3)
+                        if (heightMap[i][j].tileType == 1 && DesertCount < 3 && heightMap[i][j].isPossible)
                         {
                             AWorldCubeBase* wc;
                             DesertCount += 1;
@@ -287,6 +341,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             wc->Location = MapPos[6 + DesertCount];
                             wc->isVisited = false;
                             wc->isTown = true;
+                            wc->townname = townname[townnamecnt];
                                 });
                             FTimerHandle TimerHandle;
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
@@ -296,11 +351,12 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                                 playerSpawnPos = FVector(location.X, location.Y, location.Z );
                                 isPlayerMove = true;
                             }
-                            wc->townname = townname[townnamecnt];
+                            heightMap[i][j].isPossible = false;
                             townnamecnt++;
                         }
-                        if (heightMap[i][j].tileType == 2 && SnowCount < 3)
+                        if (heightMap[i][j].tileType == 2 && SnowCount < 3 && heightMap[i][j].isPossible)
                         {
+                            heightMap[i][j].isPossible = false;
                             AWorldCubeBase* wc;
                             SnowCount += 1;
                             FTimerDelegate TimerDelegate;
@@ -319,6 +375,50 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             townnamecnt++;
 
                         }
+                }
+
+                if (FMath::FRand() < objectFrequency)
+                {
+                    FVector location;
+                    if (j % 2 == 0)
+                        location = FVector(i * 180, j * 150, heightValue * heightVolume + 200);
+                    else
+                        location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
+
+
+                    if (heightMap[i][j].tileType == 0 && heightMap[i][j].isPossible)
+                    {
+                        heightMap[i][j].isPossible = false;
+                        AActor* wc;
+                        FTimerDelegate TimerDelegate;
+                        TimerDelegate.BindLambda([=, &wc]() {
+                            wc = GetWorld()->SpawnActor<AActor>(GrassObj, location, FRotator::ZeroRotator);
+                            });
+                        FTimerHandle TimerHandle;
+                        GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+                    }
+                    if (heightMap[i][j].tileType == 1 && heightMap[i][j].isPossible)
+                    {
+                        AActor* wc;
+                        heightMap[i][j].isPossible = false;
+                        FTimerDelegate TimerDelegate;
+                        TimerDelegate.BindLambda([=, &wc]() {
+                            wc = GetWorld()->SpawnActor<AActor>(DesertObj, location, FRotator::ZeroRotator);
+                            });
+                        FTimerHandle TimerHandle;
+                        GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+                    }
+                    if (heightMap[i][j].tileType == 2 && heightMap[i][j].isPossible)
+                    {
+                        AActor* wc;
+                        heightMap[i][j].isPossible = false;
+                        FTimerDelegate TimerDelegate;
+                        TimerDelegate.BindLambda([=, &wc]() {
+                            wc = GetWorld()->SpawnActor<AActor>(SnowObj, location, FRotator::ZeroRotator);
+                            });
+                        FTimerHandle TimerHandle;
+                        GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+                    }
                 }
                 
             }
@@ -339,7 +439,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
             float heightValue = heightMap[i][j].heightVal;
             if (heightValue >= seaLevel)
             {
-                if (FMath::FRand() < monsterFrequency)
+                if (FMath::FRand() < monsterFrequency && heightMap[i][j].isPossible)
                 {
                     FVector location;
                     if (j % 2 == 0)
@@ -347,6 +447,9 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     else
                         location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
                  
+
+                    int val = FMath::RandRange(1, 10);
+                    heightMap[i][j].isPossible = false;
                     AWorldCubeBase* wc;
                     FTimerDelegate TimerDelegate;
                     TimerDelegate.BindLambda([=, &wc]() {
@@ -357,7 +460,10 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                         wc->isKey = false;
                         wc->isTown = false;
                         wc->isVisited = false;
+                        if (val == 1)
+                            wc->isKey = true;
                         });
+                
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
 
@@ -369,5 +475,53 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
     }
 }
 
+int AProceduralWorldMapGenerator::InterpolateTileType(int tileType1, int tileType2, int tileType3, float t, float u)
+{
+    float oneMinusT = 1.0f - t;
+    float oneMinusU = 1.0f - u;
+
+    float weight1 = oneMinusT * oneMinusU;
+    float weight2 = t * oneMinusU;
+    float weight3 = oneMinusT * u;
+
+    float interpolatedTileTypeFloat = weight1 * tileType1 + weight2 * tileType2 + weight3 * tileType3;
+
+    // 반올림하여 정수 타입으로 변환
+    int interpolatedTileType = static_cast<int>(interpolatedTileTypeFloat + 0.5f);
+
+    return interpolatedTileType;
+}
+
+int AProceduralWorldMapGenerator::LinearInterpolation(int value1, int value2, float t)
+{
+    return static_cast<int>(value1 * (1 - t) + value2 * t);
+}
+
+void AProceduralWorldMapGenerator::SetSurroundingTilesAsMountain(int i, int j)
+{
+    if (heightMap[i][j].tileType == 3)
+    {
+        // 주변 타일 인덱스 계산
+        int startI = FMath::Max(0, i - 1);
+        int endI = FMath::Min(width - 1, i + 1);
+        int startJ = FMath::Max(0, j - 1);
+        int endJ = FMath::Min(height - 1, j + 1);
+
+        // 주변 타일들을 산 타일로 설정
+        for (int x = startI; x <= endI; x++)
+        {
+            for (int y = startJ; y <= endJ; y++)
+            {
+                if (x != i || y != j) // 현재 타일은 제외하고 주변 타일 변경
+                {
+                    if (x >= 0 && x < width && y >= 0 && y < height) // 인덱스의 유효성 검사
+                    {
+                        heightMap[x][y].tileType = 4; // 산 타일로 설정
+                    }
+                }
+            }
+        }
+    }
+}
 
 

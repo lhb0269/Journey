@@ -440,6 +440,11 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		return;
 	}
 
+	if (OtherActor->ActorHasTag("Land"))
+	{
+		fatigue += 0.5f;
+	}
+
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
@@ -457,15 +462,12 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		// �湮�ߴ������� üũ
 		if (!worldCube->isVisited)
 		{
-			//TArray<FCAStruct> MainTileInfos = UGameDataSingleton::GetInstance()->TileInfos;
-			// �ƴϸ� �湮 �ߴٰ� üũ
 
 			//UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
 			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
 			                   worldCube->GetActorLocation().Z + 60);
 
-			// check town or battle
-			// 0403 일단 무조건 Town 쪽으로 이동하게 설정
+
 			if (worldCube->isTown)
 			{
 				//ChangeController(false);
@@ -524,6 +526,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel);
 
 					ChangeToBattleCamera();
+					OtherActor->Destroy();
 					//PlayerController->SetInputMode(FInputModeGameOnly());
 
 					//isTown = true;

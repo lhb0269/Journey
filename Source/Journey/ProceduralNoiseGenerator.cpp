@@ -354,7 +354,7 @@ void AProceduralNoiseGenerator::CreateTrees()
 					AActor* Tile1 ;
 					TimerDelegate.BindLambda([=, &Tile1]() {
 						Tile1 = GetWorld()->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
-						Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+						//Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 						AAray.Add(Tile1);
 					});
 					FTimerHandle TimerHandle;

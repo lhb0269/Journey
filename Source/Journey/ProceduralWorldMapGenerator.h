@@ -25,6 +25,9 @@ public:
     // 0 = grass , 1 = desrt, 2 = snow, 3 = mountain
     UPROPERTY()
         int32 tileType = -1;
+
+    UPROPERTY()
+        bool isPossible = true;
 };
 
 UCLASS()
@@ -52,7 +55,12 @@ public:
     TSubclassOf<class AWorldCubeBase> DesertTown;
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AWorldCubeBase> GrassTown;
-
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AActor> SnowObj;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AActor> DesertObj;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AActor> GrassObj;
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AWorldCubeBase> GolemBase;
 
@@ -73,6 +81,8 @@ public:
     float townFrequency = 0.01f;
     UPROPERTY(EditAnywhere)
     float monsterFrequency = 0.1f;
+    UPROPERTY(EditAnywhere)
+    float objectFrequency = 0.1f;
     UPROPERTY(EditAnywhere)
     float heightVolume = 100;
 
@@ -98,6 +108,9 @@ public:
     void GenerateTowns();
     UFUNCTION(BlueprintCallable, Category = "Create")
     void GenerateMonsters();
+    int InterpolateTileType(int tileType1, int tileType2, int tileType3, float t, float u);
+    int LinearInterpolation(int value1, int value2, float t);
+    void SetSurroundingTilesAsMountain(int i, int j);
 
     float terrainTime;
     float TownTime;
