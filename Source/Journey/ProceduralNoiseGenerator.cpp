@@ -277,7 +277,7 @@ void AProceduralNoiseGenerator::CreateHouses()
 				SpawnLocation.X = i * 100 + GetActorLocation().X;
 				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
 				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
-				SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+				SpawnLocation.Z = GetActorLocation().Z - 10;
 				rotator.Roll = 0;
 	
 				if (height[i][j] == 3) {
