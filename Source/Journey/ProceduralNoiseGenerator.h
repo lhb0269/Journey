@@ -73,6 +73,7 @@ public:
 	void CreateTrees();
 	void CreateSpecial();
 	void CreateCastle();
+	void CreateNPC();
 private:
 	UProceduralMeshComponent* ProceduralMesh;
 	TArray<FVector>Vertices;

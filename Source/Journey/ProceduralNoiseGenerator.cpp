@@ -454,7 +454,8 @@ void AProceduralNoiseGenerator::CreateSpecial()
 void AProceduralNoiseGenerator::CreateCastle()
 {
 	UWorld* world = GetWorld();
-	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
+	int npc_cnt =0;
+	if (castle != nullptr && NPC_Child != nullptr) {
 		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
 			for (int j = YSize - 1; j >= 0; --j) {
@@ -473,7 +474,41 @@ void AProceduralNoiseGenerator::CreateCastle()
 					AActor* castletile = world->SpawnActor<AActor>(castle, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(castletile);
 				}
+				if (height[i][j] == 0 && npc_cnt < 10 && i == ((XSize-1)/2) - 2 && j <= ((YSize-1)/4) * 3 ) { //npc생성
+					SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+					AActor* npc = world->SpawnActor<AActor>(NPC_Child, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(npc);
+					npc_cnt++;
+				}
 			}
+		}
+	}
+}
+
+void AProceduralNoiseGenerator::CreateNPC()
+{
+	int npc_cnt = 0;
+	UWorld* world = GetWorld();
+	if(NPC_Child != nullptr)
+	{
+		for (int i = XSize - 1; i >= 0; --i)
+		{
+			for (int j = YSize - 1; j >= 0; --j) {
+				FActorSpawnParameters SpawnParams;
+				SpawnParams.Owner = this;
+				FRotator rotator;
+				FVector SpawnLocation;
+				SpawnLocation.X = i * 100 + GetActorLocation().X;
+				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+				SpawnLocation.Z =  GetActorLocation().Z + 50;
+				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+				rotator.Roll = 0;
+				if (height[i][j] == 0 && npc_cnt < 10) { //npc생성
+					AActor* npc = world->SpawnActor<AActor>(NPC_Child, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(npc);
+					npc_cnt++;
+					}
+				}
 		}
 	}
 }
