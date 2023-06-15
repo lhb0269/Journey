@@ -10,6 +10,7 @@
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
 #include "HeroAIController.h"
+#include "NiagaraComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "ProceduralNoiseGenerator.h"
@@ -75,6 +76,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	int32 timeMinutes = 1;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	int32 timeSeconds = 59;
 	
 	// CONTROLLER 
 	UPROPERTY()
@@ -115,7 +120,10 @@ public:
 		bool landClick;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		bool oceanClick;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UNiagaraComponent* TownEffect;
+	
 	float DefaultFOV;
 
 	bool isCutsceneEnd;
@@ -150,6 +158,8 @@ public:
 	ACellularAutomata* CellularActor;
 	AProceduralNoiseGenerator* ProceduralActor;
 
+	FVector FXscale;
+	FVector FXInitScale;
 	vector<FString>townname;
 	int32 townnamecnt;
 	void LoadGame();

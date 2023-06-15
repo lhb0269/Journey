@@ -38,7 +38,7 @@ AHeroCharacter::AHeroCharacter()
 	FollowCamera->bUsePawnControlRotation = true;
 
 	FollowCamera->bAutoActivate = true;
-
+	
 
 	FollowCamera->SetActive(true);
 	//WorldFollowCamera->SetActive(true);
@@ -56,13 +56,16 @@ AHeroCharacter::AHeroCharacter()
 	Armour = 200;
 	gold = 200;
 	fatigue = 0;
-
 	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 
+	TownEffect = CreateDefaultSubobject<UNiagaraComponent>("TownEffect");
+	TownEffect->SetupAttachment(RootComponent);
+	TownEffect->SetActive(false);
 	
-	
+	FXscale = TownEffect->GetRelativeScale3D();
+	FXInitScale = TownEffect->GetRelativeScale3D();
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -420,6 +423,11 @@ void AHeroCharacter::GoToWorld()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
+	isTown=false;
+	TownEffect->SetActive(false);
+	
+	TownEffect->SetRelativeScale3D(FXInitScale);
+	FXscale = FXInitScale;
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
@@ -495,6 +503,9 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				ChangeToTownCamera();
 				isTown = true;
 				townnamecnt++;
+				TownEffect->SetActive(true);
+				timeMinutes = 1;
+				timeSeconds = 59;
 			}
 			else
 			{
@@ -713,6 +724,34 @@ void AHeroCharacter::Tick(float DeltaTime)
 			FVector loc = GetActorLocation();
 			WorldMapCamera->SetActorLocation(FVector(loc.X - 400, loc.Y, loc.Z + 800));
 		}
+	}
+	if(isTown)
+	{
+		FTimerHandle MyTimerHandle;
+		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
+		{
+			if(timeSeconds != 0)
+			{
+				timeSeconds-=1;
+				FXscale.X+=0.01;
+				FXscale.Y+=0.01;
+				FXscale.Z+=0.3;
+				
+				TownEffect->SetRelativeScale3D(FXscale);
+			}
+			else
+			{
+				if(timeMinutes !=0)
+				{
+					timeSeconds=59;
+					timeMinutes-=1;
+				}
+				else
+				{
+					GoToWorld();
+				}
+			}
+		}), 2.0f,false);
 	}
 }
 

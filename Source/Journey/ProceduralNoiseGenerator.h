@@ -19,6 +19,8 @@ class JOURNEY_API AProceduralNoiseGenerator : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProceduralNoiseGenerator();
+	UPROPERTY(EditAnywhere)
+		int32 Objective = 0;
 	UPROPERTY(EditAnywhere, Meta = (ClampMin = 0))
 		int32 XSize = 0;
 	UPROPERTY(EditAnywhere, Meta = (ClampMin = 0))
@@ -33,6 +35,8 @@ public:
 		float UVScale = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 Tilemax = 5;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor> Scroll;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor> castle;
 	UPROPERTY(EditAnywhere)
@@ -91,4 +95,7 @@ private:
 	float TreeTime;
 	float TownTime;
 	float SpecialTime;
+
+	int castlx;
+	int castly;
 };

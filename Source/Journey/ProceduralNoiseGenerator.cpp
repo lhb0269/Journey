@@ -22,15 +22,29 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 	IsMotel = false;
 	IsShop = false;
 
-	
+	castlx = FMath::RandRange(1,4);
+	castly = FMath::RandRange(1,4);
 }
 
 // Called when the game starts or when spawned
 void AProceduralNoiseGenerator::BeginPlay()
 {
 	Super::BeginPlay();
-	XSize = FMath::RandRange(100,125);
-	YSize = FMath::RandRange(100,125);
+	switch(Objective)
+	{
+	case 1:
+		XSize = FMath::RandRange(25,50);
+		YSize = FMath::RandRange(25,50);
+		break;
+	case 2:
+		XSize = FMath::RandRange(75,100);
+		YSize = FMath::RandRange(75,100);
+		break;
+	case 3:
+		XSize = FMath::RandRange(100,125);
+		YSize = FMath::RandRange(100,125);
+		break;
+	}
 	CreateVertices();
 	CreateTriangles();
 
@@ -148,41 +162,112 @@ void AProceduralNoiseGenerator::CellularAutomata()
 				{
 					height[i][j] = 0;
 				}
+				if(i>=(int)(XSize/5*(castlx-1)) && i<=(int)(XSize/5*(castlx+1)) && j>=(int)(XSize/5*(castly-1)) && j<=(int)(XSize/5*(castly+1)))
+				{
+					height[i][j] = 4;
+				}
 			}
 		}
 	}
-	
-	
-	//Check Village 2nd
-	for (int i = 0; i < XSize; ++i) {
-		for (int j = 0; j < YSize; ++j) {
-			int32 count = 0;
-			if (height[i][j] == 0) count += 1;
-			for (int k = 1; k <= 4; ++k) {
-				if (i + k < XSize && i - k >= 0 && j + k < YSize && j - k >= 0) {
-					if (height[i - k][j - k] == 0)  count += 1;
-					if (height[i - k][j] == 0)  count += 1;
-					if (height[i - k][j + k] == 0)  count += 1;
-					if (height[i][j - k] == 0)  count += 1;
-					if (height[i][j + k] == 0)  count += 1;
-					if (height[i + k][j - k] == 0)  count += 1;
-					if (height[i + k][j] == 0)  count += 1;
-					if (height[i + k][j + k] == 0)  count += 1;
-				}
+	if (Objective == 1) //작은맵
+	{
+		int max_cnt = 5;
+		int cnt = 0;
+		while(cnt < max_cnt)
+		{
+			int32 i = FMath::RandRange(3,XSize-3);
+			int32 j = FMath::RandRange(3,YSize-3);
+			if(height[i][j] == 0)
+			{
+				height[i][j] = 3;
+				cnt++;
 			}
-			if (count >= 33) {
-				if(i<XSize/2 && j<YSize/2)//더미 상점
-				{
-					if(!IsShop)
-					{
-						height[i][j] = 9;
-						IsShop = true;
+		}
+	}
+	else if (Objective == 2)//중간
+	{
+		//Check Village 2nd
+		for (int i = 0; i < XSize; ++i) {
+			for (int j = 0; j < YSize; ++j) {
+				int32 count = 0;
+				if (height[i][j] == 0) count += 1;
+				for (int k = 1; k <= 4; ++k) {
+					if (i + k < XSize && i - k >= 0 && j + k < YSize && j - k >= 0) {
+						if (height[i - k][j - k] == 0)  count += 1;
+						if (height[i - k][j] == 0)  count += 1;
+						if (height[i - k][j + k] == 0)  count += 1;
+						if (height[i][j - k] == 0)  count += 1;
+						if (height[i][j + k] == 0)  count += 1;
+						if (height[i + k][j - k] == 0)  count += 1;
+						if (height[i + k][j] == 0)  count += 1;
+						if (height[i + k][j + k] == 0)  count += 1;
 					}
-					else if(IsShop)
-						height[i][j] = 6;
-					for (int k = 1; k <= 8; ++k)
+				}
+				if (count >= 33) {
+					if(i<XSize/2 && j<YSize/2)//더미 상점
+						{
+						if(!IsShop)
+						{
+							height[i][j] = 9;
+							IsShop = true;
+						}
+						else if(IsShop)
+							height[i][j] = 6;
+						for (int k = 1; k <= 8; ++k)
+						{
+							if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+								height[i - k][j - k] = 4;
+								height[i - k][j] = 4;
+								height[i - k][j + k] = 4;
+								height[i][j - k] = 4;
+								height[i][j + k] = 4;
+								height[i + k][j - k] = 4;
+								height[i + k][j] = 4;
+								height[i + k][j + k] = 4;
+							}
+						}
+						}
+					else if(i>=XSize/2 && j<YSize/2)//더미여관
+						{
+						if(!IsMotel)
+						{
+							height[i][j]=10;
+							IsMotel = true;
+						}
+						else if(IsMotel)
+							height[i][j] = 5;
+						for (int k = 1; k <= 8; ++k)
+						{
+							if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+								height[i - k][j - k] = 4;
+								height[i - k][j] = 4;
+								height[i - k][j + k] = 4;
+								height[i][j - k] = 4;
+								height[i][j + k] = 4;
+								height[i + k][j - k] = 4;
+								height[i + k][j] = 4;
+								height[i + k][j + k] = 4;
+							}
+						}
+						}
+					else if(i<XSize/2 && j>=YSize/2)
 					{
-						if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+						height[i][j] = 3;
+						for (int k = 1; k <= 4; ++k) {
+							height[i - k][j - k] = 4;
+							height[i - k][j] = 4;
+							height[i - k][j + k] = 4;
+							height[i][j - k] = 4;
+							height[i][j + k] = 4;
+							height[i + k][j - k] = 4;
+							height[i + k][j] = 4;
+							height[i + k][j + k] = 4;
+						}
+					}
+					else if(i>=XSize/2 && j>=YSize/2)
+					{
+						height[i][j] = 3;
+						for (int k = 1; k <= 4; ++k) {
 							height[i - k][j - k] = 4;
 							height[i - k][j] = 4;
 							height[i - k][j + k] = 4;
@@ -194,18 +279,83 @@ void AProceduralNoiseGenerator::CellularAutomata()
 						}
 					}
 				}
-				else if(i>=XSize/2 && j<YSize/2)//더미여관
-				{
-					if(!IsMotel)
-					{
-						height[i][j]=10;
-						IsMotel = true;
+			}
+		}
+	}
+	else if(Objective == 3)//제일 큰
+	{
+		
+		//성 생성
+		
+		height[XSize/5 * castlx][YSize/5 * castly] = 8;
+		//Check Village 2nd
+		for (int i = 0; i < XSize; ++i) {
+			for (int j = 0; j < YSize; ++j) {
+				int32 count = 0;
+				if (height[i][j] == 0) count += 1;
+				for (int k = 1; k <= 4; ++k) {
+					if (i + k < XSize && i - k >= 0 && j + k < YSize && j - k >= 0) {
+						if (height[i - k][j - k] == 0)  count += 1;
+						if (height[i - k][j] == 0)  count += 1;
+						if (height[i - k][j + k] == 0)  count += 1;
+						if (height[i][j - k] == 0)  count += 1;
+						if (height[i][j + k] == 0)  count += 1;
+						if (height[i + k][j - k] == 0)  count += 1;
+						if (height[i + k][j] == 0)  count += 1;
+						if (height[i + k][j + k] == 0)  count += 1;
 					}
-					else if(IsMotel)
-						height[i][j] = 5;
-					for (int k = 1; k <= 8; ++k)
+				}
+				if (count >= 33) {
+					if(i<XSize/2 && j<YSize/2)//더미 상점
+						{
+						if(!IsShop)
+						{
+							height[i][j] = 9;
+							IsShop = true;
+						}
+						else if(IsShop)
+							height[i][j] = 6;
+						for (int k = 1; k <= 8; ++k)
+						{
+							if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+								height[i - k][j - k] = 4;
+								height[i - k][j] = 4;
+								height[i - k][j + k] = 4;
+								height[i][j - k] = 4;
+								height[i][j + k] = 4;
+								height[i + k][j - k] = 4;
+								height[i + k][j] = 4;
+								height[i + k][j + k] = 4;
+							}
+						}
+						}
+					else if(i>=XSize/2 && j<YSize/2)//더미여관
+						{
+						if(!IsMotel)
+						{
+							height[i][j]=10;
+							IsMotel = true;
+						}
+						else if(IsMotel)
+							height[i][j] = 5;
+						for (int k = 1; k <= 8; ++k)
+						{
+							if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+								height[i - k][j - k] = 4;
+								height[i - k][j] = 4;
+								height[i - k][j + k] = 4;
+								height[i][j - k] = 4;
+								height[i][j + k] = 4;
+								height[i + k][j - k] = 4;
+								height[i + k][j] = 4;
+								height[i + k][j + k] = 4;
+							}
+						}
+						}
+					else if(i<XSize/2 && j>=YSize/2)
 					{
-						if(i-k >0 && j-k >0 && i+k <XSize && j+k < YSize){
+						height[i][j] = 3;
+						for (int k = 1; k <= 4; ++k) {
 							height[i - k][j - k] = 4;
 							height[i - k][j] = 4;
 							height[i - k][j + k] = 4;
@@ -216,49 +366,28 @@ void AProceduralNoiseGenerator::CellularAutomata()
 							height[i + k][j + k] = 4;
 						}
 					}
-				}
-				else if(i<XSize/2 && j>=YSize/2)
-				{
-					height[i][j] = 3;
-					for (int k = 1; k <= 4; ++k) {
-						height[i - k][j - k] = 4;
-						height[i - k][j] = 4;
-						height[i - k][j + k] = 4;
-						height[i][j - k] = 4;
-						height[i][j + k] = 4;
-						height[i + k][j - k] = 4;
-						height[i + k][j] = 4;
-						height[i + k][j + k] = 4;
+					else if(i>=XSize/2 && j>=YSize/2)
+					{
+						height[i][j] = 3;
+						for (int k = 1; k <= 4; ++k) {
+							height[i - k][j - k] = 4;
+							height[i - k][j] = 4;
+							height[i - k][j + k] = 4;
+							height[i][j - k] = 4;
+							height[i][j + k] = 4;
+							height[i + k][j - k] = 4;
+							height[i + k][j] = 4;
+							height[i + k][j + k] = 4;
+						}
+					}
+					if(i>=(int)(XSize/5*(castlx-1)) && i<=(int)(XSize/5*(castlx+1)) && j>=(int)(XSize/5*(castly-1)) && j<=(int)(XSize/5*(castly+1)))
+					{
+						height[i][j] = 4;
 					}
 				}
 			}
 		}
 	}
-	height[(XSize / 4) * 3][(YSize / 4) * 3] = 8;
-	// while(!IsMotel)
-	// {
-	// 	int32 x = FMath::RandRange(12,37);
-	// 	int32 y = FMath::RandRange(12,37);
-	// 	if(height[x][y] == 3)
-	// 	{
-	// 		height[x][y] = 5;
-	// 		IsMotel = true;
-	//
-	// 	}
-	// }
-	// while(!IsShop)
-	// {
-	// 	int32 x = FMath::RandRange(12,37);
-	// 	int32 y = FMath::RandRange(12,37);
-	// 	if(height[x][y] == 3)
-	// 	{
-	// 		height[x][y] = 6;
-	// 		IsShop = true;
-	//
-	// 	}
-	// }
-	//
-	
 }
 
 void AProceduralNoiseGenerator::CreateHouses()
@@ -278,15 +407,13 @@ void AProceduralNoiseGenerator::CreateHouses()
 				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
 				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
 				SpawnLocation.Z = GetActorLocation().Z - 10;
-				rotator.Roll = 0;
-	
-				if (height[i][j] == 3) {
-					rotator.Yaw = 90 * FMath::RandRange(0, 3);
-					int32 num = FMath::RandRange(0, 1);
-					switch (num)
+				if(Objective == 1)
+				{
+					if (height[i][j] == 3)
 					{
-					case 0:
-					{
+						rotator.Pitch=0;
+						rotator.Roll = 0;
+						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 						FTimerDelegate TimerDelegate;
 						AActor* HouseTile;
 						TimerDelegate.BindLambda([=, &HouseTile]() {
@@ -295,47 +422,66 @@ void AProceduralNoiseGenerator::CreateHouses()
 							});
 						FTimerHandle TimerHandle;
 						GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
-
-						break;
 					}
-					case 1:
-					{
-						if (cnt <= 4)
+				}
+				if(Objective >=2)
+				{
+					if (height[i][j] == 3) {
+						rotator.Yaw = 90 * FMath::RandRange(0, 3);
+						int32 num = FMath::RandRange(0, 1);
+						switch (num)
 						{
-							if (cnt == 3)
+						case 0:
 							{
 								FTimerDelegate TimerDelegate;
-								AActor* FountainTile;
-								TimerDelegate.BindLambda([=, &FountainTile]() {
-									FountainTile = GetWorld()->SpawnActor<AActor>(Fontain, SpawnLocation, rotator, SpawnParams); 
-									AAray.Add(FountainTile);
+								AActor* HouseTile;
+								TimerDelegate.BindLambda([=, &HouseTile]() {
+									HouseTile = GetWorld()->SpawnActor<AActor>(House, SpawnLocation, rotator, SpawnParams);
+								AAray.Add(HouseTile);
 									});
 								FTimerHandle TimerHandle;
 								GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
 
-								
-								cnt++;
 								break;
 							}
-							else
+						case 1:
 							{
-								FTimerDelegate TimerDelegate;
-								AActor* TowerTile;
-								TimerDelegate.BindLambda([=, &TowerTile]() {
-									TowerTile = GetWorld()->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
-								AAray.Add(TowerTile);
-									});
-								FTimerHandle TimerHandle;
-								GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+								if (cnt <= 4)
+								{
+									if (cnt == 3)
+									{
+										FTimerDelegate TimerDelegate;
+										AActor* FountainTile;
+										TimerDelegate.BindLambda([=, &FountainTile]() {
+											FountainTile = GetWorld()->SpawnActor<AActor>(Fontain, SpawnLocation, rotator, SpawnParams); 
+											AAray.Add(FountainTile);
+											});
+										FTimerHandle TimerHandle;
+										GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
 
-								cnt++;
-								break;
+								
+										cnt++;
+										break;
+									}
+									else
+									{
+										FTimerDelegate TimerDelegate;
+										AActor* TowerTile;
+										TimerDelegate.BindLambda([=, &TowerTile]() {
+											TowerTile = GetWorld()->SpawnActor<AActor>(Tower, SpawnLocation, rotator, SpawnParams);
+										AAray.Add(TowerTile);
+											});
+										FTimerHandle TimerHandle;
+										GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
+
+										cnt++;
+										break;
+									}
+								}
 							}
 						}
 					}
-					}
 				}
-			
 			}
 		}
 	}
@@ -347,8 +493,8 @@ void AProceduralNoiseGenerator::CreateTrees()
 	UWorld* world = GetWorld();
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		int32 cnt = 0;
-		for (int i = XSize - 1; i >= 0; --i) {
-			for (int j = YSize - 1; j >= 0; --j) {
+		for (int i = XSize - 3; i >= 3; --i) {
+			for (int j = YSize - 3; j >= 3; --j) {
 				TreeTime += 0.0005f;
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
@@ -449,6 +595,26 @@ void AProceduralNoiseGenerator::CreateSpecial()
 			}
 		}
 	}
+	int Scroll_Cnt=0;
+	while(Scroll_Cnt < Objective)
+	{
+		int x = FMath::RandRange(3,XSize-3);
+		int y = FMath::RandRange(3,YSize-3);
+		if(height[x][y]==0)
+		{
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.Owner = this;
+			FRotator rotator;
+			FVector SpawnLocation;
+			SpawnLocation.X = x * 100 + GetActorLocation().X;
+			SpawnLocation.Y = y * 100 + GetActorLocation().Y;
+			SpawnLocation.Z =  GetActorLocation().Z + 50;
+			AActor* BP_scroll = world->SpawnActor<AActor>(Scroll, SpawnLocation, FRotator(0,0,0), SpawnParams);
+			AAray.Add(BP_scroll);
+			Scroll_Cnt++;
+			UE_LOG(LogTemp,Warning,TEXT("SCroll"));
+		}
+	}
 }
 
 void AProceduralNoiseGenerator::CreateCastle()
@@ -475,7 +641,7 @@ void AProceduralNoiseGenerator::CreateCastle()
 					AAray.Add(castletile);
 				}
 				if (height[i][j] == 0 && npc_cnt < 10 && i == ((XSize-1)/2) - 2 && j <= ((YSize-1)/4) * 3 ) { //npc생성
-					SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+					SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z + 50;
 					AActor* npc = world->SpawnActor<AActor>(NPC_Child, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(npc);
 					npc_cnt++;
