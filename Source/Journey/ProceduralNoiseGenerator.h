@@ -62,6 +62,10 @@ public:
 	TArray<AActor*>AAray;
 	vector<int32>width;
 	vector<vector<int32>>height;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+		class USpringArmComponent* MinimapArm;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+		class USceneCaptureComponent2D* Minimap;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

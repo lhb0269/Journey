@@ -6,7 +6,9 @@
 #include "ProceduralNoiseGenerator.h"
 #include "ProceduralMeshComponent.h"
 #include "HeroCharacter.h"
+#include "Components/SceneCaptureComponent2D.h"
 #include "EntitySystem/MovieSceneEntitySystemRunner.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Kismet/GameplayStatics.h"
 
 
@@ -18,7 +20,13 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 
 	ProceduralMesh = CreateDefaultSubobject<UProceduralMeshComponent>(TEXT("ProceduralMesh"));
 	ProceduralMesh->SetupAttachment(GetRootComponent());
-	
+
+	MinimapArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("MinimapArm"));
+	MinimapArm->SetupAttachment(ProceduralMesh);
+
+	Minimap = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Minimap"));
+	Minimap->SetupAttachment(MinimapArm);
+	Minimap->SetActive(false);
 	IsMotel = false;
 	IsShop = false;
 
@@ -51,6 +59,7 @@ void AProceduralNoiseGenerator::BeginPlay()
 	TreeTime = 0.0f;
 	TownTime = 0.0f;
 
+	MinimapArm->SetRelativeLocation(FVector(XSize/2 * 100, YSize/2 * 100,500));
 	//UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UV0, Normals, Tangents);
 
 	ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, TArray<FVector>(), UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
@@ -608,7 +617,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 			FVector SpawnLocation;
 			SpawnLocation.X = x * 100 + GetActorLocation().X;
 			SpawnLocation.Y = y * 100 + GetActorLocation().Y;
-			SpawnLocation.Z =  GetActorLocation().Z + 50;
+			SpawnLocation.Z =  GetActorLocation().Z + 150;
 			AActor* BP_scroll = world->SpawnActor<AActor>(Scroll, SpawnLocation, FRotator(0,0,0), SpawnParams);
 			AAray.Add(BP_scroll);
 			Scroll_Cnt++;
