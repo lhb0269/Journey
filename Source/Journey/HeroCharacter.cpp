@@ -13,6 +13,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
+#include "ScrollUI.h"
+#include"Blueprint/UserWidget.h"
 #include "Camera/CameraActor.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
@@ -23,6 +25,8 @@
 #include "Items/Item.h"
 #include "CellularAutomata.h"
 #include "BattleSystem.h"
+#include "HeroController.h"
+#include "UnrealWidgetFwd.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Elements/Framework/TypedElementOwnerStore.h"
 #include "Kismet/GameplayStatics.h"
@@ -38,7 +42,7 @@ AHeroCharacter::AHeroCharacter()
 	FollowCamera->bUsePawnControlRotation = true;
 
 	FollowCamera->bAutoActivate = true;
-
+	
 
 	FollowCamera->SetActive(true);
 	//WorldFollowCamera->SetActive(true);
@@ -56,13 +60,19 @@ AHeroCharacter::AHeroCharacter()
 	Armour = 200;
 	gold = 200;
 	fatigue = 0;
-
 	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 
+	TownEffect = CreateDefaultSubobject<UNiagaraComponent>("TownEffect");
+	TownEffect->SetupAttachment(RootComponent);
+	TownEffect->SetActive(false);
 	
-	
+	FXscale = TownEffect->GetRelativeScale3D();
+	FXInitScale = TownEffect->GetRelativeScale3D();
+
+	WidgetClass = nullptr;
+	scrollUI = nullptr;
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -420,6 +430,11 @@ void AHeroCharacter::GoToWorld()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
+	isTown=false;
+	TownEffect->SetActive(false);
+	
+	TownEffect->SetRelativeScale3D(FXInitScale);
+	FXscale = FXInitScale;
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
@@ -457,7 +472,10 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	{
 		fatigue += 0.5f;
 	}
-
+	if(OtherActor->ActorHasTag("Scroll"))
+	{
+	
+	}
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
@@ -495,6 +513,39 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				ChangeToTownCamera();
 				isTown = true;
 				townnamecnt++;
+				TownEffect->SetActive(true);
+				timeMinutes = 0;
+				timeSeconds = 10;
+				
+				FTimerHandle MyTimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
+				{
+					if(isTown)
+					{
+						if(timeSeconds != 0)
+						{
+							timeSeconds-=1;
+							FXscale.X+=0.01;
+							FXscale.Y+=0.01;
+							FXscale.Z+=0.3;
+				
+							TownEffect->SetRelativeScale3D(FXscale);
+						}
+						else
+						{
+							if(timeMinutes !=0)
+							{
+								timeSeconds=59;
+								timeMinutes-=1;
+							}
+							else
+							{
+								GoToWorld();
+								GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
+							}
+						}
+					}
+				}), 1.0f,true);
 			}
 			else
 			{
@@ -791,8 +842,6 @@ void AHeroCharacter::BeginPlay()
 	PlayerController->SetInputMode(FInputModeGameAndUI());
 
 	AIController = Cast<AHeroAIController>(GetController());
-
-	
 	
 	//AIController->UnPossess();
 	PlayerController->Possess(this);

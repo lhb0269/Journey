@@ -10,9 +10,11 @@
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
 #include "HeroAIController.h"
+#include "NiagaraComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "ProceduralNoiseGenerator.h"
+#include "ScrollUI.h"
 #include "HeroCharacter.generated.h"
 
 
@@ -75,6 +77,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
 
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	int32 timeMinutes = 0;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	int32 timeSeconds = 10;
 	
 	// CONTROLLER 
 	UPROPERTY()
@@ -115,7 +121,10 @@ public:
 		bool landClick;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		bool oceanClick;
-
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UNiagaraComponent* TownEffect;
+	
 	float DefaultFOV;
 
 	bool isCutsceneEnd;
@@ -150,6 +159,8 @@ public:
 	ACellularAutomata* CellularActor;
 	AProceduralNoiseGenerator* ProceduralActor;
 
+	FVector FXscale;
+	FVector FXInitScale;
 	vector<FString>townname;
 	int32 townnamecnt;
 	void LoadGame();
@@ -166,7 +177,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void ChangeGameMode();
 
-
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UScrollUI> WidgetClass;
+	UPROPERTY(VisibleAnywhere)
+	class UScrollUI* scrollUI;
 	// 월드맵 충돌 체크
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,
