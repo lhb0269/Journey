@@ -3,6 +3,7 @@
 
 #include"Scroll.h"
 
+#include "Blueprint/UserWidget.h"
 #include "Journey/HeroCharacter.h"
 
 // Sets default values
@@ -38,9 +39,5 @@ void AScroll::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 		return;
 	}
 	AHeroCharacter* hero = Cast<AHeroCharacter>(OtherActor);
-	if(hero)
-	{
-		this->Destroy();
-	}
 }
 

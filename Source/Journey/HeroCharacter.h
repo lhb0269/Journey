@@ -14,6 +14,7 @@
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "ProceduralNoiseGenerator.h"
+#include "ScrollUI.h"
 #include "HeroCharacter.generated.h"
 
 
@@ -77,9 +78,9 @@ public:
 	void MoveToLocation(const FVector& DestLocation);
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
-	int32 timeMinutes = 1;
+	int32 timeMinutes = 0;
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
-	int32 timeSeconds = 59;
+	int32 timeSeconds = 10;
 	
 	// CONTROLLER 
 	UPROPERTY()
@@ -176,7 +177,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void ChangeGameMode();
 
-
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UScrollUI> WidgetClass;
+	UPROPERTY(VisibleAnywhere)
+	class UScrollUI* scrollUI;
 	// 월드맵 충돌 체크
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,

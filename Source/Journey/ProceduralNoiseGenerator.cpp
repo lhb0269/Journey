@@ -24,9 +24,9 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 	MinimapArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("MinimapArm"));
 	MinimapArm->SetupAttachment(ProceduralMesh);
 
-	Minimap = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Minimap"));
-	Minimap->SetupAttachment(MinimapArm);
-	Minimap->SetActive(false);
+	// Minimap = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Minimap"));
+	// Minimap->SetupAttachment(MinimapArm);
+	// Minimap->SetActive(false);
 	IsMotel = false;
 	IsShop = false;
 

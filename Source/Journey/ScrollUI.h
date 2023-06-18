@@ -9,12 +9,19 @@
 /**
  * 
  */
-UCLASS( Abstract )
+UCLASS( )
 class JOURNEY_API UScrollUI : public UUserWidget
 {
 	GENERATED_BODY()
 
 protected:
-	UPROPERTY(meta =(BindWidget))
-	class UImage* Background;
+	UPROPERTY(BlueprintReadOnly,meta =(BindWidget))
+		class UImage* Background;
+public:
+	UFUNCTION(BlueprintCallable)
+		void ChooseFight();
+	UFUNCTION(BlueprintCallable)
+		void ChooseShot();
+	UFUNCTION(BlueprintCallable)
+		void ChooseMagic();
 };

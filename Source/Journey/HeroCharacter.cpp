@@ -13,6 +13,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
+#include "ScrollUI.h"
+#include"Blueprint/UserWidget.h"
 #include "Camera/CameraActor.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
@@ -23,6 +25,8 @@
 #include "Items/Item.h"
 #include "CellularAutomata.h"
 #include "BattleSystem.h"
+#include "HeroController.h"
+#include "UnrealWidgetFwd.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Elements/Framework/TypedElementOwnerStore.h"
 #include "Kismet/GameplayStatics.h"
@@ -66,6 +70,9 @@ AHeroCharacter::AHeroCharacter()
 	
 	FXscale = TownEffect->GetRelativeScale3D();
 	FXInitScale = TownEffect->GetRelativeScale3D();
+
+	WidgetClass = nullptr;
+	scrollUI = nullptr;
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -465,7 +472,10 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	{
 		fatigue += 0.5f;
 	}
-
+	if(OtherActor->ActorHasTag("Scroll"))
+	{
+	
+	}
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
@@ -504,8 +514,38 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				isTown = true;
 				townnamecnt++;
 				TownEffect->SetActive(true);
-				timeMinutes = 1;
-				timeSeconds = 59;
+				timeMinutes = 0;
+				timeSeconds = 10;
+				
+				FTimerHandle MyTimerHandle;
+				GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
+				{
+					if(isTown)
+					{
+						if(timeSeconds != 0)
+						{
+							timeSeconds-=1;
+							FXscale.X+=0.01;
+							FXscale.Y+=0.01;
+							FXscale.Z+=0.3;
+				
+							TownEffect->SetRelativeScale3D(FXscale);
+						}
+						else
+						{
+							if(timeMinutes !=0)
+							{
+								timeSeconds=59;
+								timeMinutes-=1;
+							}
+							else
+							{
+								GoToWorld();
+								GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
+							}
+						}
+					}
+				}), 1.0f,true);
 			}
 			else
 			{
@@ -725,34 +765,6 @@ void AHeroCharacter::Tick(float DeltaTime)
 			WorldMapCamera->SetActorLocation(FVector(loc.X - 400, loc.Y, loc.Z + 800));
 		}
 	}
-	if(isTown)
-	{
-		FTimerHandle MyTimerHandle;
-		GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
-		{
-			if(timeSeconds != 0)
-			{
-				timeSeconds-=1;
-				FXscale.X+=0.01;
-				FXscale.Y+=0.01;
-				FXscale.Z+=0.3;
-				
-				TownEffect->SetRelativeScale3D(FXscale);
-			}
-			else
-			{
-				if(timeMinutes !=0)
-				{
-					timeSeconds=59;
-					timeMinutes-=1;
-				}
-				else
-				{
-					GoToWorld();
-				}
-			}
-		}), 1.0f,false);
-	}
 }
 
 
@@ -830,8 +842,6 @@ void AHeroCharacter::BeginPlay()
 	PlayerController->SetInputMode(FInputModeGameAndUI());
 
 	AIController = Cast<AHeroAIController>(GetController());
-
-	
 	
 	//AIController->UnPossess();
 	PlayerController->Possess(this);
