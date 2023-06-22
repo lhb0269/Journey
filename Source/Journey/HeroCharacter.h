@@ -125,6 +125,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	UNiagaraComponent* TownEffect;
 	
+	UPROPERTY(EditAnywhere,Category="Minimap")
+	USpringArmComponent* SpringArm;
+	UPROPERTY(EditAnywhere,Category="Minimap")
+	USceneCaptureComponent2D* Minimap;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Minimap")
+	TSubclassOf<class UUserWidget> Minimapclass;
+	UUserWidget* MinimapWidget;
+	
 	float DefaultFOV;
 
 	bool isCutsceneEnd;
@@ -137,7 +146,7 @@ public:
 	void ChangeToBattleCamera();
 	void ChangeToBossBattleCamera();
 	void ChangeToTownCamera();
-
+	void OpenMiniMap();
 	// 마우스 휠 클릭 이벤트 처리를 위한 함수
 	void OnMouseWheelClicked();
 	void OnMouseWheelReleased();
@@ -147,7 +156,7 @@ public:
 	// 마우스 휠 클릭 상태를 저장하는 변수
 	bool bIsMouseWheelClicked;
 
-
+	
 	void ChangeController(bool isAI);
 
 	void cutSceneEnd();
