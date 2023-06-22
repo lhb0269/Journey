@@ -14,7 +14,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
 #include "ScrollUI.h"
-#include"Blueprint/UserWidget.h"
+#include "Blueprint/UserWidget.h"
 #include "Camera/CameraActor.h"
 #include "GameFramework/DefaultPawn.h"
 #include "GameFramework/PlayerController.h"
@@ -26,8 +26,9 @@
 #include "CellularAutomata.h"
 #include "BattleSystem.h"
 #include "HeroController.h"
-#include "UnrealWidgetFwd.h"
+#include "MinimapWidget.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "Components/SceneCaptureComponent2D.h"
 #include "Elements/Framework/TypedElementOwnerStore.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -71,6 +72,13 @@ AHeroCharacter::AHeroCharacter()
 	FXscale = TownEffect->GetRelativeScale3D();
 	FXInitScale = TownEffect->GetRelativeScale3D();
 
+	PrimaryActorTick.bCanEverTick = true;
+	
+	SpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	
+	Minimap = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("Minimap"));
+	Minimap->SetupAttachment(SpringArm);
+	
 	WidgetClass = nullptr;
 	scrollUI = nullptr;
 }
@@ -199,6 +207,11 @@ void AHeroCharacter::ChangeToTownCamera()
 
 	APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 	CameraManager->SetFOV(90);
+}
+
+void AHeroCharacter::OpenMiniMap()
+{
+	
 }
 
 void AHeroCharacter::OnMouseWheelClicked()
@@ -356,23 +369,6 @@ void AHeroCharacter::GoToWorldMap()
 		}
 	}
 
-
-	//if (UGameDataSingleton::GetInstance()->isBossWorld)
-	//{
-	//	SetActorRotation(FRotator(0, 0, 0));
-	//	SetActorLocation(UGameDataSingleton::GetInstance()->SavedPos);
-
-	//	PlayerController->SetInputMode(FInputModeGameOnly());
-	//	PlayerController->bEnableMouseOverEvents = true;
-	//	PlayerController->bShowMouseCursor = true;
-	//	bUseControllerRotationPitch = false;
-	//	bUseControllerRotationYaw = false;
-	//	ChangeToBossWorldMapCamera();
-
-	//	UE_LOG(LogTemp, Warning, TEXT("goto pos: %s"), *UGameDataSingleton::GetInstance()->SavedPos.ToString());
-	//}
-	//else
-
 	SetActorRotation(FRotator(0, 0, 0));
 	SetActorLocation(SavedPos);
 
@@ -381,14 +377,15 @@ void AHeroCharacter::GoToWorldMap()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
-
-
-	//UGameplayStatics::OpenLevel(this, "WorldMap", true);
-	//FollowCamera->SetActive(false);
-	//WorldFollowCamera->SetActive(true);
-	//SwitchToWorldFollowCamera();
-	//WorldFollowCamera->SetActive(false);
 	isTown = false;
+	TownEffect->SetActive(false);
+	
+	TownEffect->SetRelativeScale3D(FXInitScale);
+	FXscale = FXInitScale;
+	timeMinutes = 2;
+	timeSeconds = 00;
+	
+	SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
 }
 
 void AHeroCharacter::GoToWorld()
@@ -435,6 +432,8 @@ void AHeroCharacter::GoToWorld()
 	
 	TownEffect->SetRelativeScale3D(FXInitScale);
 	FXscale = FXInitScale;
+
+	SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
 }
 
 void AHeroCharacter::ChangeCamera(bool isWorld)
@@ -472,10 +471,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	{
 		fatigue += 0.5f;
 	}
-	if(OtherActor->ActorHasTag("Scroll"))
-	{
-	
-	}
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
@@ -505,6 +500,12 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				worldCube->isVisited = true;
 				SetActorRotation(FRotator(0, 0, 0));
 				SetActorLocation(worldCube->Location);
+				// Minimap
+				FVector NewVector = worldCube->Location;
+				NewVector.Z = 1000;
+				SpringArm->SetWorldLocation(NewVector);
+				Minimap->bCaptureEveryFrame = true;
+				Minimap->bCaptureOnMovement = true;
 				//SwitchToFollowCamera();
 				PlayerController->SetInputMode(FInputModeGameOnly());
 				PlayerController->bShowMouseCursor = false;
@@ -514,38 +515,43 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				isTown = true;
 				townnamecnt++;
 				TownEffect->SetActive(true);
-				timeMinutes = 0;
-				timeSeconds = 10;
+				timeMinutes = 1;
+				timeSeconds = 59;
+
 				
 				FTimerHandle MyTimerHandle;
-				GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
+				if(!GetWorld()->GetTimerManager().IsTimerActive(MyTimerHandle))
 				{
-					if(isTown)
+					GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
 					{
-						if(timeSeconds != 0)
+						if(isTown)
 						{
-							timeSeconds-=1;
-							FXscale.X+=0.01;
-							FXscale.Y+=0.01;
-							FXscale.Z+=0.3;
-				
-							TownEffect->SetRelativeScale3D(FXscale);
-						}
-						else
-						{
-							if(timeMinutes !=0)
+							if(timeSeconds != 0)
 							{
-								timeSeconds=59;
-								timeMinutes-=1;
+								timeSeconds-=1;
+								FXscale.X+=0.01;
+								FXscale.Y+=0.01;
+								FXscale.Z+=0.3;
+				
+								TownEffect->SetRelativeScale3D(FXscale);
 							}
 							else
 							{
-								GoToWorld();
-								GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
+								if(timeMinutes !=0)
+								{
+									timeSeconds=59;
+									timeMinutes-=1;
+								}
+								else
+								{
+									GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
+									MyTimerHandle.Invalidate();
+									GoToWorld();
+								}
 							}
 						}
-					}
-				}), 1.0f,true);
+					}), 1.0f,true);
+				}
 			}
 			else
 			{
@@ -906,7 +912,15 @@ void AHeroCharacter::BeginPlay()
 
 	FTimerHandle CutsceneTimerHandle;
 	GetWorldTimerManager().SetTimer(CutsceneTimerHandle, this, &AHeroCharacter::cutSceneEnd, 20.0f, false);
-	
+	if(MinimapWidget==nullptr)
+	{
+		MinimapWidget = CreateWidget<UUserWidget>(GetWorld(),Minimapclass);
+	}
+	if(MinimapWidget!=nullptr)
+	{
+		MinimapWidget->AddToViewport();
+		SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
+	}
 }
 
 void AHeroCharacter::OnLeftClick()

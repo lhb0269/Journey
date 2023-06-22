@@ -60,6 +60,7 @@ void AProceduralNoiseGenerator::BeginPlay()
 	TownTime = 0.0f;
 
 	MinimapArm->SetRelativeLocation(FVector(XSize/2 * 100, YSize/2 * 100,500));
+	UE_LOG(LogTemp,Warning,TEXT("%d %d"),XSize/2*100,YSize/2*100);
 	//UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UV0, Normals, Tangents);
 
 	ProceduralMesh->CreateMeshSection(0, Vertices, Triangles, TArray<FVector>(), UV0, TArray<FColor>(), TArray<FProcMeshTangent>(), true);
@@ -195,6 +196,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	}
 	else if (Objective == 2)//중간
 	{
+		height[XSize/5 * castlx][YSize/5 * castly] = 8;
 		//Check Village 2nd
 		for (int i = 0; i < XSize; ++i) {
 			for (int j = 0; j < YSize; ++j) {

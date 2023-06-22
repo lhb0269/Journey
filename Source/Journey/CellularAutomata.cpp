@@ -28,18 +28,19 @@ ACellularAutomata::ACellularAutomata()
 	//CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	//CameraComponent->SetupAttachment(RootComponent);
 
-	MapPos.Add(FVector(-67120.000000,-29210.000000,540.000000));
-	MapPos.Add(FVector(-67120.000000,-62930.000000,540.000000));
-	MapPos.Add(FVector(-67120.000000,-94320.000000,540.000000));
+	MapPos.Add(FVector(-60769.0,-47139.0,540.000000));
+	MapPos.Add(FVector(-59115.0,-80935.0,540.000000));
+	MapPos.Add(FVector(-58501.000000,-109450.000000,540.000000));
 	MapPos.Add(FVector(-67120.000000,-136950.000000,540.000000));
-	MapPos.Add(FVector(-1410.000000,-30100.000000,540.000000));
-	MapPos.Add(FVector(-1410.000000,-61840.000000,540.000000));
-	MapPos.Add(FVector(-560.000000,-93480.000000,540.000000));
+	MapPos.Add(FVector(7056.324883,-48411.49484,540.000000));
+	MapPos.Add(FVector(6726.000000,-80517.49484,540.000000));
+	MapPos.Add(FVector(6436.160647,-109300.097618,540.000000));
 	MapPos.Add(FVector(-250.000000,-137220.000000,540.000000));
-	MapPos.Add(FVector(35280.000000,-30100.000000,540.000000));
-	MapPos.Add(FVector(35280.000000,-62120.000000,540.000000));
-	MapPos.Add(FVector(36250.000000,-93420.000000,540.000000));
+	MapPos.Add(FVector(41427.324883,-45626.49484,540.000000));
+	MapPos.Add(FVector(43442.160647,-81994.097618,540.000000));
+	MapPos.Add(FVector(44114.324883,-109133.49484,540.000000));
 	MapPos.Add(FVector(35830.000000,-137090.000000,540.000000));
+
 }
 
 // Called when the game starts or when spawned
@@ -439,6 +440,7 @@ void ACellularAutomata::GenMapData()
 					if(Tile1->isTown)
 					{
 						Tile1->Location = MapPos.Pop();
+						
 						Tile1->ThemeCode = (themcnt / 4) + 1;
 						themcnt++;
 					}
