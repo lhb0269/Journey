@@ -102,4 +102,5 @@ private:
 
 	int castlx;
 	int castly;
+	int32 NPCCount;
 };
