@@ -3,6 +3,8 @@
 
 #include "GameDataSingleton.h"
 
+#include "SAdvancedRotationInputBox.h"
+
 UGameDataSingleton* UGameDataSingleton::Instance = nullptr;
 
 UGameDataSingleton::UGameDataSingleton()
@@ -36,4 +38,16 @@ UGameDataSingleton* UGameDataSingleton::ResetInstance()
     Instance = NewObject<UGameDataSingleton>();
 
     return Instance;
+}
+
+void UGameDataSingleton::AddPartner()
+{
+    IsPartner.Add(true);
+    UE_LOG(LogTemp,Warning,TEXT("Add Partner"));
+}
+
+void UGameDataSingleton::RemovePartner()
+{
+    IsPartner.Pop();
+    UE_LOG(LogTemp,Warning,TEXT("Remove Partner"));
 }
