@@ -71,6 +71,19 @@ void AProceduralNoiseGenerator::BeginPlay()
 	// ���� �Ϸ� �� �÷��̾� ��ġ ����
 	AHeroCharacter* PlayerCharacter = Cast<AHeroCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
 	PlayerCharacter->ChangeCamera(false);
+
+	switch (Objective)
+	{
+	case 1:
+		NPCCount = 2;
+		break;
+	case 2:
+		NPCCount = 5;
+		break;
+	case 3:
+		NPCCount = 10;
+		break;
+	}
 }
 
 // Called every frame
@@ -140,41 +153,44 @@ void AProceduralNoiseGenerator::CellularAutomata()
 		height.push_back(width);
 		width.clear();
 	}
-	//Check Forest 1st
-	int32 tilecount = 0;
-	for (int num = 0; num < Tilemax; ++num) {
-		for (int i = 0; i < XSize; ++i) {
-			for (int j = 0; j < YSize; ++j) {
-				int32 count = 0;
-				if (height[i][j] == 1) count += 1;
-				if (i + 1 < XSize && i - 1 >= 0 && j + 1 < YSize && j - 1 >= 0) {
-					if (height[i - 1][j - 1] == 1)  count += 1;
-					if (height[i - 1][j] == 1)  count += 1;
-					if (height[i - 1][j + 1] == 1)  count += 1;
-					if (height[i][j - 1] == 1)  count += 1;
-					if (height[i][j + 1] == 1)  count += 1;
-					if (height[i + 1][j - 1] == 1)  count += 1;
-					if (height[i + 1][j] == 1)  count += 1;
-					if (height[i + 1][j + 1] == 1)  count += 1;
-				}
-				else {
-					count = 6;
-				}
-				if (count > 5) {
-					height[i][j] = 1;
+	if(Objective>=1)//중간맵 이상일때
+	{
+		//Check Forest 1st
+		int32 tilecount = 0;
+		for (int num = 0; num < Tilemax; ++num) {
+			for (int i = 0; i < XSize; ++i) {
+				for (int j = 0; j < YSize; ++j) {
+					int32 count = 0;
+					if (height[i][j] == 1) count += 1;
+					if (i + 1 < XSize && i - 1 >= 0 && j + 1 < YSize && j - 1 >= 0) {
+						if (height[i - 1][j - 1] == 1)  count += 1;
+						if (height[i - 1][j] == 1)  count += 1;
+						if (height[i - 1][j + 1] == 1)  count += 1;
+						if (height[i][j - 1] == 1)  count += 1;
+						if (height[i][j + 1] == 1)  count += 1;
+						if (height[i + 1][j - 1] == 1)  count += 1;
+						if (height[i + 1][j] == 1)  count += 1;
+						if (height[i + 1][j + 1] == 1)  count += 1;
+					}
+					else {
+						count = 6;
+					}
+					if (count > 5) {
+						height[i][j] = 1;
 
-				}
-				//else if (count == 3)height[i][j] = 2;
-				else if (count < 5) {
-					height[i][j] = 0;
-				}
-				else if(i>=XSize/2&&j>=YSize/2)
-				{
-					height[i][j] = 0;
-				}
-				if(i>=(int)(XSize/5*(castlx-1)) && i<=(int)(XSize/5*(castlx+1)) && j>=(int)(XSize/5*(castly-1)) && j<=(int)(XSize/5*(castly+1)))
-				{
-					height[i][j] = 4;
+					}
+					//else if (count == 3)height[i][j] = 2;
+					else if (count < 5) {
+						height[i][j] = 0;
+					}
+					else if(i>=XSize/2&&j>=YSize/2)
+					{
+						height[i][j] = 0;
+					}
+					if(i>=(int)(XSize/5*(castlx-1)) && i<=(int)(XSize/5*(castlx+1)) && j>=(int)(XSize/5*(castly-1)) && j<=(int)(XSize/5*(castly+1)))
+					{
+						height[i][j] = 4;
+					}
 				}
 			}
 		}
@@ -197,6 +213,16 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	else if (Objective == 2)//중간
 	{
 		height[XSize/5 * castlx][YSize/5 * castly] = 8;
+		int32 rand = FMath::RandRange(0,1);
+		switch(rand)
+		{
+		case 0:
+			IsShop=true;
+			break;
+		case 1:
+			IsMotel=true;
+			break;
+		}
 		//Check Village 2nd
 		for (int i = 0; i < XSize; ++i) {
 			for (int j = 0; j < YSize; ++j) {
@@ -502,33 +528,66 @@ void AProceduralNoiseGenerator::CreateTrees()
 {
 	
 	UWorld* world = GetWorld();
-	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
+	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr)
+	{
 		int32 cnt = 0;
-		for (int i = XSize - 3; i >= 3; --i) {
-			for (int j = YSize - 3; j >= 3; --j) {
-				TreeTime += 0.0005f;
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.Owner = this;
-				FRotator rotator;
-				FVector SpawnLocation;
-				SpawnLocation.X = i * 100 + GetActorLocation().X;
-				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
-				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
-				SpawnLocation.Z = GetActorLocation().Z - 10;
-				rotator.Roll = 0;
-				if (height[i][j] == 1) {
-					rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
+		if(Objective >= 2){
+			for (int i = XSize - 3; i >= 3; --i) {
+				for (int j = YSize - 3; j >= 3; --j) {
+					TreeTime += 0.0005f;
+					FActorSpawnParameters SpawnParams;
+					SpawnParams.Owner = this;
+					FRotator rotator;
+					FVector SpawnLocation;
+					SpawnLocation.X = i * 100 + GetActorLocation().X;
+					SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+					SpawnLocation.Z = GetActorLocation().Z - 10;
+					rotator.Roll = 0;
+					if (height[i][j] == 1) {
+						rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
 
-					FTimerDelegate TimerDelegate;
-					AActor* Tile1 ;
-					TimerDelegate.BindLambda([=, &Tile1]() {
-						Tile1 = GetWorld()->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
-						//Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
-						AAray.Add(Tile1);
-					});
-					FTimerHandle TimerHandle;
-					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TreeTime, false);
+						FTimerDelegate TimerDelegate;
+						AActor* Tile1 ;
+						TimerDelegate.BindLambda([=, &Tile1]() {
+							Tile1 = GetWorld()->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
+							//Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+							AAray.Add(Tile1);
+						});
+						FTimerHandle TimerHandle;
+						GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TreeTime, false);
 
+					}
+				}
+			}
+		}
+		if(Objective == 1){
+			for (int i = XSize - 1; i >= 0; --i) {
+				for (int j = YSize - 1; j >= 0; --j) {
+					TreeTime += 0.0005f;
+					FActorSpawnParameters SpawnParams;
+					SpawnParams.Owner = this;
+					FRotator rotator;
+					FVector SpawnLocation;
+					SpawnLocation.X = i * 100 + GetActorLocation().X;
+					SpawnLocation.Y = j * 100 + GetActorLocation().Y;
+					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
+					SpawnLocation.Z = GetActorLocation().Z - 10;
+					rotator.Roll = 0;
+					if (height[i][j] == 1) {
+						rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
+
+						FTimerDelegate TimerDelegate;
+						AActor* Tile1 ;
+						TimerDelegate.BindLambda([=, &Tile1]() {
+							Tile1 = GetWorld()->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
+							//Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
+							AAray.Add(Tile1);
+						});
+						FTimerHandle TimerHandle;
+						GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TreeTime, false);
+
+					}
 				}
 			}
 		}
@@ -631,7 +690,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 void AProceduralNoiseGenerator::CreateCastle()
 {
 	UWorld* world = GetWorld();
-	int npc_cnt =0;
+	int npc_cnt = 0;
 	if (castle != nullptr && NPC_Child != nullptr) {
 		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
@@ -651,7 +710,7 @@ void AProceduralNoiseGenerator::CreateCastle()
 					AActor* castletile = world->SpawnActor<AActor>(castle, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(castletile);
 				}
-				if (height[i][j] == 0 && npc_cnt < 10 && i == ((XSize-1)/2) - 2 && j <= ((YSize-1)/4) * 3 ) { //npc생성
+				if (height[i][j] == 0 && npc_cnt < NPCCount && i == ((XSize-1)/2) - 2 && j <= ((YSize-1)/4) * 3 ) { //npc생성
 					SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z + 50;
 					AActor* npc = world->SpawnActor<AActor>(NPC_Child, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(npc);
