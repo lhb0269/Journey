@@ -81,6 +81,8 @@ AHeroCharacter::AHeroCharacter()
 	
 	WidgetClass = nullptr;
 	scrollUI = nullptr;
+
+	MinimapToggle = true;
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -209,9 +211,18 @@ void AHeroCharacter::ChangeToTownCamera()
 	CameraManager->SetFOV(90);
 }
 
-void AHeroCharacter::OpenMiniMap()
+void AHeroCharacter::ToggleMiniMap()
 {
-	
+	if(MinimapToggle)
+	{
+		MinimapToggle=false;
+		MinimapWidget->RemoveFromParent();
+	}
+	else
+	{
+		MinimapToggle=true;
+		MinimapWidget->AddToViewport();
+	}
 }
 
 void AHeroCharacter::OnMouseWheelClicked()
@@ -621,6 +632,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 					//isTown = true;
 				}
+				ToggleMiniMap();
 			}
 		}
 	}
@@ -740,6 +752,7 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("MouseWheelClick", IE_Pressed, this, &AHeroCharacter::OnMouseWheelClicked);
 	PlayerInputComponent->BindAction("MouseWheelClick", IE_Released, this, &AHeroCharacter::OnMouseWheelReleased);
+	PlayerInputComponent->BindAction("OpenMinimap",IE_Pressed,this,&AHeroCharacter::ToggleMiniMap);
 
 	PlayerInputComponent->BindAction("GoToMinimap", IE_Released, this, &AHeroCharacter::ChangeToMiniMapCamera);
 	PlayerInputComponent->BindAction("GoToWorld", IE_Released, this, &AHeroCharacter::ChangeToWorldMapCamera);
