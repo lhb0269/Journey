@@ -5,15 +5,27 @@
 
 void UScrollUI::ChooseFight()
 {
-	UE_LOG(LogTemp,Warning,TEXT("Fight"));
+	Instance = UGameDataSingleton::GetInstance();
+	if(Instance != nullptr)
+	{
+		Instance->FightUpgrade();
+	}
 }
 
 void UScrollUI::ChooseShot()
 {
-	UE_LOG(LogTemp,Warning,TEXT("Shot"));
+	Instance = UGameDataSingleton::GetInstance();
+	if(Instance != nullptr)
+	{
+		Instance->ShotUpgrade();
+	}
 }
 
 void UScrollUI::ChooseMagic()
 {
-	UE_LOG(LogTemp,Warning,TEXT("Magic"));
+	Instance = UGameDataSingleton::GetInstance();
+	if(Instance != nullptr)
+	{
+		Instance->MagicUpgrade();
+	}
 }
