@@ -10,13 +10,15 @@ ABaseUnit::ABaseUnit()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	UWidgetComponent* WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("HPMPWidgetComponent"));
-	WidgetComponent->SetWidgetClass(UUnitHPMPWidget::StaticClass());
-	WidgetComponent->SetupAttachment(RootComponent);
+
 
 	maxHP = nowHP = 10;
 	maxMP = 10;
 	nowMP = 10;
+	isDeath = false;
+	isSkill1 = false;
+	
+	distance = 1000000.0;
 }
 
 void ABaseUnit::Attack()

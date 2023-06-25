@@ -36,6 +36,15 @@ public:
 	UPROPERTY(EditAnywhere)
 	AHeroCharacter* heroCharacter;
 
+	UPROPERTY(EditAnywhere, Category = "Hero")
+		ABaseUnit* archer;
+
+	UPROPERTY(EditAnywhere, Category = "Hero")
+		ABaseUnit* hero;
+
+	UPROPERTY(EditAnywhere, Category = "Hero")
+		ABaseUnit* maze;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

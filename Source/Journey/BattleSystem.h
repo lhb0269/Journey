@@ -22,6 +22,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class AActor> Player;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	TSubclassOf<class AActor> Hero;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	TSubclassOf<class AActor> Archer;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	TSubclassOf<class AActor> Mage;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class AActor> Monster;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class ATileInfo> TileInfo;

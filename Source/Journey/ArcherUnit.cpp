@@ -5,12 +5,12 @@
 
 AArcherUnit::AArcherUnit()
 {
-    if (HPMPWidgetComponent)
+ /*   if (HPMPWidgetComponent)
     {
 
             HPMPWidgetComponent->Initialize(this);
         
-    }
+    }*/
 }
 
 void AArcherUnit::Attack()

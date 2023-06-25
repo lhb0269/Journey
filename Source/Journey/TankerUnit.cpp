@@ -5,12 +5,12 @@
 
 ATankerUnit::ATankerUnit()
 {
-    if (HPMPWidgetComponent)
-    {
+    //if (HPMPWidgetComponent)
+    //{
 
-        HPMPWidgetComponent->Initialize(this);
-        
-    }
+    //    HPMPWidgetComponent->Initialize(this);
+    //    
+    //}
 }
 
 void ATankerUnit::Attack()

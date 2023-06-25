@@ -5,10 +5,10 @@
 
 AMageUnit::AMageUnit()
 {
-    if (HPMPWidgetComponent)
-    {
-          HPMPWidgetComponent->Initialize(this);     
-    }
+    //if (HPMPWidgetComponent)
+    //{
+    //      HPMPWidgetComponent->Initialize(this);     
+    //}
 }
 
 void AMageUnit::Attack()

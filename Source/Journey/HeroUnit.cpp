@@ -5,12 +5,13 @@
 
 AHeroUnit::AHeroUnit()
 {
-    if (HPMPWidgetComponent)
+  /*  if (HPMPWidgetComponent)
     {
 
             HPMPWidgetComponent->Initialize(this);
         
     }
+    */
 }
 
 void AHeroUnit::Attack()

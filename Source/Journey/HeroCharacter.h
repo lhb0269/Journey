@@ -9,6 +9,7 @@
 #include "Engine/DataTable.h"
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
+#include "HeroesInfoWidget.h"
 #include "HeroAIController.h"
 #include "NiagaraComponent.h"
 #include "Camera/CameraComponent.h"
@@ -81,6 +82,15 @@ public:
 
 
 	UWroldMapWidget* WorldMapWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UHeroesInfoWidget> HeroesUIWidgetClass;
+
+
+	UHeroesInfoWidget* HeroesUIWidget;
+
+
+
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	int32 timeMinutes = 0;
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
@@ -117,7 +127,10 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
 	ACameraActor* MinimapCamera;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera")
+	ACameraActor* HeroesUICamera;
 	
+
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		FVector LandOceanPos;
@@ -160,6 +173,7 @@ public:
 	// 마우스 휠 클릭 상태를 저장하는 변수
 	bool bIsMouseWheelClicked;
 
+	bool MinimapToggle;
 	
 	void ChangeController(bool isAI);
 
@@ -191,6 +205,11 @@ public:
 	void ChangeGameMode();
 	UFUNCTION()
 	void ToggleWorldMapUI();
+	UFUNCTION()
+	void ToggleMiniMap();
+
+	UFUNCTION()
+	void ToggleHeroesUI();
 
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class UScrollUI> WidgetClass;

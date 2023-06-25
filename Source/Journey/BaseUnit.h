@@ -33,10 +33,10 @@ public:
 	virtual void Die();
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	TSubclassOf<UUnitHPMPWidget> HPMPWidgetClass;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	//TSubclassOf<UUnitHPMPWidget> HPMPWidgetClass;
 
-	UUnitHPMPWidget* HPMPWidgetComponent;
+	//UUnitHPMPWidget* HPMPWidgetComponent;
 
 
 	float GetHealthPercent();
@@ -67,8 +67,7 @@ public:
 		float power;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	FVector StartLocation;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	AActor* TargetMonster;
+
 
 protected:
 	// Called when the game starts or when spawned

@@ -57,6 +57,8 @@ AHeroCharacter::AHeroCharacter()
 	shop = CreateDefaultSubobject<UShopComponent>("Shop");
 	shop->Capacity = 20;
 
+	MinimapToggle = true;
+
 	hp = 50;
 	Armour = 200;
 	gold = 200;
@@ -474,6 +476,36 @@ void AHeroCharacter::ToggleWorldMapUI()
 	}
 }
 
+void AHeroCharacter::ToggleHeroesUI()
+{
+
+	if (!HeroesUIWidget)
+	{
+		ToggleMiniMap();
+
+		PlayerController->SetViewTargetWithBlend(HeroesUICamera, 0);
+		APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
+		CameraManager->SetFOV(60);
+
+		HeroesUIWidget = CreateWidget<UHeroesInfoWidget>(GetWorld(), HeroesUIWidgetClass);
+		if (HeroesUIWidget)
+		{
+			HeroesUIWidget->AddToViewport();
+		}
+
+		
+	}
+	else
+	{
+		ToggleMiniMap();
+
+		HeroesUIWidget->RemoveFromParent();
+		HeroesUIWidget = nullptr;
+
+		ChangeToWorldMapCamera();
+	}
+}
+
 void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                     const FHitResult& SweepResult)
@@ -745,6 +777,8 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("GoToWorld", IE_Released, this, &AHeroCharacter::ChangeToWorldMapCamera);
 
 	PlayerInputComponent->BindAction("OpenWorldUI", IE_Released, this, &AHeroCharacter::ToggleWorldMapUI);
+
+	PlayerInputComponent->BindAction("OpenHeroesUI", IE_Released, this, &AHeroCharacter::ToggleHeroesUI);
 }
 
 void AHeroCharacter::OnZoomIn()
@@ -922,6 +956,10 @@ void AHeroCharacter::BeginPlay()
 		{
 			MinimapCamera = CameraActor;
 		}
+		if (IsValid(CameraActor) && CameraActor->ActorHasTag(FName("HeroesUICamera")))
+		{
+			HeroesUICamera = CameraActor;
+		}
 	}
 
 	//// 시작시 월드맵 카메라로 전환 
@@ -942,6 +980,21 @@ void AHeroCharacter::BeginPlay()
 	{
 		MinimapWidget->AddToViewport();
 		SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
+	}
+}
+
+void AHeroCharacter::ToggleMiniMap()
+{
+
+	if (MinimapToggle)
+	{
+		MinimapToggle = false;
+		MinimapWidget->RemoveFromParent();
+	}
+	else
+	{
+		MinimapToggle = true;
+		MinimapWidget->AddToViewport();
 	}
 }
 

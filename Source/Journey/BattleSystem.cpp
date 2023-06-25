@@ -17,15 +17,33 @@ void ABattleSystem::SpawnHeroInWorld(UWorld* World,  FVector SpawnLocation,  FRo
     if (World)
     {
         AActor* SpawnedHero = nullptr;
+        AActor* SpawnedMage = nullptr;
+        AActor* SpawnedArcher = nullptr;
 
-        if (Player)
+        FVector loc;
+        if (Hero)
         {
-            SpawnLocation.X += 200;
-            SpawnLocation.Y -= 750;
-            SpawnLocation.Z += 200;
+            loc = FVector(SpawnLocation.X + 100, SpawnLocation.Y - 750, SpawnLocation.Z + 200);
 
-            SpawnedHero = World->SpawnActor<AActor>(Player, SpawnLocation, SpawnRotation);
+            SpawnedHero = World->SpawnActor<AActor>(Hero, loc, SpawnRotation);
             Heroes.Add(SpawnedHero);
+        }
+
+        if (Mage)
+        {
+            loc = FVector(SpawnLocation.X + 200, SpawnLocation.Y - 750, SpawnLocation.Z + 200);
+     
+
+            SpawnedMage = World->SpawnActor<AActor>(Mage, loc, SpawnRotation);
+            Heroes.Add(SpawnedMage);
+        }
+
+        if (Archer)
+        {
+            loc = FVector(SpawnLocation.X + 300, SpawnLocation.Y - 750, SpawnLocation.Z + 200);
+
+            SpawnedArcher = World->SpawnActor<AActor>(Archer, loc, SpawnRotation);
+            Heroes.Add(SpawnedArcher);
         }
 
     }

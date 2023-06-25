@@ -8,7 +8,12 @@
 #include "Components/Button.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "BaseUnit.h"
 #include "Components/Image.h"
+#include "EngineUtils.h"
+#include "ArcherUnit.h"
+#include "MageUnit.h"
+#include "HeroUnit.h"
 #include "HeroesInfoWidget.generated.h"
 
 /**
@@ -20,6 +25,18 @@ class JOURNEY_API UHeroesInfoWidget : public UUserWidget
 	GENERATED_BODY()
 public:
 	virtual void NativeConstruct() override;
+
+
+	UPROPERTY(EditAnywhere, Category = "Hero")
+		ABaseUnit* archer;
+
+	UPROPERTY(EditAnywhere, Category = "Hero")
+		ABaseUnit* hero;
+
+	UPROPERTY(EditAnywhere,  Category = "Hero")
+		ABaseUnit* maze;
+
+	int count;
 private:
 	UPROPERTY(Meta = (BindWidget))
 	UCanvasPanel* RootPanel;
@@ -51,6 +68,7 @@ private:
 	 UImage* SkillBG;
 	UPROPERTY(meta = (BindWidget))
 	 UImage* EquipBG;
+
 
 	UFUNCTION()
 	void OnSkillBtnClicked();
