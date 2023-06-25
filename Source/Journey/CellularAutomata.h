@@ -90,7 +90,7 @@ public:
 	vector<int32>width;
 
 	TArray<FVector>MapPos;
-
+	TArray<FVector>MinimapPos;
 	vector<vector<int32>>height;
 
 	// tile 정보를 저장할 vector

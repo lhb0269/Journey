@@ -19,6 +19,8 @@ class JOURNEY_API AProceduralNoiseGenerator : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AProceduralNoiseGenerator();
+	UPROPERTY(EditAnywhere)
+		int32 Objective = 0;
 	UPROPERTY(EditAnywhere, Meta = (ClampMin = 0))
 		int32 XSize = 0;
 	UPROPERTY(EditAnywhere, Meta = (ClampMin = 0))
@@ -33,6 +35,8 @@ public:
 		float UVScale = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		int32 Tilemax = 5;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor> Scroll;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor> castle;
 	UPROPERTY(EditAnywhere)
@@ -58,6 +62,10 @@ public:
 	TArray<AActor*>AAray;
 	vector<int32>width;
 	vector<vector<int32>>height;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+		class USpringArmComponent* MinimapArm;
+	// UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	// 	class USceneCaptureComponent2D* Minimap;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -73,6 +81,7 @@ public:
 	void CreateTrees();
 	void CreateSpecial();
 	void CreateCastle();
+	void CreateNPC();
 private:
 	UProceduralMeshComponent* ProceduralMesh;
 	TArray<FVector>Vertices;
@@ -90,4 +99,8 @@ private:
 	float TreeTime;
 	float TownTime;
 	float SpecialTime;
+
+	int castlx;
+	int castly;
+	int32 NPCCount;
 };

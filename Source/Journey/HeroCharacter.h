@@ -10,10 +10,12 @@
 #include "JourneySaveGame.h"
 #include "CellularAutomata.h"
 #include "HeroAIController.h"
+#include "NiagaraComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "ProceduralNoiseGenerator.h"
 #include "WroldMapWidget.h"
+#include "ScrollUI.h"
 #include "HeroCharacter.generated.h"
 
 UCLASS()
@@ -77,7 +79,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UWroldMapWidget> WorldMapWidgetClass;
 
+
 	UWroldMapWidget* WorldMapWidget;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	int32 timeMinutes = 0;
+	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
+	int32 timeSeconds = 10;
 	
 	// CONTROLLER 
 	UPROPERTY()
@@ -118,7 +125,19 @@ public:
 		bool landClick;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		bool oceanClick;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UNiagaraComponent* TownEffect;
+	
+	UPROPERTY(EditAnywhere,Category="Minimap")
+	USpringArmComponent* SpringArm;
+	UPROPERTY(EditAnywhere,Category="Minimap")
+	USceneCaptureComponent2D* Minimap;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Minimap")
+	TSubclassOf<class UUserWidget> Minimapclass;
+	UUserWidget* MinimapWidget;
+	
 	float DefaultFOV;
 
 	bool isCutsceneEnd;
@@ -131,7 +150,7 @@ public:
 	void ChangeToBattleCamera();
 	void ChangeToBossBattleCamera();
 	void ChangeToTownCamera();
-
+	void OpenMiniMap();
 	// 마우스 휠 클릭 이벤트 처리를 위한 함수
 	void OnMouseWheelClicked();
 	void OnMouseWheelReleased();
@@ -141,7 +160,7 @@ public:
 	// 마우스 휠 클릭 상태를 저장하는 변수
 	bool bIsMouseWheelClicked;
 
-
+	
 	void ChangeController(bool isAI);
 
 	void cutSceneEnd();
@@ -153,6 +172,8 @@ public:
 	ACellularAutomata* CellularActor;
 	AProceduralNoiseGenerator* ProceduralActor;
 
+	FVector FXscale;
+	FVector FXInitScale;
 	vector<FString>townname;
 	int32 townnamecnt;
 	void LoadGame();
@@ -171,7 +192,10 @@ public:
 	UFUNCTION()
 	void ToggleWorldMapUI();
 
-
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UScrollUI> WidgetClass;
+	UPROPERTY(VisibleAnywhere)
+	class UScrollUI* scrollUI;
 	// 월드맵 충돌 체크
 	UFUNCTION()
 	void OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor,

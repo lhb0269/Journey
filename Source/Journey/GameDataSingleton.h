@@ -22,6 +22,12 @@ public:
     UFUNCTION(BlueprintCallable, Category = "UGameDataSingleton")
      static UGameDataSingleton* ResetInstance();
 
+	UFUNCTION(BlueprintCallable,Category="Partner")
+	void AddPartner();
+
+	UFUNCTION(BlueprintCallable,Category="Partner")
+	void RemovePartner();
+	
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int TotalKeyNum;
 
@@ -41,6 +47,8 @@ public:
     FVector BossWorldSpawnPos;
 
     FVector playerSpawnPos;
+
+	TArray<bool> IsPartner;
 
 private:
     UGameDataSingleton();
