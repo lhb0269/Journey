@@ -28,6 +28,12 @@ public:
 
     UPROPERTY()
         bool isPossible = true;
+
+    UPROPERTY()
+        bool isTown = false;
+
+    UPROPERTY()
+        bool isWater = false;
 };
 
 UCLASS()

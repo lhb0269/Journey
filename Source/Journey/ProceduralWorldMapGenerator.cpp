@@ -288,6 +288,11 @@ void AProceduralWorldMapGenerator::GenerateTowns()
 
     TownTime = terrainTime;
 
+    int townDistance = 10; 
+    int lastTownPositionI = -townDistance; 
+    int lastTownPositionJ = -townDistance; 
+
+
     for (int i = 1; i < width - 1; i++)
     {
         for (int j = 1; j < height - 1; j++)
@@ -325,6 +330,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
                             GrassCount += 1;
                             heightMap[i][j].isPossible = false;
+                            heightMap[i][j].isTown = true;
                             townnamecnt++;
 
                         }
@@ -354,6 +360,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             }
                             DesertCount += 1;
                             heightMap[i][j].isPossible = false;
+                            heightMap[i][j].isTown = true;
                             townnamecnt++;
 
                         }
@@ -373,7 +380,8 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
 
                             SnowCount += 1;
-                            
+                            heightMap[i][j].isPossible = false;
+                            heightMap[i][j].isTown = true;
                             townnamecnt++;
 
                         }
@@ -472,6 +480,10 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
            
                 }
 
+            }
+            else
+            {
+                heightMap[i][j].isWater = true;
             }
         }
     }
