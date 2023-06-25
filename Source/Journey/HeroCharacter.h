@@ -13,8 +13,8 @@
 #include "Camera/CameraComponent.h"
 #include "Camera/PlayerCameraManager.h"
 #include "ProceduralNoiseGenerator.h"
+#include "WroldMapWidget.h"
 #include "HeroCharacter.generated.h"
-
 
 UCLASS()
 class JOURNEY_API AHeroCharacter : public ABasicCharacter
@@ -74,7 +74,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UWroldMapWidget> WorldMapWidgetClass;
 
+	UWroldMapWidget* WorldMapWidget;
 	
 	// CONTROLLER 
 	UPROPERTY()
@@ -165,6 +168,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void ChangeGameMode();
+	UFUNCTION()
+	void ToggleWorldMapUI();
 
 
 	// 월드맵 충돌 체크

@@ -440,6 +440,26 @@ void AHeroCharacter::ChangeGameMode()
 {
 }
 
+void AHeroCharacter::ToggleWorldMapUI()
+{
+	// 월드맵 위젯이 생성되지 않았다면 생성.
+	if (!WorldMapWidget)
+	{
+		WorldMapWidget = CreateWidget<UWroldMapWidget>(GetWorld(), WorldMapWidgetClass);
+		if (WorldMapWidget)
+		{
+			WorldMapWidget->AddToViewport();
+			WorldMapWidget->SetRenderScale(FVector2D(0.5, 0.5));
+		}
+	}
+	// 월드맵 위젯이 이미 생성되어 있다면 제거.
+	else
+	{
+		WorldMapWidget->RemoveFromParent();
+		WorldMapWidget = nullptr;
+	}
+}
+
 void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
                                     const FHitResult& SweepResult)
@@ -666,6 +686,8 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 	PlayerInputComponent->BindAction("GoToMinimap", IE_Released, this, &AHeroCharacter::ChangeToMiniMapCamera);
 	PlayerInputComponent->BindAction("GoToWorld", IE_Released, this, &AHeroCharacter::ChangeToWorldMapCamera);
+
+	PlayerInputComponent->BindAction("OpenWorldUI", IE_Released, this, &AHeroCharacter::ToggleWorldMapUI);
 }
 
 void AHeroCharacter::OnZoomIn()
