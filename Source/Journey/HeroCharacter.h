@@ -163,7 +163,7 @@ public:
 	void ChangeToBattleCamera();
 	void ChangeToBossBattleCamera();
 	void ChangeToTownCamera();
-	void OpenMiniMap();
+	void ToggleMiniMap();
 	// 마우스 휠 클릭 이벤트 처리를 위한 함수
 	void OnMouseWheelClicked();
 	void OnMouseWheelReleased();
@@ -174,7 +174,7 @@ public:
 	bool bIsMouseWheelClicked;
 
 	bool MinimapToggle;
-	
+
 	void ChangeController(bool isAI);
 
 	void cutSceneEnd();
