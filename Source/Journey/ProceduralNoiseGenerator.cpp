@@ -199,6 +199,14 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	{
 		int max_cnt = 5;
 		int cnt = 0;
+
+		int32 num = FMath::RandRange(0,1);
+		if(num==0)
+			height[XSize/5 * castlx][YSize/5 * castly] = 9;
+		else
+		{
+			height[XSize/5 * castlx][YSize/5 * castly] = 10;
+		}
 		while(cnt < max_cnt)
 		{
 			int32 i = FMath::RandRange(3,XSize-3);
