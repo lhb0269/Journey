@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "GameDataSingleton.h"
 #include "ScrollUI.generated.h"
 
 /**
@@ -24,4 +25,6 @@ public:
 		void ChooseShot();
 	UFUNCTION(BlueprintCallable)
 		void ChooseMagic();
+private:
+	UGameDataSingleton* Instance;
 };

@@ -3,6 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BaseUnit.h"
+#include "ArcherUnit.h"
+#include "HeroUnit.h"
+#include "MageUnit.h"
 #include "UObject/NoExportTypes.h"
 #include "CellularAutomata.h"
 #include "GameDataSingleton.generated.h"
@@ -27,6 +31,15 @@ public:
 
 	UFUNCTION(BlueprintCallable,Category="Partner")
 	void RemovePartner();
+
+	UFUNCTION(BlueprintCallable,Category="Upgrade")
+	void FightUpgrade();
+
+	UFUNCTION(BlueprintCallable,Category="Upgrade")
+	void ShotUpgrade();
+
+	UFUNCTION(BlueprintCallable,Category="Upgrade")
+	void MagicUpgrade();
 	
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int TotalKeyNum;
@@ -50,6 +63,14 @@ public:
 
 	TArray<bool> IsPartner;
 
+	TArray<ABaseUnit*> Lineup;
+	class AArcherUnit* archer;
+	class AHeroUnit* Hero;
+	class AMageUnit* Mage;
+
+	int32 Hero_Upgrade;
+	int32 archer_Upgrade;
+	int32 Mage_Upgrade;
 private:
     UGameDataSingleton();
 
