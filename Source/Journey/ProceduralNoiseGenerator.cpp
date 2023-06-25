@@ -148,7 +148,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	int gap = 225;
 	for (int i = 0; i < XSize; ++i) {
 		for (int j = 0; j < YSize; ++j) {
-			width.push_back(FMath::RandRange(0, 1));
+				width.push_back(FMath::RandRange(0, 1));
 		}
 		height.push_back(width);
 		width.clear();
@@ -199,24 +199,33 @@ void AProceduralNoiseGenerator::CellularAutomata()
 	{
 		int max_cnt = 5;
 		int cnt = 0;
-
+		int32 rad = 8;
 		int32 num = FMath::RandRange(0,1);
 		if(num==0)
-			height[XSize/5 * castlx][YSize/5 * castly] = 9;
+		{
+			if(height[XSize/2][YSize/2 + rad] == 0)
+				height[XSize/2][YSize/2 + rad] = 9;
+		}
 		else
 		{
-			height[XSize/5 * castlx][YSize/5 * castly] = 10;
+			if(height[XSize/2][YSize/2 + rad] == 0)
+				height[XSize/2][YSize/2 + rad] = 10;
 		}
-		while(cnt < max_cnt)
-		{
-			int32 i = FMath::RandRange(3,XSize-3);
-			int32 j = FMath::RandRange(3,YSize-3);
-			if(height[i][j] == 0)
-			{
-				height[i][j] = 3;
-				cnt++;
-			}
-		}
+		if(height[XSize/2 + rad][YSize/2 + rad] == 0)
+			height[XSize/2 + rad][YSize/2 + rad] = 3;
+		if(height[XSize/2+rad][YSize/2] == 0)
+			height[XSize/2+rad][YSize/2] = 3;
+		if(height[XSize/2+rad][YSize/2 - rad] == 0)
+			height[XSize/2+rad][YSize/2 - rad] = 3;
+		if(height[XSize/2][YSize/2 - rad] == 0)
+			height[XSize/2][YSize/2 - rad] = 3;
+		if(height[XSize/2 - rad][YSize/2 - rad] == 0)
+			height[XSize/2 - rad][YSize/2 - rad] = 3;
+		if(height[XSize/2-rad][YSize/2] == 0)
+			height[XSize/2-rad][YSize/2] = 3;
+		if(height[XSize/2-rad][YSize/2 + rad] == 0)
+			height[XSize/2-rad][YSize/2 + rad] = 3;
+		
 	}
 	else if (Objective == 2)//중간
 	{
@@ -647,7 +656,10 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
 				}
 				else if (height[i][j] == 9) { //상점생성
-					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					if(Objective == 1)
+						rotator.Yaw = -90;
+					else
+						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
 					FTimerDelegate TimerDelegate;
 					AActor* Shoptile;
@@ -659,7 +671,10 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
 				}
 				else if (height[i][j] == 10) { //여관생성
-					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					if(Objective == 1)
+						rotator.Yaw = -90;
+					else
+						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
 					FTimerDelegate TimerDelegate;
 					AActor* moteltile;
