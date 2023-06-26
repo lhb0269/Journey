@@ -480,6 +480,8 @@ void AProceduralNoiseGenerator::CreateHouses()
 				}
 				if(Objective >=2)
 				{
+					rotator.Pitch=0;
+					rotator.Roll = 0;
 					if (height[i][j] == 3) {
 						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 						int32 num = FMath::RandRange(0, 1);
@@ -561,6 +563,7 @@ void AProceduralNoiseGenerator::CreateTrees()
 					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
 					SpawnLocation.Z = GetActorLocation().Z - 10;
 					rotator.Roll = 0;
+					rotator.Pitch = 0;
 					if (height[i][j] == 1) {
 						rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
 
@@ -591,6 +594,7 @@ void AProceduralNoiseGenerator::CreateTrees()
 					//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
 					SpawnLocation.Z = GetActorLocation().Z - 10;
 					rotator.Roll = 0;
+					rotator.Pitch = 0;
 					if (height[i][j] == 1) {
 						rotator.Yaw = FMath::FRandRange(-90.0f, 90.0f);
 

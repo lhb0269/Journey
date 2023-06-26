@@ -163,7 +163,6 @@ public:
 	void ChangeToBattleCamera();
 	void ChangeToBossBattleCamera();
 	void ChangeToTownCamera();
-	void ToggleMiniMap();
 	// 마우스 휠 클릭 이벤트 처리를 위한 함수
 	void OnMouseWheelClicked();
 	void OnMouseWheelReleased();

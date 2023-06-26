@@ -3,7 +3,6 @@
 
 #include "GameDataSingleton.h"
 
-#include "SAdvancedRotationInputBox.h"
 
 UGameDataSingleton* UGameDataSingleton::Instance = nullptr;
 

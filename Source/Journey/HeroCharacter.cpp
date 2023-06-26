@@ -995,22 +995,6 @@ void AHeroCharacter::BeginPlay()
 		SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
 	}
 }
-
-void AHeroCharacter::ToggleMiniMap()
-{
-
-	if (MinimapToggle)
-	{
-		MinimapToggle = false;
-		MinimapWidget->RemoveFromParent();
-	}
-	else
-	{
-		MinimapToggle = true;
-		MinimapWidget->AddToViewport();
-	}
-}
-
 void AHeroCharacter::OnLeftClick()
 {
 	if (!isInBattle)
