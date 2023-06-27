@@ -215,15 +215,12 @@ void AHeroCharacter::ChangeToTownCamera()
 
 void AHeroCharacter::ToggleMiniMap()
 {
-	if(MinimapToggle)
+	if(MinimapWidget)
 	{
-		MinimapToggle=false;
-		MinimapWidget->RemoveFromParent();
-	}
-	else
-	{
-		MinimapToggle=true;
-		MinimapWidget->AddToViewport();
+		if(MinimapWidget->GetVisibility() == ESlateVisibility::Visible)
+			MinimapWidget->SetVisibility(ESlateVisibility::Collapsed);
+		else
+			MinimapWidget->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
@@ -492,7 +489,7 @@ void AHeroCharacter::ToggleHeroesUI()
 
 	if (!HeroesUIWidget)
 	{
-		ToggleMiniMap();
+		//ToggleMiniMap();
 
 		PlayerController->SetViewTargetWithBlend(HeroesUICamera, 0);
 		APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
@@ -508,7 +505,7 @@ void AHeroCharacter::ToggleHeroesUI()
 	}
 	else
 	{
-		ToggleMiniMap();
+		//ToggleMiniMap();
 
 		HeroesUIWidget->RemoveFromParent();
 		HeroesUIWidget = nullptr;
