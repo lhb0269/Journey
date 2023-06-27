@@ -90,3 +90,11 @@ void AGameManager::createPlayer()
 {
 
 }
+
+void AGameManager::createPortal()
+{
+}
+
+void AGameManager::createBossWorld()
+{
+}
