@@ -50,7 +50,7 @@ UGameDataSingleton* UGameDataSingleton::ResetInstance()
 
 void UGameDataSingleton::AddPartner()
 {
-    IsPartner.Add(true);
+   // IsPartner.Add(true);
     UE_LOG(LogTemp,Warning,TEXT("Add Partner"));
 }
 

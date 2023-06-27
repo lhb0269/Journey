@@ -34,11 +34,15 @@ void ANPC::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ANPC::AddPartner()
 {
-	Singleton->GetInstance()->AddPartner();
+	Singleton = UGameDataSingleton::GetInstance();
+	if(Singleton != nullptr)
+		Singleton->AddPartner();
 }
 
 void ANPC::RemovePartner()
 {
-	Singleton->GetInstance()->RemovePartner();
+	Singleton = UGameDataSingleton::GetInstance();
+	if(Singleton != nullptr)
+		Singleton->RemovePartner();
 }
 

@@ -665,6 +665,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					else
 						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
+					SpawnLocation.Z = GetActorLocation().Z + 20;
 					FTimerDelegate TimerDelegate;
 					AActor* Shoptile;
 					TimerDelegate.BindLambda([=, &Shoptile]() {
@@ -680,6 +681,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					else
 						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
+					SpawnLocation.Z = GetActorLocation().Z + 20;
 					FTimerDelegate TimerDelegate;
 					AActor* moteltile;
 					TimerDelegate.BindLambda([=, &moteltile]() {
