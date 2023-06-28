@@ -17,8 +17,10 @@
 #include "ProceduralNoiseGenerator.h"
 #include "WroldMapWidget.h"
 #include "ScrollUI.h"
-#include "HeroCharacter.generated.h"
+#include <tuple>
 
+#include "PortalUI.h"
+#include "HeroCharacter.generated.h"
 UCLASS()
 class JOURNEY_API AHeroCharacter : public ABasicCharacter
 {
@@ -75,6 +77,8 @@ public:
 	UFUNCTION(BlueprintCallable,Category="Items")
 	void UseItem(class UItem* Item);
 
+	UFUNCTION(BlueprintCallable,Category="Portal")
+	void UsePortal(FVector pos,FVector savedLoc);
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
@@ -89,7 +93,9 @@ public:
 
 	UHeroesInfoWidget* HeroesUIWidget;
 
-
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="UI")
+	TSubclassOf<UPortalUI> PortalUIClass;
+	UPortalUI* portalUI;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	int32 timeMinutes = 0;
@@ -150,7 +156,9 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Minimap")
 	TSubclassOf<class UUserWidget> Minimapclass;
 	UUserWidget* MinimapWidget;
+
 	
+	vector<tuple<FString,FVector,FVector>> savedTownInfo;
 	float DefaultFOV;
 
 	bool isCutsceneEnd;
@@ -198,6 +206,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void GoToWorld();
 
+	UFUNCTION(BlueprintCallable)
+	void PortalClose();
 	void ChangeCamera(bool isWorld);
 
 	UFUNCTION(BlueprintCallable, Category = "Gameplay")

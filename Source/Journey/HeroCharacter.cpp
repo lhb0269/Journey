@@ -85,6 +85,7 @@ AHeroCharacter::AHeroCharacter()
 	scrollUI = nullptr;
 
 	MinimapToggle = true;
+
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -108,6 +109,16 @@ void AHeroCharacter::UseItem(UItem* Item)
 			}
 		}
 	}
+}
+
+void AHeroCharacter::UsePortal(FVector pos,FVector savedLoc)
+{
+	SetActorLocation(pos);
+	FVector NewVector = pos;
+	NewVector.Z = 1000;
+	SpringArm->SetWorldLocation(NewVector);
+	portalUI=nullptr;
+	SavedPos = savedLoc;
 }
 
 // void AHeroCharacter::BuyItem(UItem* Item, UInventoryComponent* Inventory)
@@ -446,6 +457,11 @@ void AHeroCharacter::GoToWorld()
 	SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
 }
 
+void AHeroCharacter::PortalClose()
+{
+	portalUI=nullptr;
+}
+
 void AHeroCharacter::ChangeCamera(bool isWorld)
 {
 	//if (isWorld)
@@ -531,6 +547,23 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	{
 		fatigue += 0.5f;
 	}
+	if(OtherActor->ActorHasTag("Portal"))
+	{
+		if (!portalUI)
+		{
+			portalUI = CreateWidget<UPortalUI>(GetWorld(), PortalUIClass);
+			if (portalUI)
+			{
+				for(auto &b:savedTownInfo)
+				{
+					portalUI->AddVillage(get<0>(b),get<1>(b),get<2>(b));
+				}
+				portalUI->AddToViewport();
+				PlayerController->SetInputMode(FInputModeGameAndUI());
+				PlayerController->bShowMouseCursor = true;
+			}
+		}
+	}
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("TownBox"))
 	{
@@ -564,6 +597,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				FVector NewVector = worldCube->Location;
 				NewVector.Z = 1000;
 				SpringArm->SetWorldLocation(NewVector);
+				//
 				Minimap->bCaptureEveryFrame = true;
 				Minimap->bCaptureOnMovement = true;
 				//SwitchToFollowCamera();
@@ -578,7 +612,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				timeMinutes = 1;
 				timeSeconds = 59;
 
-				
+				//save visited town info
+				savedTownInfo.push_back(make_tuple(worldCube->townname,worldCube->Location,SavedPos));
 				FTimerHandle MyTimerHandle;
 				if(!GetWorld()->GetTimerManager().IsTimerActive(MyTimerHandle))
 				{
