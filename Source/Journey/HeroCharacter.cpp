@@ -614,39 +614,39 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 				//save visited town info
 				savedTownInfo.push_back(make_tuple(worldCube->townname,worldCube->Location,SavedPos));
-				FTimerHandle MyTimerHandle;
-				if(!GetWorld()->GetTimerManager().IsTimerActive(MyTimerHandle))
-				{
-					GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
-					{
-						if(isTown)
-						{
-							if(timeSeconds != 0)
-							{
-								timeSeconds-=1;
-								FXscale.X+=0.01;
-								FXscale.Y+=0.01;
-								FXscale.Z+=0.3;
-				
-								TownEffect->SetRelativeScale3D(FXscale);
-							}
-							else
-							{
-								if(timeMinutes !=0)
-								{
-									timeSeconds=59;
-									timeMinutes-=1;
-								}
-								else
-								{
-									GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
-									MyTimerHandle.Invalidate();
-									GoToWorld();
-								}
-							}
-						}
-					}), 1.0f,true);
-				}
+				// FTimerHandle MyTimerHandle;
+				// if(!GetWorld()->GetTimerManager().IsTimerActive(MyTimerHandle))
+				// {
+				// 	GetWorld()->GetTimerManager().SetTimer(MyTimerHandle, FTimerDelegate::CreateLambda([&]()
+				// 	{
+				// 		if(isTown)
+				// 		{
+				// 			if(timeSeconds != 0)
+				// 			{
+				// 				timeSeconds-=1;
+				// 				FXscale.X+=0.01;
+				// 				FXscale.Y+=0.01;
+				// 				FXscale.Z+=0.3;
+				//
+				// 				TownEffect->SetRelativeScale3D(FXscale);
+				// 			}
+				// 			else
+				// 			{
+				// 				if(timeMinutes !=0)
+				// 				{
+				// 					timeSeconds=59;
+				// 					timeMinutes-=1;
+				// 				}
+				// 				else
+				// 				{
+				// 					GetWorld()->GetTimerManager().ClearTimer(MyTimerHandle);
+				// 					MyTimerHandle.Invalidate();
+				// 					GoToWorld();
+				// 				}
+				// 			}
+				// 		}
+				// 	}), 1.0f,true);
+				//}
 			}
 			else
 			{
