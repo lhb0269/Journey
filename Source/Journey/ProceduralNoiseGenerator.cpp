@@ -695,7 +695,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 				else if (height[i][j] == 12) { //포탈생성
 					rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
-					SpawnLocation.Z = GetActorLocation().Z + 200;
+					SpawnLocation.Z = GetActorLocation().Z + 100;
 					FTimerDelegate TimerDelegate;
 					AActor* Portal;
 					TimerDelegate.BindLambda([=, &Portal]() {
