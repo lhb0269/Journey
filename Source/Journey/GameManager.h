@@ -45,6 +45,11 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Hero")
 		ABaseUnit* maze;
 
+	UPROPERTY(EditAnywhere, Category = "BOSS")
+	AActor* protal;
+	UPROPERTY(EditAnywhere, Category = "BOSS")
+	AProceduralWorldMapGenerator* bossWorld;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -57,4 +62,7 @@ public:
 	void createTown();
 	void createWorldMap();
 	void createPlayer();
+
+	void createPortal();
+	void createBossWorld();
 };
