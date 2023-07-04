@@ -34,6 +34,11 @@ public:
 
     UPROPERTY()
         bool isWater = false;
+    UPROPERTY()
+        bool isPortal;
+    UPROPERTY()
+        FVector location;
+
 };
 
 UCLASS()
@@ -67,6 +72,8 @@ public:
     TSubclassOf<class AActor> DesertObj;
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AActor> GrassObj;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AActor> Portal;
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AWorldCubeBase> GolemBase;
 
@@ -121,4 +128,8 @@ public:
     float terrainTime;
     float TownTime;
     float MonsterTime;
+
+    void createBossPortal();
+
+    bool isPortal;
 };

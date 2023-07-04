@@ -906,38 +906,10 @@ void AHeroCharacter::OnZoomOut()
 
 void AHeroCharacter::createPortal()
 {
-	// 1. wcube 체크
-	// 마을이 아니고 지나갈수 있는 타일인 경우
 
-	if (!CellularActor)
-	{
-		CellularActor = Cast<ACellularAutomata>(
-			UGameplayStatics::GetActorOfClass(GetWorld(), ACellularAutomata::StaticClass()));
-	}
-	int tilemax = CellularActor->Tilemax * 2;
+	AProceduralWorldMapGenerator* worldMap = Cast<AProceduralWorldMapGenerator>(UGameplayStatics::GetActorOfClass(GetWorld(), AProceduralWorldMapGenerator::StaticClass()));
+	worldMap->createBossPortal();
 
-	if (CellularActor->isPortalExist)
-		return;
-
-	bool IsDuplicate = true;
-	// 게임 월드에 있는 모든 액터를 찾습니다.
-	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		AActor* Actor = *ActorItr;
-
-		// 해당 태그를 가진 액터만 선택합니다.
-		if (Actor->ActorHasTag("TownBox"))
-		{
-			AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(Actor);
-			if (!worldCube->isTown)
-			{
-				worldCube->isVisited = false;
-				worldCube->isPortal=true;
-				CellularActor->isPortalExist = true;
-				break;
-			}
-		}
-	}
 }
 
 void AHeroCharacter::BeginPlay()

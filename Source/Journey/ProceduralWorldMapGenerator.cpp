@@ -11,6 +11,8 @@
 
 AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
 {
+    isPortal = false;
+
  	PrimaryActorTick.bCanEverTick = true;
     isPlayerMove = false;
     townnamecnt=0;
@@ -223,6 +225,7 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
             if (heightValue < seaLevel)
             {
                // GetWorld()->SpawnActor<AActor>(Sea, location, FRotator::ZeroRotator);
+                heightMap[i][j].isWater = true;
             }
             else 
             {
@@ -332,7 +335,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             GrassCount += 1;
                             heightMap[i][j].isPossible = false;
                             heightMap[i][j].isTown = true;
-
+                            heightMap[i][j].location = location;
                         }
                         if (heightMap[i][j].tileType == 1 && DesertCount < 3 && heightMap[i][j].isPossible)
                         {
@@ -361,6 +364,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             DesertCount += 1;
                             heightMap[i][j].isPossible = false;
                             heightMap[i][j].isTown = true;
+                            heightMap[i][j].location = location;
 
                         }
                         if (heightMap[i][j].tileType == 2 && SnowCount < 3 && heightMap[i][j].isPossible)
@@ -382,7 +386,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             SnowCount += 1;
                             heightMap[i][j].isPossible = false;
                             heightMap[i][j].isTown = true;
-
+                            heightMap[i][j].location = location;
                         }
                 }
 
@@ -535,6 +539,30 @@ void AProceduralWorldMapGenerator::SetSurroundingTilesAsMountain(int i, int j)
             }
         }
     }
+}
+
+void AProceduralWorldMapGenerator::createBossPortal()
+{
+    if (!isPortal)
+    {
+        for (int i = 1; i < width - 1; i++)
+        {
+            for (int j = 1; j < height - 1; j++)
+            {
+                if (heightMap[i][j].isPossible && !heightMap[i][j].isTown && !heightMap[i][j].isWater)
+                {
+                    if (heightMap[i][j].tileType != 3 && heightMap[i][j].tileType != 4)
+                    {
+                        GetWorld()->SpawnActor<AActor>(Portal, heightMap[i][j].location, FRotator::ZeroRotator);
+                        isPortal = true;
+                        break;
+                    }
+                }
+            }
+        }
+    }
+   
+
 }
 
 
