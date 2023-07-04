@@ -59,6 +59,9 @@ public:
 	TSubclassOf<class AActor>NPC_Child;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>NPC_Guard;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>PortalObject;
+	
 	TArray<AActor*>AAray;
 	vector<int32>width;
 	vector<vector<int32>>height;

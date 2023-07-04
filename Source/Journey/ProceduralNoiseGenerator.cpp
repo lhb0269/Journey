@@ -442,6 +442,7 @@ void AProceduralNoiseGenerator::CellularAutomata()
 			}
 		}
 	}
+	height[XSize/2][YSize/2] = 12; //포탈
 }
 
 void AProceduralNoiseGenerator::CreateHouses()
@@ -687,6 +688,19 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					TimerDelegate.BindLambda([=, &moteltile]() {
 						moteltile = GetWorld()->SpawnActor<AActor>(motel, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(moteltile);
+						});
+					FTimerHandle TimerHandle;
+					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
+				}
+				else if (height[i][j] == 12) { //포탈생성
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					rotator.Pitch = 0;
+					SpawnLocation.Z = GetActorLocation().Z + 100;
+					FTimerDelegate TimerDelegate;
+					AActor* Portal;
+					TimerDelegate.BindLambda([=, &Portal]() {
+						Portal = GetWorld()->SpawnActor<AActor>(PortalObject, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(Portal);
 						});
 					FTimerHandle TimerHandle;
 					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);

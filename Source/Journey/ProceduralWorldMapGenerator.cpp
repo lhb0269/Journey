@@ -325,13 +325,13 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                                 wc->isVisited = false;
                                 wc->isTown = true;
 								wc->townname = townname[townnamecnt];
+                                townnamecnt++;
                                 });
                             FTimerHandle TimerHandle;
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
                             GrassCount += 1;
                             heightMap[i][j].isPossible = false;
                             heightMap[i][j].isTown = true;
-                            townnamecnt++;
 
                         }
                         if (heightMap[i][j].tileType == 1 && DesertCount < 3 && heightMap[i][j].isPossible)
@@ -347,7 +347,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             wc->isTown = true;
 
                             wc->townname = townname[townnamecnt];
-
+                                townnamecnt++;
 
                                 });
                             FTimerHandle TimerHandle;
@@ -361,7 +361,6 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             DesertCount += 1;
                             heightMap[i][j].isPossible = false;
                             heightMap[i][j].isTown = true;
-                            townnamecnt++;
 
                         }
                         if (heightMap[i][j].tileType == 2 && SnowCount < 3 && heightMap[i][j].isPossible)
@@ -375,6 +374,7 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             wc->isVisited = false;
                             wc->isTown = true;
 							wc->townname = townname[townnamecnt];
+                                townnamecnt++;
                                 });
                             FTimerHandle TimerHandle;
                             GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, TownTime, false);
@@ -382,7 +382,6 @@ void AProceduralWorldMapGenerator::GenerateTowns()
                             SnowCount += 1;
                             heightMap[i][j].isPossible = false;
                             heightMap[i][j].isTown = true;
-                            townnamecnt++;
 
                         }
                 }
