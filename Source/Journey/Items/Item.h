@@ -37,8 +37,8 @@ public:
 	UPROPERTY()
 	class UInventoryComponent* OwingInventory;
 	class UShopComponent* OwningShop;
-	virtual void Use(class AHeroCharacter* Character) PURE_VIRTUAL(UItem,);
+	virtual void Use(class ABaseUnit* Character) PURE_VIRTUAL(UItem,);
 	void Buy(UInventoryComponent* Inventory);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnUse(class AHeroCharacter* Character);
+	void OnUse(class ABaseUnit* Character);
 };

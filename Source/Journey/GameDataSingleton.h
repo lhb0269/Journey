@@ -46,7 +46,18 @@ public:
 
     UPROPERTY(EditAnywhere, BlueprintReadWrite)
     int NowKeyNum;
-
+	
+	int UIUnitNum;
+	
+	UFUNCTION(BlueprintCallable)
+	int32 GetUIUnitNum();
+	UFUNCTION(BlueprintCallable)
+	void AddUIUnitNum();
+	UFUNCTION(BlueprintCallable)
+	void MinusUIUnitNum();
+	UFUNCTION(BlueprintCallable)
+	void UseEquip(UItem* item);
+	
     bool isBossWorld;
 
     // tile TArray

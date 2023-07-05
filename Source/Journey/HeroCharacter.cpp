@@ -92,11 +92,11 @@ void AHeroCharacter::UseItem(UItem* Item)
 {
 	if (Item)
 	{
-		if (Item->OwingInventory != nullptr && Item->OwningShop == nullptr)
-		{
-			Item->Use(this);
-			Item->OnUse(this);
-		}
+		// if (Item->OwingInventory != nullptr && Item->OwningShop == nullptr)
+		// {
+		// 	Item->Use(this);
+		// 	Item->OnUse(this);
+		// }
 		if (Item->OwingInventory == nullptr && Item->OwningShop != nullptr) //사는거
 		{
 			if (gold >= Item->cost)

@@ -6,6 +6,7 @@
 #include "GameFramework/Character.h"
 #include "UnitHPMPWidget.h"
 #include "Components/WidgetComponent.h"
+#include "Items/EquipItem.h"
 #include "BaseUnit.generated.h"
 
 UCLASS()
@@ -77,6 +78,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	FVector StartLocation;
 
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Item")
+	TArray<UEquipItem*>EquipItems;
 
 protected:
 	// Called when the game starts or when spawned

@@ -13,13 +13,13 @@ UFoodItem::UFoodItem()
 	ItemDescription = "Heal 5 hp";
 }
 
-void UFoodItem::Use(AHeroCharacter* Character)
+void UFoodItem::Use(ABaseUnit* Character)
 {
 	if(Character)
 	{
 		if(OwingInventory)
 		{
-			Character->hp+=(HealthToHeal/2);
+			//Character->hp+=(HealthToHeal/2);
 			OwingInventory->RemoveItem(this);
 		}
 		else
