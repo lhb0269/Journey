@@ -10,6 +10,7 @@
 UFoodItem::UFoodItem()
 {
 	HealthToHeal = cost;
+	ItemDescription = "Heal 5 hp";
 }
 
 void UFoodItem::Use(AHeroCharacter* Character)

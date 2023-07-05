@@ -29,5 +29,11 @@ public:
 	FOnShopUpdated OnShopUpdated;
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadOnly,Category="Items")
-	TArray<class UItem*>Items;		
+	TArray<class UItem*>Items;
+
+	UPROPERTY(EditDefaultsOnly,Category="Inventory")
+	int32 ItemCnt;
+	UFUNCTION(BlueprintCallable)
+	void Reroll();
+private:
 };

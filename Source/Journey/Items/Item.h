@@ -28,8 +28,8 @@ public:
 	class UTexture2D* Thumbnail;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item")
 	FText ItemDisplayName;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta = (MultiLine = true))
-	FText ItemDescription;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item")
+	FString ItemDescription;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta = (ClampMin =0.0))
 	float weight;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Item")
