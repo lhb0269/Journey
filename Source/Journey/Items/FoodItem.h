@@ -18,5 +18,5 @@ public:
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta=(ClampMin=0.0))
 	float HealthToHeal;
 protected:
-	virtual void Use(class AHeroCharacter* Character) override;
+	virtual void Use(class ABaseUnit* Character) override;
 };

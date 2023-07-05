@@ -64,11 +64,6 @@ private:
 	 UTextBlock* LevelText;
 	UPROPERTY(meta = (BindWidget))
 	 UTextBlock* ClassText;
-	UPROPERTY(meta = (BindWidget))
-	 UImage* SkillBG;
-	UPROPERTY(meta = (BindWidget))
-	 UImage* EquipBG;
-
 
 	UFUNCTION()
 	void OnSkillBtnClicked();

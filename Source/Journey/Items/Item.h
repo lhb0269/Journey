@@ -28,8 +28,8 @@ public:
 	class UTexture2D* Thumbnail;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item")
 	FText ItemDisplayName;
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta = (MultiLine = true))
-	FText ItemDescription;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item")
+	FString ItemDescription;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta = (ClampMin =0.0))
 	float weight;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category="Item")
@@ -37,8 +37,8 @@ public:
 	UPROPERTY()
 	class UInventoryComponent* OwingInventory;
 	class UShopComponent* OwningShop;
-	virtual void Use(class AHeroCharacter* Character) PURE_VIRTUAL(UItem,);
+	virtual void Use(class ABaseUnit* Character) PURE_VIRTUAL(UItem,);
 	void Buy(UInventoryComponent* Inventory);
 	UFUNCTION(BlueprintImplementableEvent)
-	void OnUse(class AHeroCharacter* Character);
+	void OnUse(class ABaseUnit* Character);
 };

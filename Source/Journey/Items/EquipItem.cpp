@@ -10,7 +10,7 @@ UEquipItem::UEquipItem()
 	Armour = FMath::RandRange(1,10);
 }
 
-void UEquipItem::Use(AHeroCharacter* Character)
+void UEquipItem::Use(ABaseUnit* Character)
 {
 	if(Character)
 	{
@@ -22,5 +22,20 @@ void UEquipItem::Use(AHeroCharacter* Character)
 		{
 			OwningShop->RemoveItem(this);
 		}
+	}
+	switch(E_Case)
+	{
+		case 0:
+			Character->EquipItems.Add(this);
+			break;
+		case 1:
+			Character->EquipItems.Add(this);
+			break;
+		case 2:
+			Character->EquipItems.Add(this);
+			break;
+		case 3:
+			Character->EquipItems.Add(this);
+			break;
 	}
 }

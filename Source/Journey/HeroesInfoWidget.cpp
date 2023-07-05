@@ -3,6 +3,7 @@
 
 #include "HeroesInfoWidget.h"
 #include "GameManager.h"
+#include"GameDataSingleton.h"
 
 void UHeroesInfoWidget::NativeConstruct()
 {
@@ -34,28 +35,12 @@ void UHeroesInfoWidget::NativeConstruct()
 
 void UHeroesInfoWidget::OnSkillBtnClicked()
 {
-    if (SkillBG != nullptr)
-    {
-        SkillBG->SetVisibility(ESlateVisibility::Visible);
-    }
-
-    if (EquipBG != nullptr)
-    {
-        EquipBG->SetVisibility(ESlateVisibility::Hidden);
-    }
+    
 }
 
 void UHeroesInfoWidget::OnEquipBtnClicked()
 {
-    if (SkillBG != nullptr)
-    {
-        SkillBG->SetVisibility(ESlateVisibility::Hidden);
-    }
-
-    if (EquipBG != nullptr)
-    {
-        EquipBG->SetVisibility(ESlateVisibility::Visible);
-    }
+   
 }
 
 void UHeroesInfoWidget::OnLeftBtnClicked()
@@ -100,7 +85,10 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
         NameText->SetText(FText::FromString("Alice"));
         ClassText->SetText(FText::FromString("ARCHER"));
     }
-
+    UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
+    if(singleton!=nullptr)
+        singleton->MinusUIUnitNum();
+    
 }
 
 void UHeroesInfoWidget::OnRightBtnClicked()
@@ -142,4 +130,7 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         ClassText->SetText(FText::FromString("ARCHER"));
         //mesh = maze;
     }
+    UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
+    if(singleton!=nullptr)
+        singleton->AddUIUnitNum();
 }

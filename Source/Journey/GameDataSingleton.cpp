@@ -26,14 +26,14 @@ UGameDataSingleton::UGameDataSingleton()
     Lineup.Add(archer);
     Lineup.Add(Mage);
     
-    AHeroUnit hero;
-    UnitList.Add(hero);
+    //AHeroUnit hero;
+    //UnitList.Add(hero);
 
     Hero_Upgrade = 0;
     archer_Upgrade = 0;
     Mage_Upgrade = 0;
 
-    
+    UIUnitNum = 0;
 }
 
 UGameDataSingleton* UGameDataSingleton::GetInstance()
@@ -81,4 +81,37 @@ void UGameDataSingleton::MagicUpgrade()
 {
     Mage_Upgrade += 5;
     UE_LOG(LogTemp,Warning,TEXT("Mage Upgrade : %d"),Mage_Upgrade);
+}
+
+int32 UGameDataSingleton::GetUIUnitNum()
+{
+    return UIUnitNum;
+}
+
+void UGameDataSingleton::AddUIUnitNum()
+{
+    if(UIUnitNum<2)
+    {
+        UIUnitNum++;
+    }
+}
+
+void UGameDataSingleton::MinusUIUnitNum()
+{
+    if(UIUnitNum>0)
+    {
+        UIUnitNum--;
+    }
+}
+
+void UGameDataSingleton::UseEquip(UItem * item)
+{
+    if(item)
+    {
+        if (item->OwingInventory != nullptr && item->OwningShop == nullptr)
+        {
+            item->Use(Lineup[UIUnitNum]);
+            item->OnUse(Lineup[UIUnitNum]);
+        }
+    }
 }

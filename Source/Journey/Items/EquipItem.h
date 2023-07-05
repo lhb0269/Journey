@@ -17,6 +17,9 @@ public:
 	UEquipItem();
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta=(ClampMin=0.0))
 	int32 Armour;
+	FString E_Description;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int E_Case;//0 - hemet 1 - vest 2 - weapon 3 - shoes
 protected:
-	virtual void Use(class AHeroCharacter* Character) override;
+	virtual void Use(class ABaseUnit* Character) override;
 };

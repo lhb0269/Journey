@@ -35,10 +35,10 @@ public:
 	class UCameraComponent* FollowCamera;
 
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UInventoryComponent* Inventory;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Camera)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UShopComponent* shop;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 hp;

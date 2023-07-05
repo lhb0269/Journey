@@ -58,3 +58,13 @@ bool UShopComponent::BuyItem(UItem* Item, UInventoryComponent* InventoryComponen
 	}
 	return false;
 }
+
+void UShopComponent::Reroll()
+{
+	Items.Empty();
+	for(int i=0;i<ItemCnt;++i)
+	{
+		int32 cnt = FMath::RandRange(0,DefaultItems.Num()-1);
+		AddItem(DefaultItems[cnt]);
+	}
+}
