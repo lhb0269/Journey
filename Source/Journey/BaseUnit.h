@@ -42,6 +42,15 @@ public:
 	float GetHealthPercent();
 	float GetManaPercent();
 
+
+	/// <summary>
+	/// unitType
+	/// -1 = none
+	/// 0 = hero, 1 = archer, 2 = mage, 3= tanker
+	/// </summay>
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	int unitType;
+
 	//status
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	float nowHP;

@@ -11,10 +11,10 @@ ABaseUnit::ABaseUnit()
 	PrimaryActorTick.bCanEverTick = true;
 
 
-
+	unitType = -1;
 	maxHP = nowHP = 10;
-	maxMP = 10;
-	nowMP = 10;
+	maxMP = 100;
+	nowMP = 0;
 	isDeath = false;
 	isSkill1 = false;
 	
