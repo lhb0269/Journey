@@ -26,9 +26,14 @@ UGameDataSingleton::UGameDataSingleton()
     Lineup.Add(archer);
     Lineup.Add(Mage);
     
+    AHeroUnit hero;
+    UnitList.Add(hero);
+
     Hero_Upgrade = 0;
     archer_Upgrade = 0;
     Mage_Upgrade = 0;
+
+    
 }
 
 UGameDataSingleton* UGameDataSingleton::GetInstance()

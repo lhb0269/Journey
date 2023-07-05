@@ -63,6 +63,8 @@ public:
 
 	TArray<bool> IsPartner;
 
+	TArray<ABaseUnit> UnitList;
+
 	TArray<ABaseUnit*> Lineup;
 	class AArcherUnit* archer;
 	class AHeroUnit* Hero;

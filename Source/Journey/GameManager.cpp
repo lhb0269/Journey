@@ -39,6 +39,10 @@ void AGameManager::Tick(float DeltaTime)
 
 }
 
+void AGameManager::addUnit()
+{
+}
+
 void AGameManager::createTown()
 {
 

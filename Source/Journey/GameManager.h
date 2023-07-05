@@ -10,9 +10,11 @@
 #include "HeroCharacter.h"
 #include "LevelSequence.h"
 #include "LevelSequencePlayer.h"
+#include "BaseUnit.h"
 #include "LevelSequenceActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameManager.generated.h"
+
 
 UCLASS()
 class JOURNEY_API AGameManager : public AActor
@@ -58,6 +60,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void addUnit();
 
 	void createTown();
 	void createWorldMap();
