@@ -35,6 +35,8 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Cutscenes")
 	ULevelSequence* IntroSequence;
+	UPROPERTY(EditAnywhere, Category = "Cutscenes")
+	ULevelSequence* BossSequence;
 	UPROPERTY(EditAnywhere)
 	AHeroCharacter* heroCharacter;
 
@@ -68,4 +70,6 @@ public:
 
 	void createPortal();
 	void createBossWorld();
+
+	
 };

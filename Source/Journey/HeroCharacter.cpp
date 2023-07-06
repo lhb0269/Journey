@@ -29,6 +29,7 @@
 #include "MinimapWidget.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "Components/SceneCaptureComponent2D.h"
+#include "GameManager.h"
 #include "Elements/Framework/TypedElementOwnerStore.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -705,6 +706,14 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 	{
 	}
 
+	if (OtherActor->ActorHasTag("BossPortal"))
+	{
+		SetActorRotation(FRotator(0, 0, 0));
+		SetActorLocation(UGameDataSingleton::GetInstance()->BossWorldSpawnPos);
+		//UGameDataSingleton::GetInstance()->isBossWorld = true;
+		ChangeToBossWorldMapCamera();
+	}
+
 	// Check if the overlapped actor has a specific tag
 	if (OtherActor->ActorHasTag("BossBox2"))
 	{
@@ -909,6 +918,8 @@ void AHeroCharacter::createPortal()
 
 	AProceduralWorldMapGenerator* worldMap = Cast<AProceduralWorldMapGenerator>(UGameplayStatics::GetActorOfClass(GetWorld(), AProceduralWorldMapGenerator::StaticClass()));
 	worldMap->createBossPortal();
+	AGameManager* GM = Cast<AGameManager>(UGameplayStatics::GetActorOfClass(GetWorld(), AGameManager::StaticClass()));
+	GM->createPortal();
 
 }
 
@@ -1034,6 +1045,10 @@ void AHeroCharacter::OnLeftClick()
 						LandOceanPos = FVector(HitResult.Location.X, HitResult.Location.Y, HitResult.Location.Z + 100);
 						landClick = true;
 					}
+
+
+
+			
 
 					// 캐스팅 결과 확인하기
 					if (WCube != nullptr)
