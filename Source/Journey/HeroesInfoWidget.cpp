@@ -27,10 +27,91 @@ void UHeroesInfoWidget::NativeConstruct()
     maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
     archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
     count = 0;
-
+    UIcharcatercnt = 0;
     ClassText->SetText(FText::FromString("HERO"));
    // TextWidget->SetText(FText::FromString(Text));
 
+}
+
+void UHeroesInfoWidget::SetItems()
+{
+    HelmetThum->SetBrushFromTexture(NULL);
+    VestThum->SetBrushFromTexture(NULL);
+    WeaponeThum->SetBrushFromTexture(NULL);
+    ShoesThum->SetBrushFromTexture(NULL);
+    switch (count)
+    {
+    case 0:
+        if(hero->EquipItems[0]!=nullptr && hero->EquipItems[0]->Thumbnail!= nullptr)
+            HelmetThum->SetBrushFromTexture(hero->EquipItems[0]->Thumbnail);
+        if(hero->EquipItems[1]!=nullptr && hero->EquipItems[1]->Thumbnail != nullptr)
+            VestThum->SetBrushFromTexture(hero->EquipItems[1]->Thumbnail);
+        if(hero->EquipItems[2]!=nullptr && hero->EquipItems[2]->Thumbnail!= nullptr)
+            WeaponeThum->SetBrushFromTexture(hero->EquipItems[2]->Thumbnail);
+        if(hero->EquipItems[3]!=nullptr && hero->EquipItems[3]->Thumbnail!= nullptr)
+            ShoesThum->SetBrushFromTexture(hero->EquipItems[3]->Thumbnail);
+        break;
+    case 1:
+        if(maze->EquipItems[0]!=nullptr && maze->EquipItems[0]->Thumbnail!= nullptr)
+            HelmetThum->SetBrushFromTexture(maze->EquipItems[0]->Thumbnail);
+        if(maze->EquipItems[1]!=nullptr && maze->EquipItems[1]->Thumbnail != nullptr)
+            VestThum->SetBrushFromTexture(maze->EquipItems[1]->Thumbnail);
+        if(maze->EquipItems[2]!=nullptr && maze->EquipItems[2]->Thumbnail!= nullptr)
+            WeaponeThum->SetBrushFromTexture(maze->EquipItems[2]->Thumbnail);
+        if(maze->EquipItems[3]!=nullptr && maze->EquipItems[3]->Thumbnail!= nullptr)
+            ShoesThum->SetBrushFromTexture(maze->EquipItems[3]->Thumbnail);
+        break;
+    case 2:
+        if(archer->EquipItems[0]!=nullptr && archer->EquipItems[0]->Thumbnail!= nullptr)
+            HelmetThum->SetBrushFromTexture(archer->EquipItems[0]->Thumbnail);
+        if(archer->EquipItems[1]!=nullptr && archer->EquipItems[1]->Thumbnail != nullptr)
+            VestThum->SetBrushFromTexture(archer->EquipItems[1]->Thumbnail);
+        if(archer->EquipItems[2]!=nullptr && archer->EquipItems[2]->Thumbnail!= nullptr)
+            WeaponeThum->SetBrushFromTexture(archer->EquipItems[2]->Thumbnail);
+        if(archer->EquipItems[3]!=nullptr && archer->EquipItems[3]->Thumbnail!= nullptr)
+            ShoesThum->SetBrushFromTexture(archer->EquipItems[3]->Thumbnail);
+        break;
+    }
+}
+
+void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
+{
+    switch (item->E_Case)
+    {
+    case 0:
+        if(count == 0)
+            hero->EquipItems[0]= item;
+        if(count == 1)
+            maze->EquipItems[0] = item;
+        if(count == 2)
+            archer->EquipItems[0] = item;
+        break;
+    case 1:
+        if(count == 0)
+            hero->EquipItems[1] = item;
+        if(count == 1)
+            maze->EquipItems[1] = item;
+        if(count == 2)
+            archer->EquipItems[1] = item;
+        break;
+    case 2:
+        if(count == 0)
+            hero->EquipItems[2] = item;
+        if(count == 1)
+            maze->EquipItems[2] = item;
+        if(count == 2)
+            archer->EquipItems[2] = item;
+        break;
+    case 3:
+        if(count == 0)
+            hero->EquipItems[3] = item;
+        if(count == 1)
+            maze->EquipItems[3] = item;
+        if(count == 2)
+            archer->EquipItems[3] = item;
+        break;
+    }
+    item->OwingInventory->RemoveItem(item);
 }
 
 void UHeroesInfoWidget::OnSkillBtnClicked()
@@ -88,7 +169,7 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
     if(singleton!=nullptr)
         singleton->MinusUIUnitNum();
-    
+    SetItems();
 }
 
 void UHeroesInfoWidget::OnRightBtnClicked()
@@ -133,4 +214,5 @@ void UHeroesInfoWidget::OnRightBtnClicked()
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
     if(singleton!=nullptr)
         singleton->AddUIUnitNum();
+    SetItems();
 }

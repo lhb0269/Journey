@@ -37,6 +37,11 @@ public:
 		ABaseUnit* maze;
 
 	int count;
+	int32 UIcharcatercnt;
+	UFUNCTION(BlueprintCallable)
+	void SetItems();
+	UFUNCTION(BlueprintCallable)
+	void AddItemsInCharacter(UEquipItem* item);
 private:
 	UPROPERTY(Meta = (BindWidget))
 	UCanvasPanel* RootPanel;
@@ -64,7 +69,14 @@ private:
 	 UTextBlock* LevelText;
 	UPROPERTY(meta = (BindWidget))
 	 UTextBlock* ClassText;
-
+	UPROPERTY(meta = (BindWidget))
+	UImage* HelmetThum;
+	UPROPERTY(meta = (BindWidget))
+	UImage* VestThum;
+	UPROPERTY(meta = (BindWidget))
+	UImage* WeaponeThum;
+	UPROPERTY(meta = (BindWidget))
+	UImage* ShoesThum;
 	UFUNCTION()
 	void OnSkillBtnClicked();
 	UFUNCTION()

@@ -19,6 +19,10 @@ ABaseUnit::ABaseUnit()
 	isSkill1 = false;
 	
 	distance = 1000000.0;
+	for(int i=0;i<4;++i)
+	{
+		EquipItems.Add(NULL);
+	}
 }
 
 void ABaseUnit::Attack()

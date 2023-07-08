@@ -21,7 +21,8 @@ UGameDataSingleton::UGameDataSingleton()
 
     BossBattleSpawnPos = FVector(-43980, 49000, 94);
     BossWorldSpawnPos = FVector(-15300, 780, 20);
-
+    
+    
     Lineup.Add(Hero);
     Lineup.Add(archer);
     Lineup.Add(Mage);
@@ -29,6 +30,12 @@ UGameDataSingleton::UGameDataSingleton()
     //AHeroUnit hero;
     //UnitList.Add(hero);
 
+    for(int i=0;i<4;++i)
+    {
+        HeroItem.Add(nullptr);
+        ArcherItem.Add(nullptr);
+        MageItem.Add(nullptr);
+    }
     Hero_Upgrade = 0;
     archer_Upgrade = 0;
     Mage_Upgrade = 0;
@@ -61,7 +68,7 @@ void UGameDataSingleton::AddPartner()
 
 void UGameDataSingleton::RemovePartner()
 {
-    IsPartner.Pop();
+    //IsPartner.Pop();
     UE_LOG(LogTemp,Warning,TEXT("Remove Partner"));
 }
 
@@ -104,14 +111,45 @@ void UGameDataSingleton::MinusUIUnitNum()
     }
 }
 
-void UGameDataSingleton::UseEquip(UItem * item)
+void UGameDataSingleton::UseEquip(UEquipItem * item)
 {
     if(item)
     {
         if (item->OwingInventory != nullptr && item->OwningShop == nullptr)
         {
-            item->Use(Lineup[UIUnitNum]);
-            item->OnUse(Lineup[UIUnitNum]);
+            switch (UIUnitNum) //장비 장착
+            {
+            case 0:
+                if(item->E_Case == 0)
+                    HeroItem[0] = item;
+                if(item->E_Case == 1)
+                    HeroItem[1] = item;
+                if(item->E_Case == 2)
+                    HeroItem[2] = item;
+                if(item->E_Case == 3)
+                    HeroItem[3] = item;
+                break;
+            case 1:
+                if(item->E_Case == 0)
+                    ArcherItem[0] = item;
+                if(item->E_Case == 1)
+                    ArcherItem[1] = item;
+                if(item->E_Case == 2)
+                    ArcherItem[2] = item;
+                if(item->E_Case == 3)
+                    ArcherItem[3] = item;
+                break;
+            case 2:
+                if(item->E_Case == 0)
+                    MageItem[0] = item;
+                if(item->E_Case == 1)
+                    MageItem[1] = item;
+                if(item->E_Case == 2)
+                    MageItem[2] = item;
+                if(item->E_Case == 3)
+                    MageItem[3] = item;
+                break;
+            }
         }
     }
 }

@@ -21,6 +21,8 @@ public:
 	FString E_Set;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	int E_Case;//0 - hemet 1 - vest 2 - weapon 3 - shoes
+
+	void settingItem(UEquipItem* origin);
 protected:
 	virtual void Use(class ABaseUnit* Character) override;
 };

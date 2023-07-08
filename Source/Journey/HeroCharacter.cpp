@@ -505,7 +505,7 @@ void AHeroCharacter::ToggleHeroesUI()
 
 	if (!HeroesUIWidget)
 	{
-		//ToggleMiniMap();
+		ToggleMiniMap();
 
 		PlayerController->SetViewTargetWithBlend(HeroesUICamera, 0);
 		APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
@@ -521,7 +521,7 @@ void AHeroCharacter::ToggleHeroesUI()
 	}
 	else
 	{
-		//ToggleMiniMap();
+		ToggleMiniMap();
 
 		HeroesUIWidget->RemoveFromParent();
 		HeroesUIWidget = nullptr;

@@ -10,6 +10,18 @@ UEquipItem::UEquipItem()
 	Armour = FMath::RandRange(1,10);
 }
 
+void UEquipItem::settingItem(UEquipItem* origin)
+{
+	Armour = origin->Armour;
+	E_Set = origin->E_Set;
+	E_Case = E_Case;
+	Thumbnail = origin->Thumbnail;
+	ItemDisplayName = origin->ItemDisplayName;
+	ItemDescription = origin->ItemDescription;
+	weight = origin->weight;
+	cost = origin->cost;
+}
+
 void UEquipItem::Use(ABaseUnit* Character)
 {
 	if(Character)
