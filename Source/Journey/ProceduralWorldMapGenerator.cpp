@@ -460,13 +460,15 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     else
                         location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
                  
-
+                    heightMap[i][j].location = location;
                     int val = FMath::RandRange(1, 10);
                     heightMap[i][j].isPossible = false;
                     AWorldCubeBase* wc;
                     FTimerDelegate TimerDelegate;
-                    TimerDelegate.BindLambda([=, &wc]() {
-                        wc = GetWorld()->SpawnActor<AWorldCubeBase>(GolemBase, location, FRotator::ZeroRotator); 
+                    if (heightMap[i][j].tileType == 0)
+                    {
+                        TimerDelegate.BindLambda([=, &wc]() {
+                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassGolemBase, location, FRotator::ZeroRotator);
                         wc->monsterLevel = 1;
                         wc->monsterType = 1;
                         wc->monsterPower = 1000;
@@ -475,12 +477,72 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                         wc->isVisited = false;
                         if (val == 1)
                             wc->isKey = true;
-                        });
+                            });
+                    }
+                    if (heightMap[i][j].tileType == 1)
+                    {
+                        TimerDelegate.BindLambda([=, &wc]() {
+                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertGolemBase, location, FRotator::ZeroRotator);
+                        wc->monsterLevel = 1;
+                        wc->monsterType = 1;
+                        wc->monsterPower = 1000;
+                        wc->isKey = false;
+                        wc->isTown = false;
+                        wc->isVisited = false;
+                        if (val == 1)
+                            wc->isKey = true;
+                            });
+                    }
+                    if (heightMap[i][j].tileType == 2)
+                    {
+                        TimerDelegate.BindLambda([=, &wc]() {
+                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowGolemBase, location, FRotator::ZeroRotator);
+                        wc->monsterLevel = 1;
+                        wc->monsterType = 1;
+                        wc->monsterPower = 1000;
+                        wc->isKey = false;
+                        wc->isTown = false;
+                        wc->isVisited = false;
+                        if (val == 1)
+                            wc->isKey = true;
+                            });
+                    }
+                   
                 
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
 
            
+                }
+                if (FMath::FRand() < 0.01 && heightMap[i][j].isPossible)
+                {
+                    FVector location;
+                    if (j % 2 == 0)
+                        location = FVector(i * 180, j * 150, heightValue * heightVolume + 200);
+                    else
+                        location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
+
+
+                    int val = FMath::RandRange(1, 10);
+                    heightMap[i][j].isPossible = false;
+                    AWorldCubeBase* wc;
+                    FTimerDelegate TimerDelegate;
+
+                    TimerDelegate.BindLambda([=, &wc]() {
+                        wc = GetWorld()->SpawnActor<AWorldCubeBase>(MidBossBase, location, FRotator::ZeroRotator);
+                    wc->monsterLevel = 1;
+                    wc->monsterType = 1;
+                    wc->monsterPower = 1000;
+                    wc->isKey = false;
+                    wc->isTown = false;
+                    wc->isVisited = false;
+                    if (val == 1)
+                        wc->isKey = true;
+                        });
+                    
+
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
                 }
 
             }
@@ -543,21 +605,38 @@ void AProceduralWorldMapGenerator::SetSurroundingTilesAsMountain(int i, int j)
 
 void AProceduralWorldMapGenerator::createBossPortal()
 {
+
+    int X = FMath::RandRange(0, width);
+    int Y = FMath::RandRange(0, height);
+
     if (!isPortal)
     {
         for (int i = 1; i < width - 1; i++)
         {
             for (int j = 1; j < height - 1; j++)
             {
-                if (heightMap[i][j].isPossible && !heightMap[i][j].isTown && !heightMap[i][j].isWater)
-                {
-                    if (heightMap[i][j].tileType != 3 && heightMap[i][j].tileType != 4)
-                    {
-                        GetWorld()->SpawnActor<AActor>(Portal, heightMap[i][j].location, FRotator::ZeroRotator);
-                        isPortal = true;
-                        break;
-                    }
-                }
+                if (heightMap[i][j].heightVal < seaLevel)
+                    continue;
+                if (heightMap[i][j].tileType == 3)
+                    continue;
+                if (heightMap[i][j].tileType == 4)
+                    continue;
+                if (heightMap[i][j].isTown)
+                    continue;
+                if (!heightMap[i][j].isPossible)
+                    continue;
+
+                FVector location;
+                if (j % 2 == 0)
+                    location = FVector(i * 180, j * 150, heightMap[i][j].heightVal);
+                else
+                    location = FVector(i * 180 + 90, j * 150, heightMap[i][j].heightVal);
+ 
+                GetWorld()->SpawnActor<AActor>(Portal, location, FRotator::ZeroRotator);
+                isPortal = true;
+                heightMap[i][j].isPortal = true;
+                return;
+  
             }
         }
     }
