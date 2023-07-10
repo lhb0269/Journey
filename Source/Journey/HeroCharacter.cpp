@@ -67,13 +67,7 @@ AHeroCharacter::AHeroCharacter()
 	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
-
-	TownEffect = CreateDefaultSubobject<UNiagaraComponent>("TownEffect");
-	TownEffect->SetupAttachment(RootComponent);
-	TownEffect->SetActive(false);
 	
-	FXscale = TownEffect->GetRelativeScale3D();
-	FXInitScale = TownEffect->GetRelativeScale3D();
 
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -400,9 +394,7 @@ void AHeroCharacter::GoToWorldMap()
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
 	isTown = false;
-	TownEffect->SetActive(false);
-	
-	TownEffect->SetRelativeScale3D(FXInitScale);
+
 	FXscale = FXInitScale;
 	timeMinutes = 2;
 	timeSeconds = 00;
@@ -450,9 +442,6 @@ void AHeroCharacter::GoToWorld()
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
 	isTown=false;
-	TownEffect->SetActive(false);
-	
-	TownEffect->SetRelativeScale3D(FXInitScale);
 	FXscale = FXInitScale;
 
 	SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
@@ -609,7 +598,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				ChangeToTownCamera();
 				isTown = true;
 				townnamecnt++;
-				TownEffect->SetActive(true);
 				timeMinutes = 1;
 				timeSeconds = 59;
 
