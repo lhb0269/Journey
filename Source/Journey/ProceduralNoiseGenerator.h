@@ -20,6 +20,8 @@ public:
 	// Sets default values for this actor's properties
 	AProceduralNoiseGenerator();
 	UPROPERTY(EditAnywhere)
+		int32 Theme;	//1 basic 2 snow 3 desert
+	UPROPERTY(EditAnywhere)
 		int32 Objective = 0;
 	UPROPERTY(EditAnywhere, Meta = (ClampMin = 0))
 		int32 XSize = 0;
@@ -41,6 +43,8 @@ public:
 	TSubclassOf<class AActor> castle;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor> Tree;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor> PineTree;
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor>House;
 	UPROPERTY(EditAnywhere)
@@ -84,7 +88,6 @@ public:
 	void CreateTrees();
 	void CreateSpecial();
 	void CreateCastle();
-	void CreateNPC();
 private:
 	UProceduralMeshComponent* ProceduralMesh;
 	TArray<FVector>Vertices;

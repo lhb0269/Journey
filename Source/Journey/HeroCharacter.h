@@ -144,10 +144,7 @@ public:
 		bool landClick;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		bool oceanClick;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UNiagaraComponent* TownEffect;
-	
+
 	UPROPERTY(EditAnywhere,Category="Minimap")
 	USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere,Category="Minimap")

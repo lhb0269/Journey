@@ -32,6 +32,7 @@ AProceduralNoiseGenerator::AProceduralNoiseGenerator()
 
 	castlx = FMath::RandRange(1,4);
 	castly = FMath::RandRange(1,4);
+	
 }
 
 // Called when the game starts or when spawned
@@ -572,6 +573,10 @@ void AProceduralNoiseGenerator::CreateTrees()
 						AActor* Tile1 ;
 						TimerDelegate.BindLambda([=, &Tile1]() {
 							Tile1 = GetWorld()->SpawnActor<AActor>(Tree, SpawnLocation, rotator, SpawnParams);
+							float randscale = FMath::FRandRange(0.15,0.5);
+							if(Theme == 3)
+								randscale = 0.1f;
+							Tile1->SetActorRelativeScale3D(FVector(randscale,randscale,randscale));
 							//Tile1->AttachToActor(this, FAttachmentTransformRules::KeepWorldTransform);
 							AAray.Add(Tile1);
 						});
@@ -619,6 +624,7 @@ void AProceduralNoiseGenerator::CreateTrees()
 void AProceduralNoiseGenerator::CreateSpecial()
 {
 	SpecialTime = 0.0f;
+	int npc_cnt = 0;
 	UWorld* world = GetWorld();
 	if (Tree != nullptr && House != nullptr && motel != nullptr && Shop != nullptr && Tower != nullptr) {
 		int32 cnt = 0;
@@ -705,6 +711,12 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					FTimerHandle TimerHandle;
 					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
 				}
+				else if (height[i][j] == 0 && npc_cnt < NPCCount && i == ((XSize-1)/2) - 2 && j <= ((YSize-1)/4) * 3 ) { //npc생성
+					SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z + 50;
+					AActor* npc = world->SpawnActor<AActor>(NPC_Child, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(npc);
+					npc_cnt++;
+				}
 			}
 		}
 	}
@@ -733,7 +745,6 @@ void AProceduralNoiseGenerator::CreateSpecial()
 void AProceduralNoiseGenerator::CreateCastle()
 {
 	UWorld* world = GetWorld();
-	int npc_cnt = 0;
 	if (castle != nullptr && NPC_Child != nullptr) {
 		int32 cnt = 0;
 		for (int i = XSize - 1; i >= 0; --i) {
@@ -753,41 +764,7 @@ void AProceduralNoiseGenerator::CreateCastle()
 					AActor* castletile = world->SpawnActor<AActor>(castle, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(castletile);
 				}
-				if (height[i][j] == 0 && npc_cnt < NPCCount && i == ((XSize-1)/2) - 2 && j <= ((YSize-1)/4) * 3 ) { //npc생성
-					SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z + 50;
-					AActor* npc = world->SpawnActor<AActor>(NPC_Child, SpawnLocation, rotator, SpawnParams);
-					AAray.Add(npc);
-					npc_cnt++;
-				}
 			}
-		}
-	}
-}
-
-void AProceduralNoiseGenerator::CreateNPC()
-{
-	int npc_cnt = 0;
-	UWorld* world = GetWorld();
-	if(NPC_Child != nullptr)
-	{
-		for (int i = XSize - 1; i >= 0; --i)
-		{
-			for (int j = YSize - 1; j >= 0; --j) {
-				FActorSpawnParameters SpawnParams;
-				SpawnParams.Owner = this;
-				FRotator rotator;
-				FVector SpawnLocation;
-				SpawnLocation.X = i * 100 + GetActorLocation().X;
-				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
-				SpawnLocation.Z =  GetActorLocation().Z + 50;
-				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
-				rotator.Roll = 0;
-				if (height[i][j] == 0 && npc_cnt < 10) { //npc생성
-					AActor* npc = world->SpawnActor<AActor>(NPC_Child, SpawnLocation, rotator, SpawnParams);
-					AAray.Add(npc);
-					npc_cnt++;
-					}
-				}
 		}
 	}
 }
