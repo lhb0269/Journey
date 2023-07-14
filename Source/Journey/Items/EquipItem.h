@@ -15,14 +15,18 @@ class JOURNEY_API UEquipItem : public UItem
 	GENERATED_BODY()
 public:
 	UEquipItem();
-	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite,Category="Item",meta=(ClampMin=0.0))
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	int32 Armour;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadWrite)
 	FString E_Set;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)//0 - hemet 1 - vest 2 - weapon 3 - shoes
+	int E_Case;
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
-	int E_Case;//0 - hemet 1 - vest 2 - weapon 3 - shoes
-
+	int Level;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	int32 UpgradeCost;
 	void settingItem(UEquipItem* origin);
+	void LevelUP();
 protected:
 	virtual void Use(class ABaseUnit* Character) override;
 };
