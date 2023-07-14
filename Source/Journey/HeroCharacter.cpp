@@ -489,6 +489,22 @@ void AHeroCharacter::ToggleWorldMapUI()
 		WorldMapWidget = nullptr;
 	}
 }
+void AHeroCharacter::ToggleUpgradeUI()
+{
+	if(!UpgradeWidget)
+	{
+		UpgradeWidget = CreateWidget<UUpgradeWidget>(GetWorld(),UpgradeUIWidgetClass);
+		if(UpgradeWidget)
+		{
+			UpgradeWidget->AddToViewport();
+		}
+	}
+	else
+	{
+		UpgradeWidget->RemoveFromParent();
+		UpgradeWidget = nullptr;
+	}
+}
 
 void AHeroCharacter::ToggleHeroesUI()
 {
@@ -496,26 +512,26 @@ void AHeroCharacter::ToggleHeroesUI()
 	if (!HeroesUIWidget)
 	{
 		ToggleMiniMap();
-
+	
 		PlayerController->SetViewTargetWithBlend(HeroesUICamera, 0);
 		APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 		CameraManager->SetFOV(60);
-
+	
 		HeroesUIWidget = CreateWidget<UHeroesInfoWidget>(GetWorld(), HeroesUIWidgetClass);
 		if (HeroesUIWidget)
 		{
 			HeroesUIWidget->AddToViewport();
 		}
-
+	
 		
 	}
 	else
 	{
 		ToggleMiniMap();
-
+	
 		HeroesUIWidget->RemoveFromParent();
 		HeroesUIWidget = nullptr;
-
+	
 		ChangeToWorldMapCamera();
 	}
 }
@@ -821,6 +837,8 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("OpenWorldUI", IE_Released, this, &AHeroCharacter::ToggleWorldMapUI);
 
 	PlayerInputComponent->BindAction("OpenHeroesUI", IE_Released, this, &AHeroCharacter::ToggleHeroesUI);
+
+	PlayerInputComponent->BindAction("OpenUpgradeUI" , IE_Released, this, &AHeroCharacter::ToggleUpgradeUI);
 }
 
 void AHeroCharacter::OnZoomIn()

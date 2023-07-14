@@ -7,7 +7,9 @@
 #include "Journey/ShopComponent.h"
 UEquipItem::UEquipItem()
 {
-	Armour = FMath::RandRange(1,10);
+	Armour = 5;
+	Level = 1;
+	UpgradeCost = 500;
 }
 
 void UEquipItem::settingItem(UEquipItem* origin)
@@ -20,6 +22,18 @@ void UEquipItem::settingItem(UEquipItem* origin)
 	ItemDescription = origin->ItemDescription;
 	weight = origin->weight;
 	cost = origin->cost;
+}
+
+void UEquipItem::LevelUP()
+{
+	if(Level<=5)
+	{
+		Level++;
+		Armour*=1.5;
+		if(Armour==1)
+			Armour++;
+		UpgradeCost*=2;
+	}
 }
 
 void UEquipItem::Use(ABaseUnit* Character)
