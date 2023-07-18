@@ -27,6 +27,7 @@ public:
 	int32 UpgradeCost;
 	void settingItem(UEquipItem* origin);
 	void LevelUP();
+	ABaseUnit* Owner;
 protected:
 	virtual void Use(class ABaseUnit* Character) override;
 };

@@ -30,7 +30,14 @@ void UHeroesInfoWidget::NativeConstruct()
     UIcharcatercnt = 0;
     ClassText->SetText(FText::FromString("HERO"));
    // TextWidget->SetText(FText::FromString(Text));
+    NowHP->SetText(FText::FromString(FString::FromInt(hero->nowHP)));
+    MaxHP->SetText(FText::FromString(FString::FromInt(hero->maxHP)));
+    NowMP->SetText(FText::FromString(FString::FromInt(hero->nowMP)));
+    MaxMP->SetText(FText::FromString(FString::FromInt(hero->maxMP)));
 
+    HPBar->SetPercent(maze->nowHP / maze->maxHP);
+    MPBar->SetPercent(maze->nowMP / maze->maxMP);
+    setArmour(0);
 }
 
 void UHeroesInfoWidget::SetItems()
@@ -80,38 +87,99 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
     {
     case 0:
         if(count == 0)
+        {
             hero->EquipItems[0]= item;
+            item->Owner = hero;
+            //hero->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
+        }
         if(count == 1)
+        {
             maze->EquipItems[0] = item;
+            item->Owner = maze;
+            //maze->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
+        }
         if(count == 2)
+        {
             archer->EquipItems[0] = item;
+            item->Owner = archer;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        }
         break;
     case 1:
         if(count == 0)
+        {
             hero->EquipItems[1] = item;
+            item->Owner = hero;
+            //hero->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
+        }
         if(count == 1)
+        {
             maze->EquipItems[1] = item;
+            item->Owner = maze;
+            //maze->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
+        }
         if(count == 2)
+        {
             archer->EquipItems[1] = item;
+            item->Owner = archer;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        }
         break;
     case 2:
         if(count == 0)
+        {
             hero->EquipItems[2] = item;
+            item->Owner = hero;
+            //hero->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
+        }
         if(count == 1)
+        {
             maze->EquipItems[2] = item;
+            item->Owner = maze;
+            //maze->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
+        }
         if(count == 2)
+        {
             archer->EquipItems[2] = item;
+            item->Owner = archer;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        }
         break;
     case 3:
         if(count == 0)
+        {
             hero->EquipItems[3] = item;
+            item->Owner = hero;
+            //hero->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
+        }
         if(count == 1)
+        {
             maze->EquipItems[3] = item;
+            item->Owner = maze;
+            //maze->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
+        }
         if(count == 2)
+        {
             archer->EquipItems[3] = item;
+            item->Owner = archer;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        }
         break;
     }
     item->OwingInventory->RemoveItem(item);
+    setArmour(count);
 }
 
 void UHeroesInfoWidget::OnSkillBtnClicked()
@@ -133,7 +201,7 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
     }
 
 
-
+    setArmour(count);
     if (count == 0)
     {
         hero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
@@ -143,7 +211,14 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
 
         NameText->SetText(FText::FromString("JAMES"));
         ClassText->SetText(FText::FromString("HERO"));
-
+        NowHP->SetText(FText::FromString(FString::FromInt(hero->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(hero->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(hero->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(hero->maxMP)));
+        
+        HPBar->SetPercent(hero->nowHP / hero->maxHP);
+        MPBar->SetPercent(hero->nowMP / hero->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
         //ClassText = "123";
     }
     else if (count == 1)
@@ -155,6 +230,14 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
 
         NameText->SetText(FText::FromString("Edgar"));
         ClassText->SetText(FText::FromString("MAGE"));
+        NowHP->SetText(FText::FromString(FString::FromInt(maze->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(maze->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(maze->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(maze->maxMP)));
+        Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
+
+        HPBar->SetPercent(maze->nowHP / maze->maxHP);
+        MPBar->SetPercent(maze->nowMP / maze->maxMP);
     }
     else if (count == 2)
     {
@@ -165,6 +248,15 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
 
         NameText->SetText(FText::FromString("Alice"));
         ClassText->SetText(FText::FromString("ARCHER"));
+
+        NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(archer->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(archer->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(archer->maxMP)));
+
+        HPBar->SetPercent(archer->nowHP / archer->maxHP);
+        MPBar->SetPercent(archer->nowMP / archer->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
     }
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
     if(singleton!=nullptr)
@@ -179,6 +271,7 @@ void UHeroesInfoWidget::OnRightBtnClicked()
     {
         count = 2;
     }
+    setArmour(count);
     if (count == 0)
     {
         hero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
@@ -188,7 +281,14 @@ void UHeroesInfoWidget::OnRightBtnClicked()
 
         NameText->SetText(FText::FromString("JAMES"));
         ClassText->SetText(FText::FromString("HERO"));
-
+        NowHP->SetText(FText::FromString(FString::FromInt(hero->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(hero->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(hero->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(hero->maxMP)));
+        
+        HPBar->SetPercent(hero->nowHP / hero->maxHP);
+        MPBar->SetPercent(hero->nowMP / hero->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
     }
     else if (count == 1)
     {
@@ -198,6 +298,14 @@ void UHeroesInfoWidget::OnRightBtnClicked()
 
         NameText->SetText(FText::FromString("Edgar"));
         ClassText->SetText(FText::FromString("MAGE"));
+        NowHP->SetText(FText::FromString(FString::FromInt(maze->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(maze->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(maze->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(maze->maxMP)));
+
+        HPBar->SetPercent(maze->nowHP / maze->maxHP);
+        MPBar->SetPercent(maze->nowMP / maze->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
         //mesh = archer;
     }
     else if (count == 2)
@@ -209,10 +317,67 @@ void UHeroesInfoWidget::OnRightBtnClicked()
 
         NameText->SetText(FText::FromString("Alice"));
         ClassText->SetText(FText::FromString("ARCHER"));
+        NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(archer->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(archer->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(archer->maxMP)));
+
+        HPBar->SetPercent(archer->nowHP / archer->maxHP);
+        MPBar->SetPercent(archer->nowMP / archer->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
         //mesh = maze;
     }
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
     if(singleton!=nullptr)
         singleton->AddUIUnitNum();
     SetItems();
+}
+
+void UHeroesInfoWidget::setArmour(int num)
+{
+    switch (num)
+    {
+    case 0://hero
+        {
+            int armour=0;
+            for(int i=0;i<4;++i)
+            {
+                if(hero->EquipItems[i] != nullptr)
+                {
+                    armour += hero->EquipItems[i]->Armour;
+                }
+            }
+            armour+= hero->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(armour)));
+        }
+        break;
+    case 1://maze
+        {
+            int armour=0;
+            for(int i=0;i<4;++i)
+            {
+                if(maze->EquipItems[i] != nullptr)
+                {
+                    armour += maze->EquipItems[i]->Armour;
+                }
+            }
+            armour+= maze->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(armour)));
+        }
+        break;
+    case 2://archer
+        {
+            int armour=0;
+            for(int i=0;i<4;++i)
+            {
+                if(archer->EquipItems[i] != nullptr)
+                {
+                    armour += archer->EquipItems[i]->Armour;
+                }
+            }
+            armour+= archer->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(armour)));
+        }
+        break;
+    }
 }

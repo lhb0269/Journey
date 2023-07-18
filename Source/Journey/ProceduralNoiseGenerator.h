@@ -92,7 +92,8 @@ private:
 	UProceduralMeshComponent* ProceduralMesh;
 	TArray<FVector>Vertices;
 	TArray<int>Triangles;
-	TArray<float>Zvalue;
+	vector<float>Zvalue_width;
+	vector<vector<float>>Zvalue;
 	TArray<FVector2D>UV0;
 	
 	bool IsShop;

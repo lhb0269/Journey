@@ -70,7 +70,21 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	 UTextBlock* ClassText;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* NowHP;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxHP;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* NowMP;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxMP;
+	UPROPERTY(meta = (BindWidget))
 	UImage* HelmetThum;
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* HPBar;
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* MPBar;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Armour;
 	UPROPERTY(meta = (BindWidget))
 	UImage* VestThum;
 	UPROPERTY(meta = (BindWidget))
@@ -87,4 +101,7 @@ private:
 	void OnLeftBtnClicked();
 	UFUNCTION()
 	void OnRightBtnClicked();
+
+	UFUNCTION(BlueprintCallable)
+	void setArmour(int num);
 };
