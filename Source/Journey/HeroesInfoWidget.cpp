@@ -42,10 +42,10 @@ void UHeroesInfoWidget::NativeConstruct()
 
 void UHeroesInfoWidget::SetItems()
 {
-    HelmetThum->SetBrushFromTexture(NULL);
-    VestThum->SetBrushFromTexture(NULL);
-    WeaponeThum->SetBrushFromTexture(NULL);
-    ShoesThum->SetBrushFromTexture(NULL);
+    HelmetThum->SetBrushFromTexture(Thumnail);
+    VestThum->SetBrushFromTexture(Thumnail);
+    WeaponeThum->SetBrushFromTexture(Thumnail);
+    ShoesThum->SetBrushFromTexture(Thumnail);
     switch (count)
     {
     case 0:
