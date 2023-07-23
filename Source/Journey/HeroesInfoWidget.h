@@ -42,6 +42,8 @@ public:
 	void SetItems();
 	UFUNCTION(BlueprintCallable)
 	void AddItemsInCharacter(UEquipItem* item);
+	UPROPERTY(EditAnywhere)
+	UTexture2D* Thumnail;
 private:
 	UPROPERTY(Meta = (BindWidget))
 	UCanvasPanel* RootPanel;
@@ -70,6 +72,20 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	 UTextBlock* ClassText;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* NowHP;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxHP;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* NowMP;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* MaxMP;
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* HPBar;
+	UPROPERTY(meta = (BindWidget))
+	UProgressBar* MPBar;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Armour;
+	UPROPERTY(meta = (BindWidget))
 	UImage* HelmetThum;
 	UPROPERTY(meta = (BindWidget))
 	UImage* VestThum;
@@ -87,4 +103,7 @@ private:
 	void OnLeftBtnClicked();
 	UFUNCTION()
 	void OnRightBtnClicked();
+
+	UFUNCTION(BlueprintCallable)
+	void setArmour(int num);
 };

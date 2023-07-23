@@ -9,6 +9,7 @@ AMageUnit::AMageUnit()
     //{
     //      HPMPWidgetComponent->Initialize(this);     
     //}
+    Armour  = 5;
 }
 
 void AMageUnit::Attack()

@@ -62,7 +62,7 @@ AHeroCharacter::AHeroCharacter()
 
 	hp = 50;
 	Armour = 200;
-	gold = 200;
+	gold = 2000;
 	fatigue = 0;
 	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();

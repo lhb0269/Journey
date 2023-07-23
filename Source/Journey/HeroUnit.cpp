@@ -12,6 +12,7 @@ AHeroUnit::AHeroUnit()
         
     }
     */
+	Armour = 15;
 }
 
 void AHeroUnit::Attack()

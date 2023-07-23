@@ -10,6 +10,7 @@ UEquipItem::UEquipItem()
 	Armour = 5;
 	Level = 1;
 	UpgradeCost = 500;
+	Owner = nullptr;
 }
 
 void UEquipItem::settingItem(UEquipItem* origin)
@@ -33,6 +34,24 @@ void UEquipItem::LevelUP()
 		if(Armour==1)
 			Armour++;
 		UpgradeCost*=2;
+		if(Owner != nullptr)
+		{
+			switch (E_Case)
+			{
+			case 0:
+				Owner->EquipItems[0]->Armour = Armour;
+				break;
+			case 1:
+				Owner->EquipItems[1]->Armour = Armour;
+				break;
+			case 2:
+				Owner->EquipItems[2]->Armour = Armour;
+				break;
+			case 3:
+				Owner->EquipItems[3]->Armour = Armour;
+				break;
+			}
+		}
 	}
 }
 
@@ -64,4 +83,5 @@ void UEquipItem::Use(ABaseUnit* Character)
 			Character->EquipItems.Add(this);
 			break;
 	}
+	Owner = Character;
 }

@@ -57,6 +57,12 @@ public:
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AActor> MountainLand;
     UPROPERTY(EditAnywhere)
+    TArray<TSubclassOf<class AActor>> GrassDeco;
+    UPROPERTY(EditAnywhere)
+    TArray<TSubclassOf<class AActor>> DesertDeco;
+    UPROPERTY(EditAnywhere)
+    TArray<TSubclassOf<class AActor>> SnowDeco;
+    UPROPERTY(EditAnywhere)
     TSubclassOf<class AActor> SnowLand;
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AActor> Sea;
@@ -127,6 +133,8 @@ public:
     void GenerateTowns();
     UFUNCTION(BlueprintCallable, Category = "Create")
     void GenerateMonsters();
+    UFUNCTION(BlueprintCallable, Category = "Create")
+    void GenerateDeco();
     int InterpolateTileType(int tileType1, int tileType2, int tileType3, float t, float u);
     int LinearInterpolation(int value1, int value2, float t);
     void SetSurroundingTilesAsMountain(int i, int j);
@@ -134,7 +142,8 @@ public:
     float terrainTime;
     float TownTime;
     float MonsterTime;
-
+    float DecoTime;
+    
     void createBossPortal();
 
     bool isPortal;

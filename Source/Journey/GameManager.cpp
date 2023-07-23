@@ -75,7 +75,7 @@ void AGameManager::createWorldMap()
 	FTimerHandle TerrainTimerHandle;
 	FTimerHandle TownsTimerHandle;
 	FTimerHandle MonstersTimerHandle;
-
+	FTimerHandle DecoTimerHandle;
 
 	GetWorldTimerManager().SetTimer(TerrainTimerHandle, worldMap, &AProceduralWorldMapGenerator::GenerateTerrain, 1.0f, false);
 
@@ -85,6 +85,7 @@ void AGameManager::createWorldMap()
 
 	GetWorldTimerManager().SetTimer(MonstersTimerHandle, worldMap, &AProceduralWorldMapGenerator::GenerateMonsters, 3.0f, false);
 
+	GetWorldTimerManager().SetTimer(DecoTimerHandle, worldMap, &AProceduralWorldMapGenerator::GenerateDeco, 4.0f, false);
 	/*worldMap->GenerateTerrain();
 	worldMap->GenerateTowns();
 	worldMap->GenerateMonsters();*/
