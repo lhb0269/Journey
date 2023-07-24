@@ -497,12 +497,16 @@ void AHeroCharacter::ToggleUpgradeUI()
 		if(UpgradeWidget)
 		{
 			UpgradeWidget->AddToViewport();
+			PlayerController->SetInputMode(FInputModeUIOnly());
+			PlayerController->bShowMouseCursor = true;
 		}
 	}
 	else
 	{
 		UpgradeWidget->RemoveFromParent();
 		UpgradeWidget = nullptr;
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
 	}
 }
 
@@ -521,6 +525,8 @@ void AHeroCharacter::ToggleHeroesUI()
 		if (HeroesUIWidget)
 		{
 			HeroesUIWidget->AddToViewport();
+			PlayerController->SetInputMode(FInputModeUIOnly());
+			PlayerController->bShowMouseCursor = true;
 		}
 	
 		
@@ -531,6 +537,8 @@ void AHeroCharacter::ToggleHeroesUI()
 	
 		HeroesUIWidget->RemoveFromParent();
 		HeroesUIWidget = nullptr;
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
 	
 		ChangeToWorldMapCamera();
 	}

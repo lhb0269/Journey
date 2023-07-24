@@ -58,6 +58,8 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Tower;
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>Smith;
+	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Fontain;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>NPC_Child;
@@ -98,6 +100,7 @@ private:
 	
 	bool IsShop;
 	bool IsMotel;
+	bool IsSmith;
 	
 	void CreateVertices();
 	void CreateTriangles();

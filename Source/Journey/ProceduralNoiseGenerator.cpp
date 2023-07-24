@@ -411,7 +411,15 @@ void AProceduralNoiseGenerator::CellularAutomata()
 						}
 					else if(i<XSize/2 && j>=YSize/2)
 					{
-						height[i][j] = 3;
+						if(!IsSmith)
+						{
+							height[i][j] = 13;
+							IsSmith = true;
+						}
+						else
+						{
+							height[i][j] = 3;
+						}
 						for (int k = 1; k <= 4; ++k) {
 							height[i - k][j - k] = 4;
 							height[i - k][j] = 4;
@@ -681,7 +689,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					else
 						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
-					SpawnLocation.Z = GetActorLocation().Z + 20;
+					//SpawnLocation.Z = GetActorLocation().Z + 20;
 					FTimerDelegate TimerDelegate;
 					AActor* Shoptile;
 					TimerDelegate.BindLambda([=, &Shoptile]() {
@@ -697,7 +705,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					else
 						rotator.Yaw = 90 * FMath::RandRange(0, 3);
 					rotator.Pitch = 0;
-					SpawnLocation.Z = GetActorLocation().Z + 20;
+					//SpawnLocation.Z = GetActorLocation().Z + 20;
 					FTimerDelegate TimerDelegate;
 					AActor* moteltile;
 					TimerDelegate.BindLambda([=, &moteltile]() {
@@ -716,6 +724,19 @@ void AProceduralNoiseGenerator::CreateSpecial()
 					TimerDelegate.BindLambda([=, &Portal]() {
 						Portal = GetWorld()->SpawnActor<AActor>(PortalObject, SpawnLocation, rotator, SpawnParams);
 					AAray.Add(Portal);
+						});
+					FTimerHandle TimerHandle;
+					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);
+				}
+				else if (height[i][j] == 13) { //대장간
+					rotator.Yaw = 90 * FMath::RandRange(0, 3);
+					rotator.Pitch = 0;
+					SpawnLocation.Z += 20;
+					FTimerDelegate TimerDelegate;
+					AActor* SmithTile;
+					TimerDelegate.BindLambda([=, &SmithTile]() {
+						SmithTile = GetWorld()->SpawnActor<AActor>(Smith, SpawnLocation, rotator, SpawnParams);
+					AAray.Add(SmithTile);
 						});
 					FTimerHandle TimerHandle;
 					GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, SpecialTime, false);

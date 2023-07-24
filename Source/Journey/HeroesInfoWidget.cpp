@@ -340,6 +340,7 @@ void UHeroesInfoWidget::setArmour(int num)
     case 0://hero
         {
             int armour=0;
+            hero->Armour = 15;
             for(int i=0;i<4;++i)
             {
                 if(hero->EquipItems[i] != nullptr)
@@ -349,11 +350,13 @@ void UHeroesInfoWidget::setArmour(int num)
             }
             armour+= hero->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(armour)));
+            hero->Armour = armour;
         }
         break;
     case 1://maze
         {
             int armour=0;
+            maze->Armour = 5;
             for(int i=0;i<4;++i)
             {
                 if(maze->EquipItems[i] != nullptr)
@@ -363,11 +366,13 @@ void UHeroesInfoWidget::setArmour(int num)
             }
             armour+= maze->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(armour)));
+            maze->Armour = armour;
         }
         break;
     case 2://archer
         {
             int armour=0;
+            archer->Armour = 3;
             for(int i=0;i<4;++i)
             {
                 if(archer->EquipItems[i] != nullptr)
@@ -377,6 +382,35 @@ void UHeroesInfoWidget::setArmour(int num)
             }
             armour+= archer->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(armour)));
+            archer->Armour = armour;
+        }
+        break;
+    }
+}
+
+void UHeroesInfoWidget::UsePotion()
+{
+    switch (count)
+    {
+    case 0://hero
+        {
+           hero->nowHP += 10;
+            HPBar->SetPercent(hero->nowHP / hero->maxHP);
+            NowHP->SetText(FText::FromString(FString::FromInt(hero->nowHP)));
+        }
+        break;
+    case 1://maze
+        {
+            maze->nowHP += 10;
+            HPBar->SetPercent(maze->nowHP / maze->maxHP);
+            NowHP->SetText(FText::FromString(FString::FromInt(maze->nowHP)));
+        }
+        break;
+    case 2://archer
+        {
+            archer->nowHP += 10;
+            HPBar->SetPercent(archer->nowHP / archer->maxHP);
+            NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
         }
         break;
     }

@@ -216,7 +216,7 @@ public:
 	void ToggleWorldMapUI();
 	UFUNCTION()
 	void ToggleMiniMap();
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	void ToggleUpgradeUI();
 	
 	UFUNCTION(BlueprintCallable)
