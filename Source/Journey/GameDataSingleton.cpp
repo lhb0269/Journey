@@ -74,20 +74,21 @@ void UGameDataSingleton::RemovePartner()
 
 void UGameDataSingleton::FightUpgrade()
 {
-    Hero_Upgrade += 5;
-    UE_LOG(LogTemp,Warning,TEXT("Hero Upgrade : %d"),Hero_Upgrade);
+    Hero->power += 5;
+    UE_LOG(LogTemp,Warning,TEXT("Hero Upgrade : %d"),Hero->power);
 }
 
 void UGameDataSingleton::ShotUpgrade()
 {
-    archer_Upgrade += 5;
-    UE_LOG(LogTemp,Warning,TEXT("Archer Upgrade : %d"),archer_Upgrade);
+    archer->power += 5;
+    UE_LOG(LogTemp,Warning,TEXT("Archer Upgrade : %d"),archer->power);
 }
 
 void UGameDataSingleton::MagicUpgrade()
 {
     Mage_Upgrade += 5;
-    UE_LOG(LogTemp,Warning,TEXT("Mage Upgrade : %d"),Mage_Upgrade);
+    Mage->power+=5;
+    UE_LOG(LogTemp,Warning,TEXT("Mage Upgrade : %d"),Mage->power);
 }
 
 int32 UGameDataSingleton::GetUIUnitNum()

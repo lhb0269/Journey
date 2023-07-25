@@ -539,8 +539,10 @@ void AHeroCharacter::ToggleHeroesUI()
 		HeroesUIWidget = nullptr;
 		PlayerController->SetInputMode(FInputModeGameOnly());
 		PlayerController->bShowMouseCursor = false;
-	
-		ChangeToWorldMapCamera();
+		if(isTown)
+			ChangeToTownCamera();
+		else if(!isTown)
+			ChangeToWorldMapCamera();
 	}
 }
 

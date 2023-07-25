@@ -23,6 +23,7 @@ void UEquipItem::settingItem(UEquipItem* origin)
 	ItemDescription = origin->ItemDescription;
 	weight = origin->weight;
 	cost = origin->cost;
+	bEquip = false;
 }
 
 void UEquipItem::LevelUP()

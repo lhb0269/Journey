@@ -86,6 +86,8 @@ private:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* Armour;
 	UPROPERTY(meta = (BindWidget))
+	UTextBlock* Power;
+	UPROPERTY(meta = (BindWidget))
 	UImage* HelmetThum;
 	UPROPERTY(meta = (BindWidget))
 	UImage* VestThum;

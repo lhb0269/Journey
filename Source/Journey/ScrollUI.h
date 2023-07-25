@@ -14,6 +14,17 @@ UCLASS( )
 class JOURNEY_API UScrollUI : public UUserWidget
 {
 	GENERATED_BODY()
+public:
+	virtual void NativeConstruct() override;
+	
+	UPROPERTY(EditAnywhere, Category = "Hero")
+	ABaseUnit* archer;
+
+	UPROPERTY(EditAnywhere, Category = "Hero")
+	ABaseUnit* hero;
+
+	UPROPERTY(EditAnywhere,  Category = "Hero")
+	ABaseUnit* maze;
 
 protected:
 	UPROPERTY(BlueprintReadOnly,meta =(BindWidget))

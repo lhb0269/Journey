@@ -38,6 +38,7 @@ void UHeroesInfoWidget::NativeConstruct()
     HPBar->SetPercent(maze->nowHP / maze->maxHP);
     MPBar->SetPercent(maze->nowMP / maze->maxMP);
     setArmour(0);
+    Power->SetText(FText::FromString(FString::FromInt(hero->power)));
 }
 
 void UHeroesInfoWidget::SetItems()
@@ -90,6 +91,7 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             hero->EquipItems[0]= item;
             item->Owner = hero;
+            item->bEquip = true;
             //hero->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
         }
@@ -97,6 +99,7 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             maze->EquipItems[0] = item;
             item->Owner = maze;
+            item->bEquip = true;
             //maze->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
         }
@@ -104,6 +107,7 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             archer->EquipItems[0] = item;
             item->Owner = archer;
+            item->bEquip = true;
             //archer->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
         }
@@ -113,6 +117,7 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             hero->EquipItems[1] = item;
             item->Owner = hero;
+            item->bEquip = true;
             //hero->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
         }
@@ -120,6 +125,7 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             maze->EquipItems[1] = item;
             item->Owner = maze;
+            item->bEquip = true;
             //maze->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
         }
@@ -127,31 +133,35 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             archer->EquipItems[1] = item;
             item->Owner = archer;
+            item->bEquip = true;
             //archer->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
         }
         break;
     case 2:
-        if(count == 0)
+        if(count == 0 && item->ItemDisplayName.ToString() == "Sword")
         {
             hero->EquipItems[2] = item;
             item->Owner = hero;
+            item->bEquip = true;
             //hero->Armour += item->Armour;
-            Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
+            Power->SetText(FText::FromString(FString::FromInt(hero->power)));
         }
-        if(count == 1)
+        if(count == 1 && item->ItemDisplayName.ToString() == "Staff")
         {
             maze->EquipItems[2] = item;
             item->Owner = maze;
+            item->bEquip = true;
             //maze->Armour += item->Armour;
-            Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
+            Power->SetText(FText::FromString(FString::FromInt(maze->power)));
         }
-        if(count == 2)
+        if(count == 2 && item->ItemDisplayName.ToString() == "Arrow")
         {
             archer->EquipItems[2] = item;
             item->Owner = archer;
+            item->bEquip = true;
             //archer->Armour += item->Armour;
-            Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+            Power->SetText(FText::FromString(FString::FromInt(archer->power)));
         }
         break;
     case 3:
@@ -159,6 +169,7 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             hero->EquipItems[3] = item;
             item->Owner = hero;
+            item->bEquip = true;
             //hero->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
         }
@@ -166,6 +177,7 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             maze->EquipItems[3] = item;
             item->Owner = maze;
+            item->bEquip = true;
             //maze->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
         }
@@ -173,13 +185,17 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
         {
             archer->EquipItems[3] = item;
             item->Owner = archer;
+            item->bEquip = true;
             //archer->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
         }
         break;
     }
-    item->OwingInventory->RemoveItem(item);
-    setArmour(count);
+    if(item->bEquip)
+    {
+        item->OwingInventory->RemoveItem(item);
+        setArmour(count);
+    }
 }
 
 void UHeroesInfoWidget::OnSkillBtnClicked()
@@ -219,6 +235,7 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
         HPBar->SetPercent(hero->nowHP / hero->maxHP);
         MPBar->SetPercent(hero->nowMP / hero->maxMP);
         Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(hero->power)));
         //ClassText = "123";
     }
     else if (count == 1)
@@ -238,6 +255,7 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
 
         HPBar->SetPercent(maze->nowHP / maze->maxHP);
         MPBar->SetPercent(maze->nowMP / maze->maxMP);
+        Power->SetText(FText::FromString(FString::FromInt(maze->power)));
     }
     else if (count == 2)
     {
@@ -257,6 +275,7 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
         HPBar->SetPercent(archer->nowHP / archer->maxHP);
         MPBar->SetPercent(archer->nowMP / archer->maxMP);
         Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(archer->power)));
     }
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
     if(singleton!=nullptr)
@@ -289,6 +308,7 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         HPBar->SetPercent(hero->nowHP / hero->maxHP);
         MPBar->SetPercent(hero->nowMP / hero->maxMP);
         Armour->SetText(FText::FromString(FString::FromInt(hero->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(hero->power)));
     }
     else if (count == 1)
     {
@@ -306,6 +326,7 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         HPBar->SetPercent(maze->nowHP / maze->maxHP);
         MPBar->SetPercent(maze->nowMP / maze->maxMP);
         Armour->SetText(FText::FromString(FString::FromInt(maze->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(maze->power)));
         //mesh = archer;
     }
     else if (count == 2)
@@ -325,6 +346,7 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         HPBar->SetPercent(archer->nowHP / archer->maxHP);
         MPBar->SetPercent(archer->nowMP / archer->maxMP);
         Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(archer->power)));
         //mesh = maze;
     }
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
@@ -340,48 +362,66 @@ void UHeroesInfoWidget::setArmour(int num)
     case 0://hero
         {
             int armour=0;
-            hero->Armour = 15;
+            hero->Armour = 15;//basic armour
+            hero->power = 10; //basic power;
             for(int i=0;i<4;++i)
             {
-                if(hero->EquipItems[i] != nullptr)
+                if(hero->EquipItems[i] != nullptr && i != 2)
                 {
                     armour += hero->EquipItems[i]->Armour;
+                }
+                if(hero->EquipItems[i] != nullptr && i == 2)
+                {
+                    hero->power+=hero->EquipItems[i]->Armour;
                 }
             }
             armour+= hero->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(armour)));
+            Power->SetText(FText::FromString(FString::FromInt(hero->power)));
             hero->Armour = armour;
         }
         break;
     case 1://maze
         {
             int armour=0;
-            maze->Armour = 5;
+            maze->Armour = 5;//basic armour
+            maze->power = 10; //basic power;
             for(int i=0;i<4;++i)
             {
-                if(maze->EquipItems[i] != nullptr)
+                if(maze->EquipItems[i] != nullptr && i != 2)
                 {
                     armour += maze->EquipItems[i]->Armour;
+                }
+                if(maze->EquipItems[i] != nullptr && i == 2)
+                {
+                    maze->power+=maze->EquipItems[i]->Armour;
                 }
             }
             armour+= maze->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(armour)));
+            Power->SetText(FText::FromString(FString::FromInt(maze->power)));
             maze->Armour = armour;
         }
         break;
     case 2://archer
         {
             int armour=0;
-            archer->Armour = 3;
+            archer->Armour = 3;//basic armour
+            archer->power = 10; //basic power;
             for(int i=0;i<4;++i)
             {
-                if(archer->EquipItems[i] != nullptr)
+                if(archer->EquipItems[i] != nullptr && i != 2)
                 {
                     armour += archer->EquipItems[i]->Armour;
+                }
+                if(archer->EquipItems[i] != nullptr && i == 2)
+                {
+                    archer->power+=archer->EquipItems[i]->Armour;
                 }
             }
             armour+= archer->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(armour)));
+            Power->SetText(FText::FromString(FString::FromInt(archer->power)));
             archer->Armour = armour;
         }
         break;

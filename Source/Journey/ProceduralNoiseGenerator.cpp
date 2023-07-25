@@ -757,7 +757,7 @@ void AProceduralNoiseGenerator::CreateSpecial()
 			FVector SpawnLocation;
 			SpawnLocation.X = x * 100 + GetActorLocation().X;
 			SpawnLocation.Y = y * 100 + GetActorLocation().Y;
-			SpawnLocation.Z = Zvalue[x][y] + 50;
+			SpawnLocation.Z = Zvalue[x][y] + 100;
 			AActor* BP_scroll = world->SpawnActor<AActor>(Scroll, SpawnLocation, FRotator(0,0,0), SpawnParams);
 			AAray.Add(BP_scroll);
 			Scroll_Cnt++;
