@@ -2,30 +2,47 @@
 
 
 #include "ScrollUI.h"
+#include "GameManager.h"
+
+void UScrollUI::NativeConstruct()
+{
+	Super::NativeConstruct();
+	for (TActorIterator<AGameManager> It(GetWorld()); It; ++It)
+	{
+		AGameManager* GM = *It;
+		archer = GM->archer;
+		hero = GM->hero;
+		maze = GM->maze;
+       
+	}
+}
 
 void UScrollUI::ChooseFight()
 {
-	Instance = UGameDataSingleton::GetInstance();
-	if(Instance != nullptr)
-	{
-		Instance->FightUpgrade();
-	}
+	hero->power+= 5;
+	// Instance = UGameDataSingleton::GetInstance();
+	// if(Instance != nullptr)
+	// {
+	// 	Instance->FightUpgrade();
+	// }
 }
 
 void UScrollUI::ChooseShot()
 {
-	Instance = UGameDataSingleton::GetInstance();
-	if(Instance != nullptr)
-	{
-		Instance->ShotUpgrade();
-	}
+	archer->power+= 5;
+	// Instance = UGameDataSingleton::GetInstance();
+	// if(Instance != nullptr)
+	// {
+	// 	Instance->ShotUpgrade();
+	// }
 }
 
 void UScrollUI::ChooseMagic()
 {
-	Instance = UGameDataSingleton::GetInstance();
-	if(Instance != nullptr)
-	{
-		Instance->MagicUpgrade();
-	}
+	maze->power+= 5;
+	// Instance = UGameDataSingleton::GetInstance();
+	// if(Instance != nullptr)
+	// {
+	// 	Instance->MagicUpgrade();
+	// }
 }

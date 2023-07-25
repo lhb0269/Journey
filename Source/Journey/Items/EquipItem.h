@@ -28,6 +28,8 @@ public:
 	void settingItem(UEquipItem* origin);
 	void LevelUP();
 	ABaseUnit* Owner;
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
+	bool bEquip;
 protected:
 	virtual void Use(class ABaseUnit* Character) override;
 };
