@@ -706,9 +706,9 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel, 0);
 
 					// 변경 코드
-					FVector NewVector = worldCube->Location;
+	/*				FVector NewVector = worldCube->Location;
 					NewVector.Z = 1000;
-					SpringArm->SetWorldLocation(NewVector);
+					SpringArm->SetWorldLocation(NewVector);*/
 					Minimap->bCaptureEveryFrame = true;
 					Minimap->bCaptureOnMovement = true;
 					//SwitchToFollowCamera();

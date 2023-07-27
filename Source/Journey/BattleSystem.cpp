@@ -122,6 +122,8 @@ void ABattleSystem::ShowBattleEndWidget()
         if (World)
         {
             APlayerController* PlayerController = World->GetFirstPlayerController();
+            PlayerController->SetInputMode(FInputModeUIOnly());
+            PlayerController->bShowMouseCursor = true;
             if (PlayerController)
             {
                 UUserWidget* BattleEndWidget = CreateWidget<UUserWidget>(PlayerController, BattleEndWidgetClass);
