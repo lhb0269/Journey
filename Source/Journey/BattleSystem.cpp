@@ -9,6 +9,10 @@ ABattleSystem::ABattleSystem()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
     isBattleStart = false;
+
+    forestVector = FVector(14800.000000, 50630, 88.000000);
+    snowVector = FVector(7600, 50630, 88.000000);
+    desertVector = FVector(890, 50630, 88.000000);
 }
 
 
@@ -62,26 +66,142 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 
     if (World)
     {
-       // for (int i = 0; i < spawnNum; i++)
-        {
-            if (Monster)
-            {
-                SpawnLocation.X += FMath::RandRange(-200, 450);
-                SpawnLocation.Y += FMath::RandRange(-50, 150);
-                SpawnLocation.Z += 100;
 
-                AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGoblin, SpawnLocation, SpawnRotation);
-                Monsters.Add(SpawnedMonster);
+        FVector loc;
+        // 숲
+        if(battleType < 3)
+        {
+            loc = forestVector;
+        }
+        // 설원
+        if (battleType >=3 && battleType < 6)
+        {
+            loc = snowVector;
+        }
+        // 사막
+        if (battleType >= 6 && battleType < 9)
+        {
+            loc = desertVector;
+        }
+        // 보스 고블린
+        if (battleType == 9)
+        {
+            loc = forestVector;
+        }
+        // 보스 골렘
+        if (battleType == 10)
+        {
+            loc = snowVector;
+        }
+        // 보스 오크
+        if (battleType == 11)
+        {
+            loc = desertVector;
+        }
+
+        FVector spawnVec = loc;
+
+        // 고블린
+        if(battleType % 3 == 0 && battleType <9)
+        {
+            for (int i = 0; i < spawnNum; i++)
+            {
+                spawnVec = loc;
+               spawnVec.X += FMath::RandRange(-200, 450);
+               spawnVec.Y += FMath::RandRange(-50, 150);
+               spawnVec.Z += 100;
+
+               AActor* SpawnedMonster = World->SpawnActor<AActor>(BassGoblin, spawnVec, SpawnRotation);
+               Monsters.Add(SpawnedMonster);
+                
             }
         }
+        // 오크
+        if (battleType % 3 == 1 && battleType < 9)
+        {
+            for (int i = 0; i < spawnNum; i++)
+            {
+                spawnVec = loc;
+               spawnVec.X += FMath::RandRange(-200, 450);
+               spawnVec.Y += FMath::RandRange(-50, 150);
+               spawnVec.Z += 100;
+
+               AActor* SpawnedMonster = World->SpawnActor<AActor>(BaseOrc, spawnVec, SpawnRotation);
+               Monsters.Add(SpawnedMonster);
+                
+            }
+        }
+        // 골렘
+        if (battleType % 3 == 2 && battleType < 9)
+        {
+            for (int i = 0; i < spawnNum; i++)
+            {
+                spawnVec = loc;
+               spawnVec.X += FMath::RandRange(-200, 450);
+               spawnVec.Y += FMath::RandRange(-50, 150);
+               spawnVec.Z += 100;
+
+               AActor* SpawnedMonster = World->SpawnActor<AActor>(BaseGolem, spawnVec, SpawnRotation);
+               Monsters.Add(SpawnedMonster);
+                
+            }
+        }
+
+        // 보스 고블린
+        if (battleType == 9)
+        {
+            spawnVec = loc;
+            spawnVec.X += FMath::RandRange(-200, 450);
+            spawnVec.Y += FMath::RandRange(-50, 150);
+            spawnVec.Z += 100;
+
+            AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGoblin, spawnVec, SpawnRotation);
+            Monsters.Add(SpawnedMonster);
+        }
+        // 보스 고블린
+        if (battleType == 10)
+        {
+            spawnVec = loc;
+            spawnVec.X += FMath::RandRange(-200, 450);
+            spawnVec.Y += FMath::RandRange(-50, 150);
+            spawnVec.Z += 100;
+
+            AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGolem, spawnVec, SpawnRotation);
+            Monsters.Add(SpawnedMonster);
+        }
+        // 보스 고블린
+        if (battleType == 11)
+        {
+            spawnVec = loc;
+            spawnVec.X += FMath::RandRange(-200, 450);
+            spawnVec.Y += FMath::RandRange(-50, 150);
+            spawnVec.Z += 100;
+
+            AActor* SpawnedMonster = World->SpawnActor<AActor>(BossOrc, spawnVec, SpawnRotation);
+            Monsters.Add(SpawnedMonster);
+        }
+
+
+       //for (int i = 0; i < spawnNum; i++)
+       // {
+       //     if (Monster)
+       //     {
+       //         SpawnLocation.X += FMath::RandRange(-200, 450);
+       //         SpawnLocation.Y += FMath::RandRange(-50, 150);
+       //         SpawnLocation.Z += 100;
+
+       //         AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGoblin, SpawnLocation, SpawnRotation);
+       //         Monsters.Add(SpawnedMonster);
+       //     }
+       // }
 
    
     }
 }
 
-void ABattleSystem::resetBattleField(int monsterPower, int battleType)
+void ABattleSystem::resetBattleField(int monsterPower, int nowBattleType)
 {
-
+    battleType = nowBattleType;
     isBattleStart = true;
     // 배열 초기화
     enemyPower = monsterPower;

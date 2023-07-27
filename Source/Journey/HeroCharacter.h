@@ -163,6 +163,9 @@ public:
 
 	bool isCutsceneEnd;
 
+	FVector foresetVector;
+	FVector snowVector;
+	FVector desertVector;
 
 	// Camera 전환 함수
 	void ChangeToWorldMapCamera();

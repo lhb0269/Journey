@@ -42,8 +42,8 @@ public:
 	TSubclassOf<class AActor> Archer;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class AActor> Mage;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
-	TSubclassOf<class AActor> Monster;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	//TSubclassOf<class AActor> Monster;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class ATileInfo> TileInfo;
 
@@ -68,10 +68,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	bool isBattleStart;
 
+	FVector forestVector;
+	FVector snowVector;
+	FVector desertVector;
+
+	// 0 ½£ °íºí¸°, 1 ½£ ¿ÀÅ©, 2 ½£ °ñ·½
+	// 3 ¼³¿ø °íºí¸°, 4 ¼³¿ø ¿ÀÅ©, 5 ¼³¿ø °ñ·½
+	// 6 »ç¸· °íºí¸°, 7 »ç¸· ¿ÀÅ©, 8 »ç¸· °ñ·½
+	// 9 ½£ º¸½º °íºí¸°, 10 ¼³¿ø º¸½º °ñ·½, 11 »ç¸· º¸½º ¿ÀÅ© 
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	int battleType;
+
 	void SpawnHeroInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
 	void SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
 
-	void resetBattleField(int monsterPower,int battleType);
+	void resetBattleField(int monsterPower,int nowBattleType);
 
 	void ShowBattleEndWidget();
 protected:

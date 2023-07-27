@@ -81,12 +81,29 @@ public:
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AActor> Portal;
     UPROPERTY(EditAnywhere)
-    TSubclassOf<class AWorldCubeBase> GolemBase;
+    TSubclassOf<class AWorldCubeBase> DesertGolemBase;
     UPROPERTY(EditAnywhere)
-        TSubclassOf<class AWorldCubeBase> OrcBase;
+        TSubclassOf<class AWorldCubeBase> DesertOrcBase;
     UPROPERTY(EditAnywhere)
 
-        TSubclassOf<class AWorldCubeBase> GoblinBase;
+        TSubclassOf<class AWorldCubeBase> DesertGoblinBase;
+
+    UPROPERTY(EditAnywhere)
+        TSubclassOf<class AWorldCubeBase> ForestGolemBase;
+    UPROPERTY(EditAnywhere)
+        TSubclassOf<class AWorldCubeBase> ForestOrcBase;
+    UPROPERTY(EditAnywhere)
+
+        TSubclassOf<class AWorldCubeBase> ForestGoblinBase;
+
+    UPROPERTY(EditAnywhere)
+        TSubclassOf<class AWorldCubeBase> SnowGolemBase;
+    UPROPERTY(EditAnywhere)
+        TSubclassOf<class AWorldCubeBase> SnowOrcBase;
+    UPROPERTY(EditAnywhere)
+
+        TSubclassOf<class AWorldCubeBase> SnowGoblinBase;
+
     UPROPERTY(EditAnywhere)
        TSubclassOf<class AWorldCubeBase> GolemBossBase;
     UPROPERTY(EditAnywhere)
@@ -121,6 +138,10 @@ public:
 
     int64 Seed;
     TArray<TArray<FWTile>> heightMap;
+
+    bool isDesertBoss;
+    bool isForestBoss;
+    bool isSnowBoss;
 public:
 
     virtual void BeginPlay() override;

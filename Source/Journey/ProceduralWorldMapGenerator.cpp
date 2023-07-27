@@ -11,6 +11,10 @@
 
 AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
 {
+    isDesertBoss = false;
+    isForestBoss = false;
+    isSnowBoss = false;
+
     isPortal = false;
 
  	PrimaryActorTick.bCanEverTick = true;
@@ -474,47 +478,164 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     heightMap[i][j].isPossible = false;
                     AWorldCubeBase* wc;
                     FTimerDelegate TimerDelegate;
+
+                    //  생성 난수 
+                    std::random_device rd;
+                    std::mt19937 gen(rd());
+                    std::uniform_real_distribution<> dis(0.0, 1.0);
+                    double randomValue = dis(gen);
+
+  
+
                     if (heightMap[i][j].tileType == 0)
                     {
-                        TimerDelegate.BindLambda([=, &wc]() {
-                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(GolemBase, location, FRotator::ZeroRotator);
-                        wc->monsterLevel = 1;
-                        wc->monsterType = 1;
-                        wc->monsterPower = 1000;
-                        wc->isKey = false;
-                        wc->isTown = false;
-                        wc->isVisited = false;
-                        if (val == 1)
-                            wc->isKey = true;
-                            });
+                        // 순서는 고블린, 골렘, 오크
+                        if (randomValue < 1.0 / 3.0)
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(ForestGoblinBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 0;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+                        }
+                        else if (randomValue < 2.0 / 3.0)
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(ForestGolemBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 2;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+                        }
+                        else
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(ForestOrcBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 1;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+         
+                        }
+        
                     }
                     if (heightMap[i][j].tileType == 1)
                     {
-                        TimerDelegate.BindLambda([=, &wc]() {
-                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(OrcBase, location, FRotator::ZeroRotator);
-                        wc->monsterLevel = 1;
-                        wc->monsterType = 1;
-                        wc->monsterPower = 1000;
-                        wc->isKey = false;
-                        wc->isTown = false;
-                        wc->isVisited = false;
-                        if (val == 1)
-                            wc->isKey = true;
-                            });
+                        // 순서는 고블린, 골렘, 오크
+                        if (randomValue < 1.0 / 3.0)
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertGoblinBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 6;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+                        }
+                        else if (randomValue < 2.0 / 3.0)
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertGolemBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 8;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+                        }
+                        else
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertOrcBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 7;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+
+                        }
                     }
                     if (heightMap[i][j].tileType == 2)
                     {
-                        TimerDelegate.BindLambda([=, &wc]() {
-                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(GoblinBase, location, FRotator::ZeroRotator);
-                        wc->monsterLevel = 1;
-                        wc->monsterType = 1;
-                        wc->monsterPower = 1000;
-                        wc->isKey = false;
-                        wc->isTown = false;
-                        wc->isVisited = false;
-                        if (val == 1)
-                            wc->isKey = true;
-                            });
+                        if (randomValue < 1.0 / 3.0)
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowGoblinBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 3;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+                        }
+                        else if (randomValue < 2.0 / 3.0)
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowGolemBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 4;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+                        }
+                        else
+                        {
+                            TimerDelegate.BindLambda([=, &wc]() {
+                                wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowOrcBase, location, FRotator::ZeroRotator);
+                            wc->monsterLevel = 1;
+                            wc->tileType = 5;
+                            wc->monsterType = 1;
+                            wc->monsterPower = 1000;
+                            wc->isKey = false;
+                            wc->isTown = false;
+                            wc->isVisited = false;
+                            if (val == 1)
+                                wc->isKey = true;
+                                });
+
+                        }
                     }
                    
                 
@@ -523,8 +644,42 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
 
            
                 }
-                if (FMath::FRand() < 0.01 && heightMap[i][j].isPossible)
+                if (FMath::FRand() < 0.1 && heightMap[i][j].isPossible && heightMap[i][j].tileType == 0 && !isForestBoss)
                 {
+                    isForestBoss = true;
+                    FVector location;
+                    if (j % 2 == 0)
+                        location = FVector(i * 180, j * 150, heightValue * heightVolume + 200);
+                    else
+                        location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
+
+
+                    int val = FMath::RandRange(1, 10);
+                    heightMap[i][j].isPossible = false;
+                    AWorldCubeBase* wc;
+                    FTimerDelegate TimerDelegate;
+
+                    TimerDelegate.BindLambda([=, &wc]() {
+                        wc = GetWorld()->SpawnActor<AWorldCubeBase>(GoblinBossBase, location, FRotator::ZeroRotator);
+                    wc->monsterLevel = 1;
+                    wc->tileType = 9;
+                    wc->monsterType = 1;
+                    wc->monsterPower = 1000;
+                    wc->isKey = false;
+                    wc->isTown = false;
+                    wc->isVisited = false;
+                    if (val == 1)
+                        wc->isKey = true;
+                        });
+                    
+
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
+                }
+                if (FMath::FRand() < 0.1 && heightMap[i][j].isPossible && heightMap[i][j].tileType == 1 && !isDesertBoss)
+                {
+                    isDesertBoss = true;
+
                     FVector location;
                     if (j % 2 == 0)
                         location = FVector(i * 180, j * 150, heightValue * heightVolume + 200);
@@ -540,6 +695,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     TimerDelegate.BindLambda([=, &wc]() {
                         wc = GetWorld()->SpawnActor<AWorldCubeBase>(OrcBossBase, location, FRotator::ZeroRotator);
                     wc->monsterLevel = 1;
+                    wc->tileType = 10;
                     wc->monsterType = 1;
                     wc->monsterPower = 1000;
                     wc->isKey = false;
@@ -548,7 +704,39 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     if (val == 1)
                         wc->isKey = true;
                         });
-                    
+
+
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
+                }
+                if (FMath::FRand() < 0.1 && heightMap[i][j].isPossible && heightMap[i][j].tileType == 2 && !isSnowBoss)
+                {
+                    isSnowBoss = true;
+                    FVector location;
+                    if (j % 2 == 0)
+                        location = FVector(i * 180, j * 150, heightValue * heightVolume + 200);
+                    else
+                        location = FVector(i * 180 + 90, j * 150, heightValue * heightVolume + 200);
+
+
+                    int val = FMath::RandRange(1, 10);
+                    heightMap[i][j].isPossible = false;
+                    AWorldCubeBase* wc;
+                    FTimerDelegate TimerDelegate;
+
+                    TimerDelegate.BindLambda([=, &wc]() {
+                        wc = GetWorld()->SpawnActor<AWorldCubeBase>(GolemBossBase, location, FRotator::ZeroRotator);
+                    wc->monsterLevel = 1;
+                    wc->tileType = 10;
+                    wc->monsterType = 1;
+                    wc->monsterPower = 1000;
+                    wc->isKey = false;
+                    wc->isTown = false;
+                    wc->isVisited = false;
+                    if (val == 1)
+                        wc->isKey = true;
+                        });
+
 
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);

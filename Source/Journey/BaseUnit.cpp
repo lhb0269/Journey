@@ -13,7 +13,7 @@ ABaseUnit::ABaseUnit()
 
 	unitType = -1;
 	maxHP =  100;
-	nowHP = 10;
+	nowHP = 100;
 	maxMP = 100;
 	nowMP = 0;
 	isDeath = false;

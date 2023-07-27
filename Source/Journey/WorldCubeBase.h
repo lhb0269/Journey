@@ -27,8 +27,16 @@ public:
 
 	void resetCubeState();
 
+	// 0 ½£ °íºí¸°, 1 ½£ ¿ÀÅ©, 2 ½£ °ñ·½
+	// 3 ¼³¿ø °íºí¸°, 4 ¼³¿ø ¿ÀÅ©, 4 ¼³¿ø °ñ·½
+	// 5 »ç¸· °íºí¸°, 6 »ç¸· ¿ÀÅ©, 7 »ç¸· °ñ·½
+	// 8 ½£ º¸½º °íºí¸°, 9 ¼³¿ø º¸½º °ñ·½, 10 »ç¸· º¸½º ¿ÀÅ© 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int tileType;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isVisited;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool isTown;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)

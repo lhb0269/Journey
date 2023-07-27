@@ -67,6 +67,11 @@ AHeroCharacter::AHeroCharacter()
 	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
+
+
+	foresetVector = FVector(14800.000000, 49150, 88.000000);
+	snowVector = FVector(7600, 49150, 88.000000);
+	desertVector = FVector(890, 49150, 88.000000);
 	
 
 	PrimaryActorTick.bCanEverTick = true;
@@ -690,7 +695,33 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					worldCube->isKey = false;
 					SetActorRotation(FRotator(0, 0, 0));
 					//SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
-					SetActorLocation(FVector(14949, 49000, 94));
+
+					if (worldCube->tileType >= 0 && worldCube->tileType < 3)
+					{
+						SetActorLocation(foresetVector);
+					}
+					if (worldCube->tileType >= 3 && worldCube->tileType < 6)
+					{
+						SetActorLocation(snowVector);
+					}
+					if (worldCube->tileType >= 6 && worldCube->tileType < 9)
+					{
+						SetActorLocation(desertVector);
+					}
+					if (worldCube->tileType == 9)
+					{
+						SetActorLocation(foresetVector);
+					}
+					if (worldCube->tileType == 10)
+					{
+						SetActorLocation(snowVector);
+					}
+					if (worldCube->tileType == 11)
+					{
+						SetActorLocation(desertVector);
+					}
+
+					
 					/*PlayerController->bEnableMouseOverEvents = true;
 					PlayerController->bShowMouseCursor = true;
 					bUseControllerRotationPitch = false;
@@ -704,7 +735,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 						if (!(*It)->isBossSystem)
 							battleSystem = *It;
 					}
-					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel, 0);
+					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel, worldCube->tileType);
 
 					// 변경 코드
 	/*				FVector NewVector = worldCube->Location;
