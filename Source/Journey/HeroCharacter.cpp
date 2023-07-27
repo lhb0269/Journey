@@ -676,10 +676,10 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					worldCube->isKey = false;
 					SetActorRotation(FRotator(0, 0, 0));
 					SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
-					PlayerController->bEnableMouseOverEvents = true;
+					/*PlayerController->bEnableMouseOverEvents = true;
 					PlayerController->bShowMouseCursor = true;
 					bUseControllerRotationPitch = false;
-					bUseControllerRotationYaw = false;
+					bUseControllerRotationYaw = false;*/
 
 					// 전투맵 세팅
 					UWorld* World = GetWorld();
@@ -689,9 +689,26 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 						if (!(*It)->isBossSystem)
 							battleSystem = *It;
 					}
-					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel);
+					battleSystem->resetBattleField(worldCube->monsterPower * worldCube->monsterLevel, 0);
 
-					ChangeToBattleCamera();
+					// 변경 코드
+					FVector NewVector = worldCube->Location;
+					NewVector.Z = 1000;
+					SpringArm->SetWorldLocation(NewVector);
+					Minimap->bCaptureEveryFrame = true;
+					Minimap->bCaptureOnMovement = true;
+					//SwitchToFollowCamera();
+					PlayerController->SetInputMode(FInputModeGameOnly());
+					PlayerController->bShowMouseCursor = false;
+					bUseControllerRotationPitch = true;
+					bUseControllerRotationYaw = true;
+					ChangeToTownCamera();
+
+					isInBattle = true;
+
+					////////
+
+					//ChangeToBattleCamera();
 					OtherActor->Destroy();
 					//PlayerController->SetInputMode(FInputModeGameOnly());
 
@@ -1012,6 +1029,15 @@ void AHeroCharacter::BeginPlay()
 }
 void AHeroCharacter::OnLeftClick()
 {
+	if (isInBattle)
+	{
+		if (!isAttack)
+		{
+			isAttack = true;
+		}
+	}
+
+
 	if (!isInBattle)
 	{
 		FVector2D ScreenPosition;

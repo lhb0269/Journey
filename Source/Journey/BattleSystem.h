@@ -18,6 +18,21 @@ public:
 	ABattleSystem();
 
 
+	// ½£ = °íºí¸°, »ç¸· = ¿ÀÅ© , ¼³¿ø = °ñ·½
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	TSubclassOf<class AActor> BossGoblin;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	TSubclassOf<class AActor> BossOrc;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	TSubclassOf<class AActor> BossGolem;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+		TSubclassOf<class AActor> BassGoblin;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+		TSubclassOf<class AActor> BaseOrc;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+		TSubclassOf<class AActor> BaseGolem;
+
+
 	// MONSTER, PLAYER
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class AActor> Player;
@@ -56,7 +71,7 @@ public:
 	void SpawnHeroInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
 	void SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
 
-	void resetBattleField(int monsterPower);
+	void resetBattleField(int monsterPower,int battleType);
 
 	void ShowBattleEndWidget();
 protected:
