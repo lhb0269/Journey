@@ -689,7 +689,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					worldCube->isVisited = true;
 					worldCube->isKey = false;
 					SetActorRotation(FRotator(0, 0, 0));
-					SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
+					//SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
+					SetActorLocation(FVector(14949, 49000, 94));
 					/*PlayerController->bEnableMouseOverEvents = true;
 					PlayerController->bShowMouseCursor = true;
 					bUseControllerRotationPitch = false;
@@ -714,9 +715,9 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					//SwitchToFollowCamera();
 					PlayerController->SetInputMode(FInputModeGameOnly());
 					PlayerController->bShowMouseCursor = false;
-					bUseControllerRotationPitch = true;
-					bUseControllerRotationYaw = true;
-					ChangeToTownCamera();
+					//bUseControllerRotationPitch = true;
+					//bUseControllerRotationYaw = true;
+					//ChangeToTownCamera();
 
 					isInBattle = true;
 
