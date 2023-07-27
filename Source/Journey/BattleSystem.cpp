@@ -62,7 +62,7 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 
     if (World)
     {
-        for (int i = 0; i < spawnNum; i++)
+       // for (int i = 0; i < spawnNum; i++)
         {
             if (Monster)
             {
@@ -70,7 +70,7 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
                 SpawnLocation.Y += FMath::RandRange(-50, 150);
                 SpawnLocation.Z += 100;
 
-                AActor* SpawnedMonster = World->SpawnActor<AActor>(Monster, SpawnLocation, SpawnRotation);
+                AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGoblin, SpawnLocation, SpawnRotation);
                 Monsters.Add(SpawnedMonster);
             }
         }
@@ -79,7 +79,7 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
     }
 }
 
-void ABattleSystem::resetBattleField(int monsterPower)
+void ABattleSystem::resetBattleField(int monsterPower, int battleType)
 {
 
     isBattleStart = true;

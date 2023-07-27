@@ -477,7 +477,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     if (heightMap[i][j].tileType == 0)
                     {
                         TimerDelegate.BindLambda([=, &wc]() {
-                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(GrassGolemBase, location, FRotator::ZeroRotator);
+                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(GolemBase, location, FRotator::ZeroRotator);
                         wc->monsterLevel = 1;
                         wc->monsterType = 1;
                         wc->monsterPower = 1000;
@@ -491,7 +491,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     if (heightMap[i][j].tileType == 1)
                     {
                         TimerDelegate.BindLambda([=, &wc]() {
-                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(DesertGolemBase, location, FRotator::ZeroRotator);
+                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(OrcBase, location, FRotator::ZeroRotator);
                         wc->monsterLevel = 1;
                         wc->monsterType = 1;
                         wc->monsterPower = 1000;
@@ -505,7 +505,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     if (heightMap[i][j].tileType == 2)
                     {
                         TimerDelegate.BindLambda([=, &wc]() {
-                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowGolemBase, location, FRotator::ZeroRotator);
+                            wc = GetWorld()->SpawnActor<AWorldCubeBase>(GoblinBase, location, FRotator::ZeroRotator);
                         wc->monsterLevel = 1;
                         wc->monsterType = 1;
                         wc->monsterPower = 1000;
@@ -538,7 +538,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     FTimerDelegate TimerDelegate;
 
                     TimerDelegate.BindLambda([=, &wc]() {
-                        wc = GetWorld()->SpawnActor<AWorldCubeBase>(MidBossBase, location, FRotator::ZeroRotator);
+                        wc = GetWorld()->SpawnActor<AWorldCubeBase>(OrcBossBase, location, FRotator::ZeroRotator);
                     wc->monsterLevel = 1;
                     wc->monsterType = 1;
                     wc->monsterPower = 1000;

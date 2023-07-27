@@ -81,13 +81,18 @@ public:
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AActor> Portal;
     UPROPERTY(EditAnywhere)
-    TSubclassOf<class AWorldCubeBase> GrassGolemBase;
+    TSubclassOf<class AWorldCubeBase> GolemBase;
     UPROPERTY(EditAnywhere)
-        TSubclassOf<class AWorldCubeBase> DesertGolemBase;
+        TSubclassOf<class AWorldCubeBase> OrcBase;
     UPROPERTY(EditAnywhere)
-        TSubclassOf<class AWorldCubeBase> SnowGolemBase;
+
+        TSubclassOf<class AWorldCubeBase> GoblinBase;
     UPROPERTY(EditAnywhere)
-       TSubclassOf<class AWorldCubeBase> MidBossBase;
+       TSubclassOf<class AWorldCubeBase> GolemBossBase;
+    UPROPERTY(EditAnywhere)
+        TSubclassOf<class AWorldCubeBase> OrcBossBase;
+    UPROPERTY(EditAnywhere)
+        TSubclassOf<class AWorldCubeBase> GoblinBossBase;
 
     TArray<FVector>MapPos;
     std::vector<FString>townname;
