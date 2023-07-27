@@ -138,9 +138,11 @@ public:
 
     int64 Seed;
     TArray<TArray<FWTile>> heightMap;
-
+    UPROPERTY(EditAnywhere)
     bool isDesertBoss;
+    UPROPERTY(EditAnywhere)
     bool isForestBoss;
+    UPROPERTY(EditAnywhere)
     bool isSnowBoss;
 public:
 

@@ -644,7 +644,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
 
            
                 }
-                if (FMath::FRand() < 0.1 && heightMap[i][j].isPossible && heightMap[i][j].tileType == 0 && !isForestBoss)
+                if ( heightMap[i][j].isPossible && heightMap[i][j].tileType == 0 && !isForestBoss)
                 {
                     isForestBoss = true;
                     FVector location;
@@ -676,7 +676,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
                 }
-                if (FMath::FRand() < 0.1 && heightMap[i][j].isPossible && heightMap[i][j].tileType == 1 && !isDesertBoss)
+                if ( heightMap[i][j].isPossible && heightMap[i][j].tileType == 1 && !isDesertBoss)
                 {
                     isDesertBoss = true;
 
@@ -695,7 +695,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     TimerDelegate.BindLambda([=, &wc]() {
                         wc = GetWorld()->SpawnActor<AWorldCubeBase>(OrcBossBase, location, FRotator::ZeroRotator);
                     wc->monsterLevel = 1;
-                    wc->tileType = 10;
+                    wc->tileType = 11;
                     wc->monsterType = 1;
                     wc->monsterPower = 1000;
                     wc->isKey = false;
@@ -709,7 +709,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
                 }
-                if (FMath::FRand() < 0.1 && heightMap[i][j].isPossible && heightMap[i][j].tileType == 2 && !isSnowBoss)
+                if (heightMap[i][j].isPossible && heightMap[i][j].tileType == 2 && !isSnowBoss)
                 {
                     isSnowBoss = true;
                     FVector location;

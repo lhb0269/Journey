@@ -24,29 +24,57 @@ void ABattleSystem::SpawnHeroInWorld(UWorld* World,  FVector SpawnLocation,  FRo
         AActor* SpawnedMage = nullptr;
         AActor* SpawnedArcher = nullptr;
 
+
         FVector loc;
+        // 숲
+        if (battleType < 3)
+        {
+            loc = forestVector;
+        }
+        // 설원
+        if (battleType >= 3 && battleType < 6)
+        {
+            loc = snowVector;
+        }
+        // 사막
+        if (battleType >= 6 && battleType < 9)
+        {
+            loc = desertVector;
+        }
+        // 보스 고블린
+        if (battleType == 9)
+        {
+            loc = forestVector;
+        }
+        // 보스 골렘
+        if (battleType == 10)
+        {
+            loc = snowVector;
+        }
+        // 보스 오크
+        if (battleType == 11)
+        {
+            loc = desertVector;
+        }
+
+        FVector spawnVec = loc;
         if (Hero)
         {
-            loc = FVector(SpawnLocation.X + 100, SpawnLocation.Y - 750, SpawnLocation.Z + 200);
 
-            SpawnedHero = World->SpawnActor<AActor>(Hero, loc, SpawnRotation);
+            SpawnedHero = World->SpawnActor<AActor>(Hero, FVector(loc.X + 100, loc.Y - 750, loc.Z + 200), SpawnRotation);
             Heroes.Add(SpawnedHero);
         }
 
         if (Mage)
         {
-            loc = FVector(SpawnLocation.X + 200, SpawnLocation.Y - 750, SpawnLocation.Z + 200);
-     
 
-            SpawnedMage = World->SpawnActor<AActor>(Mage, loc, SpawnRotation);
+            SpawnedMage = World->SpawnActor<AActor>(Mage, FVector(loc.X + 200, loc.Y - 750, loc.Z + 200), SpawnRotation);
             Heroes.Add(SpawnedMage);
         }
 
         if (Archer)
         {
-            loc = FVector(SpawnLocation.X + 300, SpawnLocation.Y - 750, SpawnLocation.Z + 200);
-
-            SpawnedArcher = World->SpawnActor<AActor>(Archer, loc, SpawnRotation);
+            SpawnedArcher = World->SpawnActor<AActor>(Archer, FVector(loc.X + 300, loc.Y - 750, loc.Z + 200), SpawnRotation);
             Heroes.Add(SpawnedArcher);
         }
 
@@ -158,7 +186,7 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
             AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGoblin, spawnVec, SpawnRotation);
             Monsters.Add(SpawnedMonster);
         }
-        // 보스 고블린
+        // 보스 골렘
         if (battleType == 10)
         {
             spawnVec = loc;
@@ -169,7 +197,7 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
             AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGolem, spawnVec, SpawnRotation);
             Monsters.Add(SpawnedMonster);
         }
-        // 보스 고블린
+        // 보스 오크
         if (battleType == 11)
         {
             spawnVec = loc;
