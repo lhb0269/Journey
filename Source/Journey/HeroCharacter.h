@@ -20,6 +20,7 @@
 #include <tuple>
 
 #include "PortalUI.h"
+#include "UpgradeWidget.h"
 #include "HeroCharacter.generated.h"
 UCLASS()
 class JOURNEY_API AHeroCharacter : public ABasicCharacter
@@ -89,9 +90,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<UHeroesInfoWidget> HeroesUIWidgetClass;
-
-
 	UHeroesInfoWidget* HeroesUIWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<UUpgradeWidget> UpgradeUIWidgetClass;
+	UUpgradeWidget* UpgradeWidget;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="UI")
 	TSubclassOf<UPortalUI> PortalUIClass;
@@ -144,10 +147,7 @@ public:
 		bool landClick;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 		bool oceanClick;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UNiagaraComponent* TownEffect;
-	
+
 	UPROPERTY(EditAnywhere,Category="Minimap")
 	USpringArmComponent* SpringArm;
 	UPROPERTY(EditAnywhere,Category="Minimap")
@@ -216,8 +216,10 @@ public:
 	void ToggleWorldMapUI();
 	UFUNCTION()
 	void ToggleMiniMap();
-
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
+	void ToggleUpgradeUI();
+	
+	UFUNCTION(BlueprintCallable)
 	void ToggleHeroesUI();
 
 	UPROPERTY(EditAnywhere)

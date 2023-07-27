@@ -76,6 +76,7 @@ void AProceduralWorldMapGenerator::BeginPlay()
     terrainTime = 0.0f;
     TownTime = 0.0f;
     MonsterTime = 0.0f;
+    DecoTime = 0.0f;
 
   /*  GenerateTerrain();
     GenerateTowns();
@@ -231,31 +232,39 @@ void AProceduralWorldMapGenerator::GenerateTerrain()
             {
                 if (heightMap[i][j].tileType == 0)
                 {
-                    FTimerDelegate TimerDelegate;
-                    TimerDelegate.BindLambda([=]() {
-                        GetWorld()->SpawnActor<AActor>(GrassLand, location, FRotator::ZeroRotator);
-                        });
-                    FTimerHandle TimerHandle;
-                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
-
+                    if(heightMap[i][j].isPossible)
+                    {
+                        FTimerDelegate TimerDelegate;
+                        TimerDelegate.BindLambda([=]() {
+                            GetWorld()->SpawnActor<AActor>(GrassLand, location, FRotator::ZeroRotator);
+                            });
+                        FTimerHandle TimerHandle;
+                        GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
+                    }
                 }
                 if (heightMap[i][j].tileType == 1)
                 {
-                    FTimerDelegate TimerDelegate;
-                    TimerDelegate.BindLambda([=]() {
-                        GetWorld()->SpawnActor<AActor>(DesertLand, location, FRotator::ZeroRotator);
-                        });
-                    FTimerHandle TimerHandle;
-                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
+                    if(heightMap[i][j].isPossible)
+                    {
+                        FTimerDelegate TimerDelegate;
+                        TimerDelegate.BindLambda([=]() {
+                            GetWorld()->SpawnActor<AActor>(DesertLand, location, FRotator::ZeroRotator);
+                            });
+                        FTimerHandle TimerHandle;
+                        GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
+                    }
                 }
                 if (heightMap[i][j].tileType == 2)
                 {
-                    FTimerDelegate TimerDelegate;
-                    TimerDelegate.BindLambda([=]() {
-                        GetWorld()->SpawnActor<AActor>(SnowLand, location, FRotator::ZeroRotator);
-                        });
-                    FTimerHandle TimerHandle;
-                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
+                    if(heightMap[i][j].isPossible)
+                    {
+                        FTimerDelegate TimerDelegate;
+                        TimerDelegate.BindLambda([=]() {
+                            GetWorld()->SpawnActor<AActor>(SnowLand, location, FRotator::ZeroRotator);
+                            });
+                        FTimerHandle TimerHandle;
+                        GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, terrainTime, false);
+                    }
                 }
                 if (heightMap[i][j].tileType == 3)
                 {
@@ -550,6 +559,61 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
             {
                 heightMap[i][j].isWater = true;
             }
+        }
+    }
+}
+
+void AProceduralWorldMapGenerator::GenerateDeco()
+{
+    DecoTime = terrainTime;
+    for (int i = 1; i < width - 1; i++)
+    {
+        for (int j = 1; j < height - 1; j++)
+        {
+            DecoTime += 0.001f;
+            float heightValue = heightMap[i][j].heightVal;
+            FVector location;
+            if (j % 2 == 0)
+                location = FVector(i * 180 , j * 150, heightValue * heightVolume);
+            else
+                location = FVector(i * 180 +90 , j * 150, heightValue * heightVolume);
+            if (heightMap[i][j].tileType == 0)
+            {
+                if(heightMap[i][j].isPossible && !heightMap[i][j].isWater)
+                {
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(GrassDeco[FMath::RandRange(0,GrassDeco.Num()-1)], location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, DecoTime, false);
+                }
+            }
+            if (heightMap[i][j].tileType == 1)
+            {
+                if(heightMap[i][j].isPossible && !heightMap[i][j].isWater)
+                {
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(DesertDeco[FMath::RandRange(0,DesertDeco.Num()-1)], location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, DecoTime, false);
+                }
+            }
+            if (heightMap[i][j].tileType == 2)
+            {
+                if(heightMap[i][j].isPossible && !heightMap[i][j].isWater)
+                {
+                    FTimerDelegate TimerDelegate;
+                    TimerDelegate.BindLambda([=]() {
+                        GetWorld()->SpawnActor<AActor>(SnowDeco[FMath::RandRange(0,SnowDeco.Num()-1)], location, FRotator::ZeroRotator);
+                        });
+                    FTimerHandle TimerHandle;
+                    GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, DecoTime, false);
+                }
+            }
+            
         }
     }
 }

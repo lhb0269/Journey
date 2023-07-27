@@ -10,7 +10,7 @@ UItem::UItem()
 	weight = 1.f;
 	ItemDisplayName = FText::FromString("Item");
 	UseActionText = FText::FromString("Use");
-	cost = FMath::RandRange(50,200);
+	//cost = FMath::RandRange(50,200);
 }
 
 void UItem::Buy(UInventoryComponent* Inventory)

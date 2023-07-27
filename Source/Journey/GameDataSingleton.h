@@ -15,7 +15,7 @@
  * 
  *  값들을 Public 으로 돌려 놓았음
  */
-UCLASS()
+UCLASS(Blueprintable,BlueprintType)
 class JOURNEY_API UGameDataSingleton : public UObject
 {
 	GENERATED_BODY()
@@ -48,6 +48,13 @@ public:
     int NowKeyNum;
 	
 	int UIUnitNum;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TArray<UEquipItem*>HeroItem;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TArray<UEquipItem*>ArcherItem;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	TArray<UEquipItem*>MageItem;
 	
 	UFUNCTION(BlueprintCallable)
 	int32 GetUIUnitNum();
@@ -56,7 +63,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void MinusUIUnitNum();
 	UFUNCTION(BlueprintCallable)
-	void UseEquip(UItem* item);
+	void UseEquip(UEquipItem* item);
 	
     bool isBossWorld;
 
@@ -71,9 +78,7 @@ public:
     FVector BossWorldSpawnPos;
 
     FVector playerSpawnPos;
-
-	TArray<bool> IsPartner;
-
+	
 	TArray<ABaseUnit> UnitList;
 
 	TArray<ABaseUnit*> Lineup;

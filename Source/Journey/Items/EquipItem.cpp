@@ -7,7 +7,53 @@
 #include "Journey/ShopComponent.h"
 UEquipItem::UEquipItem()
 {
-	Armour = FMath::RandRange(1,10);
+	Armour = 5;
+	Level = 1;
+	UpgradeCost = 500;
+	Owner = nullptr;
+}
+
+void UEquipItem::settingItem(UEquipItem* origin)
+{
+	Armour = origin->Armour;
+	E_Set = origin->E_Set;
+	E_Case = E_Case;
+	Thumbnail = origin->Thumbnail;
+	ItemDisplayName = origin->ItemDisplayName;
+	ItemDescription = origin->ItemDescription;
+	weight = origin->weight;
+	cost = origin->cost;
+	bEquip = false;
+}
+
+void UEquipItem::LevelUP()
+{
+	if(Level<=5)
+	{
+		Level++;
+		Armour*=1.5;
+		if(Armour==1)
+			Armour++;
+		UpgradeCost*=2;
+		if(Owner != nullptr)
+		{
+			switch (E_Case)
+			{
+			case 0:
+				Owner->EquipItems[0]->Armour = Armour;
+				break;
+			case 1:
+				Owner->EquipItems[1]->Armour = Armour;
+				break;
+			case 2:
+				Owner->EquipItems[2]->Armour = Armour;
+				break;
+			case 3:
+				Owner->EquipItems[3]->Armour = Armour;
+				break;
+			}
+		}
+	}
 }
 
 void UEquipItem::Use(ABaseUnit* Character)
@@ -38,4 +84,5 @@ void UEquipItem::Use(ABaseUnit* Character)
 			Character->EquipItems.Add(this);
 			break;
 	}
+	Owner = Character;
 }

@@ -20,6 +20,8 @@ public:
 	// Sets default values for this actor's properties
 	AProceduralNoiseGenerator();
 	UPROPERTY(EditAnywhere)
+		int32 Theme;	//1 basic 2 snow 3 desert
+	UPROPERTY(EditAnywhere)
 		int32 Objective = 0;
 	UPROPERTY(EditAnywhere, Meta = (ClampMin = 0))
 		int32 XSize = 0;
@@ -42,6 +44,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor> Tree;
 	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor> PineTree;
+	UPROPERTY(EditAnywhere)
 		TSubclassOf<class AActor>House;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Shop;
@@ -53,6 +57,8 @@ public:
 	TSubclassOf<class AActor>Dummymotel;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Tower;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class AActor>Smith;
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<class AActor>Fontain;
 	UPROPERTY(EditAnywhere)
@@ -84,16 +90,17 @@ public:
 	void CreateTrees();
 	void CreateSpecial();
 	void CreateCastle();
-	void CreateNPC();
 private:
 	UProceduralMeshComponent* ProceduralMesh;
 	TArray<FVector>Vertices;
 	TArray<int>Triangles;
-	TArray<float>Zvalue;
+	vector<float>Zvalue_width;
+	vector<vector<float>>Zvalue;
 	TArray<FVector2D>UV0;
 	
 	bool IsShop;
 	bool IsMotel;
+	bool IsSmith;
 	
 	void CreateVertices();
 	void CreateTriangles();

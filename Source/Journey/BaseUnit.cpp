@@ -12,13 +12,19 @@ ABaseUnit::ABaseUnit()
 
 
 	unitType = -1;
-	maxHP = nowHP = 10;
+	maxHP =  100;
+	nowHP = 10;
 	maxMP = 100;
 	nowMP = 0;
 	isDeath = false;
 	isSkill1 = false;
 	
 	distance = 1000000.0;
+	for(int i=0;i<4;++i)
+	{
+		EquipItems.Add(NULL);
+	}
+	power = 10;
 }
 
 void ABaseUnit::Attack()

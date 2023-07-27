@@ -11,6 +11,7 @@ AArcherUnit::AArcherUnit()
             HPMPWidgetComponent->Initialize(this);
         
     }*/
+	Armour = 3;
 }
 
 void AArcherUnit::Attack()

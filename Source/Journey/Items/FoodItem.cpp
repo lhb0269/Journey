@@ -9,7 +9,8 @@
 
 UFoodItem::UFoodItem()
 {
-	HealthToHeal = cost;
+	HealthToHeal = 10;
+	cost = 100;
 	ItemDescription = "Heal 5 hp";
 }
 

@@ -76,6 +76,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 		float power;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	int Armour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	FVector StartLocation;
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Item")

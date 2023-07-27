@@ -62,18 +62,12 @@ AHeroCharacter::AHeroCharacter()
 
 	hp = 50;
 	Armour = 200;
-	gold = 200;
+	gold = 2000;
 	fatigue = 0;
 	isTown = false;
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
-
-	TownEffect = CreateDefaultSubobject<UNiagaraComponent>("TownEffect");
-	TownEffect->SetupAttachment(RootComponent);
-	TownEffect->SetActive(false);
 	
-	FXscale = TownEffect->GetRelativeScale3D();
-	FXInitScale = TownEffect->GetRelativeScale3D();
 
 	PrimaryActorTick.bCanEverTick = true;
 	
@@ -400,9 +394,7 @@ void AHeroCharacter::GoToWorldMap()
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
 	isTown = false;
-	TownEffect->SetActive(false);
-	
-	TownEffect->SetRelativeScale3D(FXInitScale);
+
 	FXscale = FXInitScale;
 	timeMinutes = 2;
 	timeSeconds = 00;
@@ -450,9 +442,6 @@ void AHeroCharacter::GoToWorld()
 	bUseControllerRotationYaw = false;
 	ChangeToWorldMapCamera();
 	isTown=false;
-	TownEffect->SetActive(false);
-	
-	TownEffect->SetRelativeScale3D(FXInitScale);
 	FXscale = FXInitScale;
 
 	SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
@@ -500,34 +489,60 @@ void AHeroCharacter::ToggleWorldMapUI()
 		WorldMapWidget = nullptr;
 	}
 }
+void AHeroCharacter::ToggleUpgradeUI()
+{
+	if(!UpgradeWidget)
+	{
+		UpgradeWidget = CreateWidget<UUpgradeWidget>(GetWorld(),UpgradeUIWidgetClass);
+		if(UpgradeWidget)
+		{
+			UpgradeWidget->AddToViewport();
+			PlayerController->SetInputMode(FInputModeUIOnly());
+			PlayerController->bShowMouseCursor = true;
+		}
+	}
+	else
+	{
+		UpgradeWidget->RemoveFromParent();
+		UpgradeWidget = nullptr;
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+	}
+}
 
 void AHeroCharacter::ToggleHeroesUI()
 {
 
 	if (!HeroesUIWidget)
 	{
-		//ToggleMiniMap();
-
+		ToggleMiniMap();
+	
 		PlayerController->SetViewTargetWithBlend(HeroesUICamera, 0);
 		APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
 		CameraManager->SetFOV(60);
-
+	
 		HeroesUIWidget = CreateWidget<UHeroesInfoWidget>(GetWorld(), HeroesUIWidgetClass);
 		if (HeroesUIWidget)
 		{
 			HeroesUIWidget->AddToViewport();
+			PlayerController->SetInputMode(FInputModeUIOnly());
+			PlayerController->bShowMouseCursor = true;
 		}
-
+	
 		
 	}
 	else
 	{
-		//ToggleMiniMap();
-
+		ToggleMiniMap();
+	
 		HeroesUIWidget->RemoveFromParent();
 		HeroesUIWidget = nullptr;
-
-		ChangeToWorldMapCamera();
+		PlayerController->SetInputMode(FInputModeGameOnly());
+		PlayerController->bShowMouseCursor = false;
+		if(isTown)
+			ChangeToTownCamera();
+		else if(!isTown)
+			ChangeToWorldMapCamera();
 	}
 }
 
@@ -609,7 +624,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				ChangeToTownCamera();
 				isTown = true;
 				townnamecnt++;
-				TownEffect->SetActive(true);
 				timeMinutes = 1;
 				timeSeconds = 59;
 
@@ -850,6 +864,8 @@ void AHeroCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAction("OpenWorldUI", IE_Released, this, &AHeroCharacter::ToggleWorldMapUI);
 
 	PlayerInputComponent->BindAction("OpenHeroesUI", IE_Released, this, &AHeroCharacter::ToggleHeroesUI);
+
+	PlayerInputComponent->BindAction("OpenUpgradeUI" , IE_Released, this, &AHeroCharacter::ToggleUpgradeUI);
 }
 
 void AHeroCharacter::OnZoomIn()
