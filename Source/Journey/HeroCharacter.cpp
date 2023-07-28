@@ -68,10 +68,9 @@ AHeroCharacter::AHeroCharacter()
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 
-
-	foresetVector = FVector(14800.000000, 49150, 88.000000);
-	snowVector = FVector(7600, 49150, 88.000000);
-	desertVector = FVector(890, 49150, 88.000000);
+	foresetVector = FVector(14800.000000, 50018.373314, 46.150002);
+	snowVector = FVector(7600, 50018.373314, 46.150002);
+	desertVector = FVector(890, 50018.373314, 46.150002);
 	
 
 	PrimaryActorTick.bCanEverTick = true;
