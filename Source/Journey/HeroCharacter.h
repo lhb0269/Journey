@@ -253,7 +253,7 @@ protected:
 
 	// 컷씬 시작 부분
 
-	
+	UFUNCTION(BlueprintCallable, Category = "Gameplay")
 	void createPortal();
 
 	void SwitchToFollowCamera();

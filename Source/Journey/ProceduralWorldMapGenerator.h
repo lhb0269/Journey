@@ -144,6 +144,8 @@ public:
     bool isForestBoss;
     UPROPERTY(EditAnywhere)
     bool isSnowBoss;
+
+    int bossCount;
 public:
 
     virtual void BeginPlay() override;

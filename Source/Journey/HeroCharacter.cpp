@@ -417,6 +417,9 @@ void AHeroCharacter::GoToWorld()
 		if (!(*It)->isBossSystem)
 			battleSystem = *It;
 	}
+
+	AProceduralWorldMapGenerator* worldMap = Cast<AProceduralWorldMapGenerator>(UGameplayStatics::GetActorOfClass(GetWorld(), AProceduralWorldMapGenerator::StaticClass()));
+
 	battleSystem->isBattleStart = false;
 	if (World)
 	{
@@ -450,6 +453,10 @@ void AHeroCharacter::GoToWorld()
 	FXscale = FXInitScale;
 
 	SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
+
+
+	if (worldMap->bossCount == battleSystem->bossCount)
+		createPortal();
 }
 
 void AHeroCharacter::PortalClose()
@@ -744,8 +751,8 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					Minimap->bCaptureEveryFrame = true;
 					Minimap->bCaptureOnMovement = true;
 					//SwitchToFollowCamera();
-					PlayerController->SetInputMode(FInputModeGameOnly());
-					PlayerController->bShowMouseCursor = false;
+					//PlayerController->SetInputMode(FInputModeGameOnly());
+					//PlayerController->bShowMouseCursor = false;
 					//bUseControllerRotationPitch = true;
 					//bUseControllerRotationYaw = true;
 					//ChangeToTownCamera();
@@ -764,92 +771,107 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 			}
 		}
 	}
-	// Check if the overlapped actor has a specific tag
-	if (OtherActor->ActorHasTag("BossBox1"))
+
+	if (OtherActor->ActorHasTag("FinalBossBox"))
 	{
+
+		// 전투맵 세팅
+		UWorld* World = GetWorld();
+		ABattleSystem* battleSystem = nullptr;
+		for (TActorIterator<ABattleSystem> It(World); It; ++It)
+		{
+			if (!(*It)->isBossSystem)
+				battleSystem = *It;
+		}
+		battleSystem->settingBossField();
+
+		Minimap->bCaptureEveryFrame = true;
+		Minimap->bCaptureOnMovement = true;
+		OtherActor->Destroy();
+		isInBattle = true;
 	}
 
 	if (OtherActor->ActorHasTag("BossPortal"))
 	{
+		SetActorLocation(FVector( -15879, 1355, 130));
 		SetActorRotation(FRotator(0, 0, 0));
-		SetActorLocation(UGameDataSingleton::GetInstance()->BossWorldSpawnPos);
 		//UGameDataSingleton::GetInstance()->isBossWorld = true;
-		ChangeToBossWorldMapCamera();
+	//	ChangeToBossWorldMapCamera();
 	}
 
-	// Check if the overlapped actor has a specific tag
-	if (OtherActor->ActorHasTag("BossBox2"))
-	{
-		AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
+	//// Check if the overlapped actor has a specific tag
+	//if (OtherActor->ActorHasTag("BossBox2"))
+	//{
+	//	AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
 
-		if (!worldCube->isVisited)
-		{
-			worldCube->isVisited = true;
-
-
-			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
-			                   worldCube->GetActorLocation().Z + 60);
-
-			SetActorRotation(FRotator(0, 0, 0));
-			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
-
-			PlayerController->SetInputMode(FInputModeGameOnly());
-			PlayerController->bEnableMouseOverEvents = true;
-			PlayerController->bShowMouseCursor = true;
-			bUseControllerRotationPitch = false;
-			bUseControllerRotationYaw = false;
-
-			ChangeToBossBattleCamera();
-			//isTown = true;
-		}
-	}
-
-	// Check if the overlapped actor has a specific tag
-	if (OtherActor->ActorHasTag("BossBox3"))
-	{
-		AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
-		if (!worldCube->isVisited)
-		{
-			worldCube->isVisited = true;
+	//	if (!worldCube->isVisited)
+	//	{
+	//		worldCube->isVisited = true;
 
 
-			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
-			                   worldCube->GetActorLocation().Z + 60);
+	//		SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
+	//		                   worldCube->GetActorLocation().Z + 60);
 
-			SetActorRotation(FRotator(0, 0, 0));
-			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
-			ChangeToBossBattleCamera();
+	//		SetActorRotation(FRotator(0, 0, 0));
+	//		SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
 
-			PlayerController->SetInputMode(FInputModeGameOnly());
-			PlayerController->bShowMouseCursor = false;
-			bUseControllerRotationPitch = true;
-			bUseControllerRotationYaw = true;
-			//isTown = true;
-		}
-	}
+	//		PlayerController->SetInputMode(FInputModeGameOnly());
+	//		PlayerController->bEnableMouseOverEvents = true;
+	//		PlayerController->bShowMouseCursor = true;
+	//		bUseControllerRotationPitch = false;
+	//		bUseControllerRotationYaw = false;
 
-	// Check if the overlapped actor has a specific tag
-	if (OtherActor->ActorHasTag("BossBox4"))
-	{
-		AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
-		if (!worldCube->isVisited)
-		{
-			worldCube->isVisited = true;
+	//		ChangeToBossBattleCamera();
+	//		//isTown = true;
+	//	}
+	//}
 
-			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
-			                   worldCube->GetActorLocation().Z + 60);
+	//// Check if the overlapped actor has a specific tag
+	//if (OtherActor->ActorHasTag("BossBox3"))
+	//{
+	//	AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
+	//	if (!worldCube->isVisited)
+	//	{
+	//		worldCube->isVisited = true;
 
-			SetActorRotation(FRotator(0, 0, 0));
-			SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
-			ChangeToBossBattleCamera();
 
-			PlayerController->SetInputMode(FInputModeGameOnly());
-			PlayerController->bShowMouseCursor = false;
-			bUseControllerRotationPitch = true;
-			bUseControllerRotationYaw = true;
-			//isTown = true;
-		}
-	}
+	//		SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
+	//		                   worldCube->GetActorLocation().Z + 60);
+
+	//		SetActorRotation(FRotator(0, 0, 0));
+	//		SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
+	//		ChangeToBossBattleCamera();
+
+	//		PlayerController->SetInputMode(FInputModeGameOnly());
+	//		PlayerController->bShowMouseCursor = false;
+	//		bUseControllerRotationPitch = true;
+	//		bUseControllerRotationYaw = true;
+	//		//isTown = true;
+	//	}
+	//}
+
+	//// Check if the overlapped actor has a specific tag
+	//if (OtherActor->ActorHasTag("BossBox4"))
+	//{
+	//	AWorldCubeBase* worldCube = Cast<AWorldCubeBase>(OtherActor);
+	//	if (!worldCube->isVisited)
+	//	{
+	//		worldCube->isVisited = true;
+
+	//		SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
+	//		                   worldCube->GetActorLocation().Z + 60);
+
+	//		SetActorRotation(FRotator(0, 0, 0));
+	//		SetActorLocation(UGameDataSingleton::GetInstance()->BossBattleSpawnPos);
+	//		ChangeToBossBattleCamera();
+
+	//		PlayerController->SetInputMode(FInputModeGameOnly());
+	//		PlayerController->bShowMouseCursor = false;
+	//		bUseControllerRotationPitch = true;
+	//		bUseControllerRotationYaw = true;
+	//		//isTown = true;
+	//	}
+	//}
 }
 
 void AHeroCharacter::SwitchToFollowCamera()

@@ -17,8 +17,11 @@ public:
 	// Sets default values for this actor's properties
 	ABattleSystem();
 
+	int bossCount;
 
 	// ½£ = °íºí¸°, »ç¸· = ¿ÀÅ© , ¼³¿ø = °ñ·½
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+		TSubclassOf<class AActor> FinalBoss;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class AActor> BossGoblin;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
@@ -71,6 +74,8 @@ public:
 	FVector forestVector;
 	FVector snowVector;
 	FVector desertVector;
+	FVector bossVector;
+	FVector heroVector;
 
 	// 0 ½£ °íºí¸°, 1 ½£ ¿ÀÅ©, 2 ½£ °ñ·½
 	// 3 ¼³¿ø °íºí¸°, 4 ¼³¿ø ¿ÀÅ©, 5 ¼³¿ø °ñ·½
@@ -81,8 +86,11 @@ public:
 	int battleType;
 
 	void SpawnHeroInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
+	void SpawnHeroInBoss(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
 	void SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
+	void SpawnBossInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation);
 
+	void settingBossField();
 	void resetBattleField(int monsterPower,int nowBattleType);
 
 	void ShowBattleEndWidget();

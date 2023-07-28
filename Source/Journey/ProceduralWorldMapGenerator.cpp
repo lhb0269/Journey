@@ -17,6 +17,8 @@ AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
 
     isPortal = false;
 
+    bossCount = 0;
+
  	PrimaryActorTick.bCanEverTick = true;
     isPlayerMove = false;
     townnamecnt=0;
@@ -671,7 +673,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     if (val == 1)
                         wc->isKey = true;
                         });
-                    
+                    bossCount += 1;
 
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
@@ -704,7 +706,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                     if (val == 1)
                         wc->isKey = true;
                         });
-
+                    bossCount += 1;
 
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
@@ -737,7 +739,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                         wc->isKey = true;
                         });
 
-
+                    bossCount += 1;
                     FTimerHandle TimerHandle;
                     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, MonsterTime, false);
                 }

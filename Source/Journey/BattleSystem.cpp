@@ -13,6 +13,11 @@ ABattleSystem::ABattleSystem()
     forestVector = FVector(14800.000000, 50630, 88.000000);
     snowVector = FVector(7600, 50630, 88.000000);
     desertVector = FVector(890, 50630, 88.000000);
+    bossVector = FVector(-12730.000000,  1560.000000, 403.299049);
+
+    heroVector = FVector(-14020.000000, 1560.000000,  403.299049);
+
+    bossCount = 0;
 }
 
 
@@ -78,6 +83,38 @@ void ABattleSystem::SpawnHeroInWorld(UWorld* World,  FVector SpawnLocation,  FRo
             Heroes.Add(SpawnedArcher);
         }
 
+    }
+}
+
+void ABattleSystem::SpawnHeroInBoss(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation)
+{
+
+    AActor* SpawnedHero = nullptr;
+    AActor* SpawnedMage = nullptr;
+    AActor* SpawnedArcher = nullptr;
+
+    FVector loc = heroVector;
+
+    FRotator R = FRotator(0, 0, 0);
+
+    if (Hero)
+    {
+
+        SpawnedHero = World->SpawnActor<AActor>(Hero, FVector(loc.X - 200 , loc.Y , loc.Z ), R);
+        Heroes.Add(SpawnedHero);
+    }
+
+    if (Mage)
+    {
+
+        SpawnedMage = World->SpawnActor<AActor>(Mage, FVector(loc.X , loc.Y - 300, loc.Z ), R);
+        Heroes.Add(SpawnedMage);
+    }
+
+    if (Archer)
+    {
+        SpawnedArcher = World->SpawnActor<AActor>(Archer, FVector(loc.X , loc.Y + 300, loc.Z ), R);
+        Heroes.Add(SpawnedArcher);
     }
 }
 
@@ -227,6 +264,53 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
     }
 }
 
+void ABattleSystem::SpawnBossInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation)
+{
+    FVector spawnVec = bossVector;
+   //spawnVec.X += FMath::RandRange(-200, 450);
+   //spawnVec.Y += FMath::RandRange(-50, 150);
+   //spawnVec.Z += 100;
+    FRotator R = FRotator(0, 0, 0);
+
+   AActor* SpawnedMonster = World->SpawnActor<AActor>(FinalBoss, spawnVec, R);
+   Monsters.Add(SpawnedMonster);
+    
+
+
+}
+
+void ABattleSystem::settingBossField()
+{
+    isBattleStart = true;
+    // 배열 초기화
+
+    for (AActor* Actor : Heroes)
+    {
+        if (Actor)
+        {
+            Actor->Destroy();
+        }
+    }
+
+    for (AActor* Actor : Monsters)
+    {
+        if (Actor)
+        {
+            Actor->Destroy();
+        }
+    }
+
+    Heroes.Empty();
+    Monsters.Empty();
+
+    // 생성
+    UWorld* World = GetWorld();
+    FVector centerPos = GetActorLocation();
+
+    SpawnHeroInBoss(World, centerPos, FRotator(0, 90, 0));
+    SpawnBossInWorld(World, centerPos, FRotator(0, -90, 0));
+}
+
 void ABattleSystem::resetBattleField(int monsterPower, int nowBattleType)
 {
     battleType = nowBattleType;
@@ -266,6 +350,22 @@ void ABattleSystem::ShowBattleEndWidget()
 {
     if (BattleEndWidgetClass)
     {
+
+        // 보스 고블린
+        if (battleType == 9)
+        {
+            bossCount += 1;
+        }
+        // 보스 골렘
+        if (battleType == 10)
+        {
+            bossCount += 1;
+        }
+        // 보스 오크
+        if (battleType == 11)
+        {
+            bossCount += 1;
+        }
         UWorld* World = GetWorld();
         if (World)
         {
