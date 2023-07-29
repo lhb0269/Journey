@@ -225,12 +225,27 @@ void AHeroCharacter::ChangeToTownCamera()
 
 void AHeroCharacter::ToggleMiniMap()
 {
-	if(MinimapWidget)
+	// if(MinimapWidget)
+	// {
+	// 	if(MinimapWidget->GetVisibility() == ESlateVisibility::Visible)
+	// 		MinimapWidget->SetVisibility(ESlateVisibility::Collapsed);
+	// 	else
+	// 		MinimapWidget->SetVisibility(ESlateVisibility::Visible);
+	// }
+	// 월드맵 위젯이 생성되지 않았다면 생성.
+	if (!MinimapWidget)
 	{
-		if(MinimapWidget->GetVisibility() == ESlateVisibility::Visible)
-			MinimapWidget->SetVisibility(ESlateVisibility::Collapsed);
-		else
-			MinimapWidget->SetVisibility(ESlateVisibility::Visible);
+		MinimapWidget = CreateWidget<UMinimapWidget>(GetWorld(), Minimapclass);
+		if (MinimapWidget)
+		{
+			MinimapWidget->AddToViewport();
+		}
+	}
+	// 월드맵 위젯이 이미 생성되어 있다면 제거.
+	else
+	{
+		MinimapWidget->RemoveFromParent();
+		MinimapWidget = nullptr;
 	}
 }
 
@@ -526,7 +541,7 @@ void AHeroCharacter::ToggleHeroesUI()
 
 	if (!HeroesUIWidget)
 	{
-		ToggleMiniMap();
+		//ToggleMiniMap();
 	
 		PlayerController->SetViewTargetWithBlend(HeroesUICamera, 0);
 		APlayerCameraManager* CameraManager = UGameplayStatics::GetPlayerCameraManager(GetWorld(), 0);
