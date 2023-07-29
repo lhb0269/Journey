@@ -428,12 +428,14 @@ void UHeroesInfoWidget::setArmour(int num)
     }
 }
 
-void UHeroesInfoWidget::UsePotion()
+bool UHeroesInfoWidget::UsePotion()
 {
     switch (count)
     {
     case 0://hero
         {
+            if(hero->nowHP >= hero->maxHP)
+                return false;
            hero->nowHP += 10;
             HPBar->SetPercent(hero->nowHP / hero->maxHP);
             NowHP->SetText(FText::FromString(FString::FromInt(hero->nowHP)));
@@ -441,6 +443,8 @@ void UHeroesInfoWidget::UsePotion()
         break;
     case 1://maze
         {
+            if(maze->nowHP >= maze->maxHP)
+                return false;
             maze->nowHP += 10;
             HPBar->SetPercent(maze->nowHP / maze->maxHP);
             NowHP->SetText(FText::FromString(FString::FromInt(maze->nowHP)));
@@ -448,10 +452,13 @@ void UHeroesInfoWidget::UsePotion()
         break;
     case 2://archer
         {
+            if(archer->nowHP >= archer->maxHP)
+                return false;
             archer->nowHP += 10;
             HPBar->SetPercent(archer->nowHP / archer->maxHP);
             NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
         }
         break;
     }
+    return true;
 }

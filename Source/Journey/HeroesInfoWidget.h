@@ -110,5 +110,5 @@ private:
 	void setArmour(int num);
 
 	UFUNCTION(BlueprintCallable)
-	void UsePotion();
+	bool UsePotion();
 };
