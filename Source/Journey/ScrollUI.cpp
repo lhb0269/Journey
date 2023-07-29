@@ -19,30 +19,15 @@ void UScrollUI::NativeConstruct()
 
 void UScrollUI::ChooseFight()
 {
-	hero->power+= 5;
-	// Instance = UGameDataSingleton::GetInstance();
-	// if(Instance != nullptr)
-	// {
-	// 	Instance->FightUpgrade();
-	// }
+	hero->Upgrade+= 5;
 }
 
 void UScrollUI::ChooseShot()
 {
-	archer->power+= 5;
-	// Instance = UGameDataSingleton::GetInstance();
-	// if(Instance != nullptr)
-	// {
-	// 	Instance->ShotUpgrade();
-	// }
+	archer->Upgrade+= 5;
 }
 
 void UScrollUI::ChooseMagic()
 {
-	maze->power+= 5;
-	// Instance = UGameDataSingleton::GetInstance();
-	// if(Instance != nullptr)
-	// {
-	// 	Instance->MagicUpgrade();
-	// }
+	maze->Upgrade+= 5;
 }

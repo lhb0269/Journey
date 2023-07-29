@@ -225,27 +225,12 @@ void AHeroCharacter::ChangeToTownCamera()
 
 void AHeroCharacter::ToggleMiniMap()
 {
-	// if(MinimapWidget)
-	// {
-	// 	if(MinimapWidget->GetVisibility() == ESlateVisibility::Visible)
-	// 		MinimapWidget->SetVisibility(ESlateVisibility::Collapsed);
-	// 	else
-	// 		MinimapWidget->SetVisibility(ESlateVisibility::Visible);
-	// }
-	// 월드맵 위젯이 생성되지 않았다면 생성.
-	if (!MinimapWidget)
+	if(MinimapWidget)
 	{
-		MinimapWidget = CreateWidget<UMinimapWidget>(GetWorld(), Minimapclass);
-		if (MinimapWidget)
-		{
-			MinimapWidget->AddToViewport();
-		}
-	}
-	// 월드맵 위젯이 이미 생성되어 있다면 제거.
-	else
-	{
-		MinimapWidget->RemoveFromParent();
-		MinimapWidget = nullptr;
+		if(MinimapWidget->GetVisibility() == ESlateVisibility::Visible)
+			MinimapWidget->SetVisibility(ESlateVisibility::Collapsed);
+		else
+			MinimapWidget->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
@@ -532,7 +517,12 @@ void AHeroCharacter::ToggleUpgradeUI()
 		UpgradeWidget->RemoveFromParent();
 		UpgradeWidget = nullptr;
 		PlayerController->SetInputMode(FInputModeGameOnly());
-		PlayerController->bShowMouseCursor = false;
+		if(isTown)
+			PlayerController->bShowMouseCursor = false;
+		else
+		{
+			PlayerController->bShowMouseCursor = true;
+		}
 	}
 }
 
@@ -559,16 +549,19 @@ void AHeroCharacter::ToggleHeroesUI()
 	}
 	else
 	{
-		ToggleMiniMap();
-	
 		HeroesUIWidget->RemoveFromParent();
 		HeroesUIWidget = nullptr;
 		PlayerController->SetInputMode(FInputModeGameOnly());
-		PlayerController->bShowMouseCursor = false;
 		if(isTown)
+		{
 			ChangeToTownCamera();
-		else if(!isTown)
+			PlayerController->bShowMouseCursor = false;
+		}
+		else
+		{
 			ChangeToWorldMapCamera();
+			PlayerController->bShowMouseCursor = true;
+		}
 	}
 }
 
