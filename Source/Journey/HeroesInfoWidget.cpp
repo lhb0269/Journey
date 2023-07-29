@@ -21,11 +21,13 @@ void UHeroesInfoWidget::NativeConstruct()
         archer = GM->archer;
         hero = GM->hero;
         maze = GM->maze;
+        realHero = GM->realHero;
        
     }
-    hero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
+    hero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
     maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
     archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
+    realHero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
     count = 0;
     UIcharcatercnt = 0;
     ClassText->SetText(FText::FromString("HERO"));
@@ -220,9 +222,10 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
     setArmour(count);
     if (count == 0)
     {
-        hero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
+        hero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
         maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
         archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
        // mesh = hero;
 
         NameText->SetText(FText::FromString("JAMES"));
@@ -243,6 +246,7 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
         hero->SetActorLocation((FVector(-51560.0, 500, 88.0)));
         maze->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
         archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
         //mesh = archer;
 
         NameText->SetText(FText::FromString("Edgar"));
@@ -262,6 +266,7 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
         hero->SetActorLocation((FVector(-51560.0, 600, 88.0)));
         maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
         archer->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
         //mesh = maze;
 
         NameText->SetText(FText::FromString("Alice"));
@@ -277,6 +282,28 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
         Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
         Power->SetText(FText::FromString(FString::FromInt(archer->power)));
     }
+    else if (count == 3)
+    {
+        hero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
+        maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
+        archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
+        //mesh = maze;
+
+        NameText->SetText(FText::FromString("Garen"));
+        ClassText->SetText(FText::FromString("Tanker"));
+
+        NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(archer->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(archer->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(archer->maxMP)));
+
+        HPBar->SetPercent(archer->nowHP / archer->maxHP);
+        MPBar->SetPercent(archer->nowMP / archer->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(archer->power)));
+    }
+
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
     if(singleton!=nullptr)
         singleton->MinusUIUnitNum();
@@ -286,16 +313,17 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
 void UHeroesInfoWidget::OnRightBtnClicked()
 {
     count += 1;
-    if (count >= 2)
+    if (count >= 3)
     {
         count = 2;
     }
     setArmour(count);
     if (count == 0)
     {
-        hero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
+        hero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
         maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
         archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
         // mesh = hero;
 
         NameText->SetText(FText::FromString("JAMES"));
@@ -315,6 +343,7 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         hero->SetActorLocation((FVector(-51560.0, 500, 88.0)));
         maze->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
         archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
 
         NameText->SetText(FText::FromString("Edgar"));
         ClassText->SetText(FText::FromString("MAGE"));
@@ -334,6 +363,7 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         hero->SetActorLocation((FVector(-51560.0, 600, 88.0)));
         maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
         archer->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
 
 
         NameText->SetText(FText::FromString("Alice"));
@@ -348,6 +378,28 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
         Power->SetText(FText::FromString(FString::FromInt(archer->power)));
         //mesh = maze;
+    }
+    else if (count == 3)
+    {
+        hero->SetActorLocation((FVector(-51560.0, 1330.0, 88.0)));
+        maze->SetActorLocation((FVector(-51560.0, 500, 88.0)));
+        archer->SetActorLocation((FVector(-51560.0, 600, 88.0)));
+        realHero->SetActorLocation((FVector(-51560.0, 200, 88.0)));
+        //mesh = maze;
+
+        NameText->SetText(FText::FromString("Garen"));
+        ClassText->SetText(FText::FromString("Tanker"));
+
+        NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(archer->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(archer->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(archer->maxMP)));
+
+        HPBar->SetPercent(archer->nowHP / archer->maxHP);
+        MPBar->SetPercent(archer->nowMP / archer->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(archer->power)));
+
     }
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
     if(singleton!=nullptr)

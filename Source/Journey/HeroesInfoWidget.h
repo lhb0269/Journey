@@ -36,6 +36,9 @@ public:
 	UPROPERTY(EditAnywhere,  Category = "Hero")
 		ABaseUnit* maze;
 
+	UPROPERTY(EditAnywhere, Category = "Hero")
+		ABaseUnit* realHero;
+
 	int count;
 	int32 UIcharcatercnt;
 	UFUNCTION(BlueprintCallable)

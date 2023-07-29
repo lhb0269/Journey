@@ -49,6 +49,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Hero")
 		ABaseUnit* maze;
 
+	UPROPERTY(EditAnywhere, Category = "Hero")
+		ABaseUnit* realHero;
+
 	UPROPERTY(EditAnywhere, Category = "BOSS")
 	AActor* protal;
 	UPROPERTY(EditAnywhere, Category = "BOSS")
