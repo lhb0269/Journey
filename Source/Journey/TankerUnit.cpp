@@ -11,6 +11,7 @@ ATankerUnit::ATankerUnit()
     //    HPMPWidgetComponent->Initialize(this);
     //    
     //}
+    Armour = 20;
 }
 
 void ATankerUnit::Attack()
