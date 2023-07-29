@@ -59,9 +59,6 @@ private:
 	UButton* QuitBtn;
 
 	UPROPERTY(Meta = (BindWidget))
-	UButton* SkillBtn;
-
-	UPROPERTY(Meta = (BindWidget))
 	UButton* EquipBtn;
 
 	UPROPERTY(meta = (BindWidget))

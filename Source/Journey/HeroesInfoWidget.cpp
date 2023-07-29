@@ -8,8 +8,6 @@
 void UHeroesInfoWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
-    
-    SkillBtn->OnClicked.AddDynamic(this, &UHeroesInfoWidget::OnSkillBtnClicked);
     EquipBtn->OnClicked.AddDynamic(this, &UHeroesInfoWidget::OnEquipBtnClicked);
 
     LeftChangeBtn->OnClicked.AddDynamic(this, &UHeroesInfoWidget::OnLeftBtnClicked);
@@ -81,6 +79,16 @@ void UHeroesInfoWidget::SetItems()
         if(archer->EquipItems[3]!=nullptr && archer->EquipItems[3]->Thumbnail!= nullptr)
             ShoesThum->SetBrushFromTexture(archer->EquipItems[3]->Thumbnail);
         break;
+    case 3:
+        if(realHero->EquipItems[0]!=nullptr && realHero->EquipItems[0]->Thumbnail!= nullptr)
+            HelmetThum->SetBrushFromTexture(realHero->EquipItems[0]->Thumbnail);
+        if(realHero->EquipItems[1]!=nullptr && realHero->EquipItems[1]->Thumbnail != nullptr)
+            VestThum->SetBrushFromTexture(realHero->EquipItems[1]->Thumbnail);
+        if(realHero->EquipItems[2]!=nullptr && realHero->EquipItems[2]->Thumbnail!= nullptr)
+            WeaponeThum->SetBrushFromTexture(realHero->EquipItems[2]->Thumbnail);
+        if(realHero->EquipItems[3]!=nullptr && realHero->EquipItems[3]->Thumbnail!= nullptr)
+            ShoesThum->SetBrushFromTexture(realHero->EquipItems[3]->Thumbnail);
+        break;
     }
 }
 
@@ -113,6 +121,14 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
             //archer->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
         }
+        if(count == 3)
+        {
+            realHero->EquipItems[0] = item;
+            item->Owner = realHero;
+            item->bEquip = true;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(realHero->Armour)));
+        }
         break;
     case 1:
         if(count == 0)
@@ -138,6 +154,14 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
             item->bEquip = true;
             //archer->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        }
+        if(count == 3)
+        {
+            realHero->EquipItems[1] = item;
+            item->Owner = realHero;
+            item->bEquip = true;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(realHero->Armour)));
         }
         break;
     case 2:
@@ -165,6 +189,14 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
             //archer->Armour += item->Armour;
             Power->SetText(FText::FromString(FString::FromInt(archer->power)));
         }
+        if(count == 3 && item->ItemDisplayName.ToString() == "Sheild")
+        {
+            realHero->EquipItems[2] = item;
+            item->Owner = realHero;
+            item->bEquip = true;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(realHero->Armour)));
+        }
         break;
     case 3:
         if(count == 0)
@@ -190,6 +222,14 @@ void UHeroesInfoWidget::AddItemsInCharacter(UEquipItem* item)
             item->bEquip = true;
             //archer->Armour += item->Armour;
             Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
+        }
+        if(count == 3)
+        {
+            realHero->EquipItems[3] = item;
+            item->Owner = realHero;
+            item->bEquip = true;
+            //archer->Armour += item->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(realHero->Armour)));
         }
         break;
     }
@@ -293,15 +333,15 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
         NameText->SetText(FText::FromString("Garen"));
         ClassText->SetText(FText::FromString("Tanker"));
 
-        NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
-        MaxHP->SetText(FText::FromString(FString::FromInt(archer->maxHP)));
-        NowMP->SetText(FText::FromString(FString::FromInt(archer->nowMP)));
-        MaxMP->SetText(FText::FromString(FString::FromInt(archer->maxMP)));
+        NowHP->SetText(FText::FromString(FString::FromInt(realHero->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(realHero->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(realHero->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(realHero->maxMP)));
 
-        HPBar->SetPercent(archer->nowHP / archer->maxHP);
-        MPBar->SetPercent(archer->nowMP / archer->maxMP);
-        Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
-        Power->SetText(FText::FromString(FString::FromInt(archer->power)));
+        HPBar->SetPercent(realHero->nowHP / realHero->maxHP);
+        MPBar->SetPercent(realHero->nowMP / realHero->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(realHero->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(realHero->power)));
     }
 
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
@@ -313,9 +353,9 @@ void UHeroesInfoWidget::OnLeftBtnClicked()
 void UHeroesInfoWidget::OnRightBtnClicked()
 {
     count += 1;
-    if (count >= 3)
+    if (count >= 4)
     {
-        count = 2;
+        count = 3;
     }
     setArmour(count);
     if (count == 0)
@@ -390,15 +430,15 @@ void UHeroesInfoWidget::OnRightBtnClicked()
         NameText->SetText(FText::FromString("Garen"));
         ClassText->SetText(FText::FromString("Tanker"));
 
-        NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
-        MaxHP->SetText(FText::FromString(FString::FromInt(archer->maxHP)));
-        NowMP->SetText(FText::FromString(FString::FromInt(archer->nowMP)));
-        MaxMP->SetText(FText::FromString(FString::FromInt(archer->maxMP)));
+        NowHP->SetText(FText::FromString(FString::FromInt(realHero->nowHP)));
+        MaxHP->SetText(FText::FromString(FString::FromInt(realHero->maxHP)));
+        NowMP->SetText(FText::FromString(FString::FromInt(realHero->nowMP)));
+        MaxMP->SetText(FText::FromString(FString::FromInt(realHero->maxMP)));
 
-        HPBar->SetPercent(archer->nowHP / archer->maxHP);
-        MPBar->SetPercent(archer->nowMP / archer->maxMP);
-        Armour->SetText(FText::FromString(FString::FromInt(archer->Armour)));
-        Power->SetText(FText::FromString(FString::FromInt(archer->power)));
+        HPBar->SetPercent(realHero->nowHP / realHero->maxHP);
+        MPBar->SetPercent(realHero->nowMP / realHero->maxMP);
+        Armour->SetText(FText::FromString(FString::FromInt(realHero->Armour)));
+        Power->SetText(FText::FromString(FString::FromInt(realHero->power)));
 
     }
     UGameDataSingleton* singleton = UGameDataSingleton::GetInstance();
@@ -477,6 +517,28 @@ void UHeroesInfoWidget::setArmour(int num)
             archer->Armour = armour;
         }
         break;
+    case 3://tanker
+        {
+            int armour=0;
+            realHero->Armour = 20;//basic armour
+            realHero->power = 10 + realHero->Upgrade; //basic power;
+            for(int i=0;i<4;++i)
+            {
+                if(realHero->EquipItems[i] != nullptr && i != 2)
+                {
+                    armour += realHero->EquipItems[i]->Armour;
+                }
+                if(realHero->EquipItems[i] != nullptr && i == 2)
+                {
+                    realHero->power+=realHero->EquipItems[i]->Armour;
+                }
+            }
+            armour+= realHero->Armour;
+            Armour->SetText(FText::FromString(FString::FromInt(armour)));
+            Power->SetText(FText::FromString(FString::FromInt(realHero->power)));
+            realHero->Armour = armour;
+        }
+        break;
     }
 }
 
@@ -511,6 +573,14 @@ bool UHeroesInfoWidget::UsePotion()
             NowHP->SetText(FText::FromString(FString::FromInt(archer->nowHP)));
         }
         break;
+    case 3://tanker
+        {
+            if(realHero->nowHP >= realHero->maxHP)
+                return false;
+            realHero->nowHP += 10;
+            HPBar->SetPercent(realHero->nowHP / realHero->maxHP);
+            NowHP->SetText(FText::FromString(FString::FromInt(realHero->nowHP)));
+        }
     }
     return true;
 }
