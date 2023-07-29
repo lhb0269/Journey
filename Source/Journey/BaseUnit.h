@@ -74,7 +74,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	float distance;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		float power;
+		int power;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
+	int Upgrade;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	int Armour;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")

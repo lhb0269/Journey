@@ -25,6 +25,7 @@ ABaseUnit::ABaseUnit()
 		EquipItems.Add(NULL);
 	}
 	power = 10;
+	Upgrade = 0;
 }
 
 void ABaseUnit::Attack()

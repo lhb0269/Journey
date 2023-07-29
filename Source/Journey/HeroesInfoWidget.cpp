@@ -415,7 +415,7 @@ void UHeroesInfoWidget::setArmour(int num)
         {
             int armour=0;
             hero->Armour = 15;//basic armour
-            hero->power = 10; //basic power;
+            hero->power = 10 + hero->Upgrade; //basic power;
             for(int i=0;i<4;++i)
             {
                 if(hero->EquipItems[i] != nullptr && i != 2)
@@ -437,7 +437,7 @@ void UHeroesInfoWidget::setArmour(int num)
         {
             int armour=0;
             maze->Armour = 5;//basic armour
-            maze->power = 10; //basic power;
+            maze->power = 10 + maze->Upgrade; //basic power;
             for(int i=0;i<4;++i)
             {
                 if(maze->EquipItems[i] != nullptr && i != 2)
@@ -459,7 +459,7 @@ void UHeroesInfoWidget::setArmour(int num)
         {
             int armour=0;
             archer->Armour = 3;//basic armour
-            archer->power = 10; //basic power;
+            archer->power = 10 + archer->Upgrade; //basic power;
             for(int i=0;i<4;++i)
             {
                 if(archer->EquipItems[i] != nullptr && i != 2)
