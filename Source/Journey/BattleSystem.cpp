@@ -317,8 +317,17 @@ void ABattleSystem::resetBattleField(int monsterPower, int nowBattleType)
     isBattleStart = true;
     // πËø≠ √ ±‚»≠
     enemyPower = monsterPower;
-    RewardGold = monsterPower;
 
+    // »πµÊ ∞ÒµÂ 
+    if (battleType < 9)
+    {
+        RewardGold= FMath::RandRange(3, 4) * 1000;
+    }
+    else
+    {
+        RewardGold = FMath::RandRange(8, 10) * 1000;
+    }
+  
     for (AActor* Actor : Heroes)
     {
         if (Actor)
@@ -348,6 +357,7 @@ void ABattleSystem::resetBattleField(int monsterPower, int nowBattleType)
 
 void ABattleSystem::ShowBattleEndWidget()
 {
+    isBattleStart = false;
     if (BattleEndWidgetClass)
     {
 
