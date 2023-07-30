@@ -774,7 +774,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 					//isTown = true;
 				}
-				ToggleMiniMap();
+				//ToggleMiniMap();
 			}
 		}
 	}
@@ -1102,6 +1102,7 @@ void AHeroCharacter::BeginPlay()
 	{
 		MinimapWidget->AddToViewport();
 		SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
+		MinimapWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 void AHeroCharacter::OnLeftClick()
