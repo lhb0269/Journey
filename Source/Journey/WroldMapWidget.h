@@ -36,7 +36,11 @@ public:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Texture")
     UTexture2D* TownTexture;
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Texture")
-       UTexture2D* PlayerTexture;
+    UTexture2D* PlayerTexture;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Texture")
+    UTexture2D* PortalTexture;
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Texture")
+    UTexture2D* BossTexture;
 
 private:
     UPROPERTY(Meta = (BindWidget))

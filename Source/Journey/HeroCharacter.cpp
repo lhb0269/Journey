@@ -68,9 +68,9 @@ AHeroCharacter::AHeroCharacter()
 	UCapsuleComponent* MyCapsuleComponent = GetCapsuleComponent();
 	MyCapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &AHeroCharacter::OnOverlapBegin);
 
-	foresetVector = FVector(14800.000000, 50018.373314, 46.150002);
-	snowVector = FVector(7600, 50018.373314, 46.150002);
-	desertVector = FVector(890, 50018.373314, 46.150002);
+	foresetVector = FVector(15000.000000, 50018.373314, 46.150002);
+	snowVector = FVector(7800, 50018.373314, 46.150002);
+	desertVector = FVector(1100, 50018.373314, 46.150002);
 	
 
 	PrimaryActorTick.bCanEverTick = true;
@@ -360,6 +360,8 @@ void AHeroCharacter::SaveGame()
 
 void AHeroCharacter::GoToWorldMap()
 {
+	isInBattle = false;
+
 	// 혹시 모를 남아있을 monster, player 모두 제거
 	UWorld* World = GetWorld();
 	ABattleSystem* battleSystem = nullptr;
@@ -377,12 +379,12 @@ void AHeroCharacter::GoToWorldMap()
 			AActor* Actor = *ActorItr;
 
 			// 해당 태그를 가진 액터만 선택합니다.
-			if (Actor->ActorHasTag("BP_MONSTER"))
+			if (Actor->ActorHasTag("Monster07"))
 			{
 				Actor->Destroy();
 			}
 
-			if (Actor->ActorHasTag("BP_HERO"))
+			if (Actor->ActorHasTag("Units"))
 			{
 				Actor->Destroy();
 			}
@@ -709,6 +711,11 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					worldCube->isKey = false;
 					SetActorRotation(FRotator(0, 0, 0));
 					//SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
+
+
+					FRotator CurrentRotation = GetActorRotation();
+					CurrentRotation.Yaw += 90.0f;
+					SetActorRotation(CurrentRotation);
 
 					if (worldCube->tileType >= 0 && worldCube->tileType < 3)
 					{
