@@ -60,8 +60,9 @@ AHeroCharacter::AHeroCharacter()
 
 	MinimapToggle = true;
 
-	hp = 50;
-	Armour = 200;
+	hp = 100;
+	Power = 10;
+	Armour = 1;
 	gold = 2000;
 	fatigue = 0;
 	isTown = false;

@@ -11,6 +11,7 @@ ABaseUnit::ABaseUnit()
 	PrimaryActorTick.bCanEverTick = true;
 
 
+	Armour = 1;
 	unitType = -1;
 	maxHP =  100;
 	nowHP = 100;

@@ -42,11 +42,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	class UShopComponent* shop;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
-	int32 hp;
+	float hp;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 mp;
     UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
-	int32 Armour;
+	float Armour;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero")
+		float Power;
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category= "Hero")
 	int32 gold;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hero")

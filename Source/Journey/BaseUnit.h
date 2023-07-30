@@ -74,11 +74,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	float distance;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-		int power;
+		float power;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	int Upgrade;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
-	int Armour;
+		float Armour;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Status")
 	FVector StartLocation;
 

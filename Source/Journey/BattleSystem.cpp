@@ -125,11 +125,11 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 
     // enemyPower에 따라 생성되는 골렘 수 변경
     
-    int spawnNum = enemyPower / 100;
+    int spawnNum = FMath::RandRange(3, 5);
 
     // 최대 생성 적은 5마리
-    if (spawnNum > 3)
-        spawnNum = 3;
+    //if (spawnNum > 5)
+    //    spawnNum = 3;
 
     if (World)
     {
