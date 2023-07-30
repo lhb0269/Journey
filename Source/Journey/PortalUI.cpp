@@ -12,6 +12,6 @@ void UPortalUI::AddVillage(const FString& VillageName,const FVector& pos,const F
 {
 	VillageInfo = CreateWidget<UVillageInfo>(GetWorld(), VillageInfoClass);
 	VillageInfo->SetUpText(VillageName,pos,savedpos);
-	
+	townname = VillageName;
 	VillageBox->AddChildToWrapBox(VillageInfo);
 }

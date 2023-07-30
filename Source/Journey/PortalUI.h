@@ -26,6 +26,8 @@ public:
 	TSubclassOf<UVillageInfo> VillageInfoClass;
 	UVillageInfo* VillageInfo;
 	void AddVillage(const FString& VillageName,const FVector& pos,const FVector& savedpos);
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FString townname;
 private:
 	UPROPERTY(Meta = (BindWidget))
 	UCanvasPanel* RootPanel;
