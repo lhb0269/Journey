@@ -266,17 +266,6 @@ void AHeroCharacter::ChangeController(bool isAI)
 void AHeroCharacter::cutSceneEnd()
 {
 	isCutsceneEnd = true;
-
-	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
-	{
-		AActor* Actor = *ActorItr;
-		// 해당 태그를 가진 액터만 선택합니다.
-		if (Actor->ActorHasTag("TownBox"))
-		{
-			SetActorLocation(Actor->GetActorLocation());
-			break;
-		}
-	}
 	for (TActorIterator<AWorldCubeBase> ActorItr(GetWorld()); ActorItr; ++ActorItr)
 	{
 		// 해당 태그를 가진 액터만 선택합니다.
@@ -285,6 +274,17 @@ void AHeroCharacter::cutSceneEnd()
 			SavedPos = FVector(ActorItr->GetActorLocation().X, ActorItr->GetActorLocation().Y,
 							   ActorItr->GetActorLocation().Z + 60);
 			savedTownInfo.push_back(make_tuple(ActorItr->townname,ActorItr->Location,SavedPos));
+		}
+	}
+	for (TActorIterator<AActor> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		AActor* Actor = *ActorItr;
+		// 해당 태그를 가진 액터만 선택합니다.
+		if (Actor->ActorHasTag("TownBox"))
+		{
+			SetActorLocation(Actor->GetActorLocation());
+			SavedPos = Actor->GetActorLocation();
+			break;
 		}
 	}
 }
