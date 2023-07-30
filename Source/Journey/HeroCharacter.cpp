@@ -277,6 +277,16 @@ void AHeroCharacter::cutSceneEnd()
 			break;
 		}
 	}
+	for (TActorIterator<AWorldCubeBase> ActorItr(GetWorld()); ActorItr; ++ActorItr)
+	{
+		// 해당 태그를 가진 액터만 선택합니다.
+		if (ActorItr->isTown)
+		{
+			SavedPos = FVector(ActorItr->GetActorLocation().X, ActorItr->GetActorLocation().Y,
+							   ActorItr->GetActorLocation().Z + 60);
+			savedTownInfo.push_back(make_tuple(ActorItr->townname,ActorItr->Location,SavedPos));
+		}
+	}
 }
 
 void AHeroCharacter::MoveCamera(float DeltaTime)
@@ -649,7 +659,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				timeSeconds = 59;
 
 				//save visited town info
-				savedTownInfo.push_back(make_tuple(worldCube->townname,worldCube->Location,SavedPos));
+				//savedTownInfo.push_back(make_tuple(worldCube->townname,worldCube->Location,SavedPos));
 				// FTimerHandle MyTimerHandle;
 				// if(!GetWorld()->GetTimerManager().IsTimerActive(MyTimerHandle))
 				// {
@@ -781,7 +791,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 
 					//isTown = true;
 				}
-				ToggleMiniMap();
+				//ToggleMiniMap();
 			}
 		}
 	}
@@ -1049,6 +1059,7 @@ void AHeroCharacter::BeginPlay()
 	nowKeyNum = 0;
 
 
+	
 	// CAMERA
 	// Bttle camera 와 world camera를 확한다.
 	for (TActorIterator<ACameraActor> It(GetWorld()); It; ++It)
@@ -1109,6 +1120,7 @@ void AHeroCharacter::BeginPlay()
 	{
 		MinimapWidget->AddToViewport();
 		SpringArm->SetRelativeLocation(FVector(3911.0,3490.0,2164.0));
+		MinimapWidget->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 void AHeroCharacter::OnLeftClick()
