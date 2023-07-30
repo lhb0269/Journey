@@ -224,6 +224,18 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 
             AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGoblin, spawnVec, SpawnRotation);
             Monsters.Add(SpawnedMonster);
+
+            for (int i = 0; i < spawnNum; i++)
+            {
+                spawnVec = loc;
+                spawnVec.X += FMath::RandRange(-200, 450);
+                spawnVec.Y += FMath::RandRange(-50, 150);
+                spawnVec.Z += 100;
+
+                AActor* SMonster = World->SpawnActor<AActor>(BassGoblin, spawnVec, SpawnRotation);
+                Monsters.Add(SMonster);
+
+            }
         }
         // º¸½º °ñ·½
         if (battleType == 10)
@@ -235,6 +247,18 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 
             AActor* SpawnedMonster = World->SpawnActor<AActor>(BossGolem, spawnVec, SpawnRotation);
             Monsters.Add(SpawnedMonster);
+
+            for (int i = 0; i < spawnNum; i++)
+            {
+                spawnVec = loc;
+                spawnVec.X += FMath::RandRange(-200, 450);
+                spawnVec.Y += FMath::RandRange(-50, 150);
+                spawnVec.Z += 100;
+
+                AActor* SMonster = World->SpawnActor<AActor>(BaseGolem, spawnVec, SpawnRotation);
+                Monsters.Add(SMonster);
+
+            }
         }
         // º¸½º ¿ÀÅ©
         if (battleType == 11)
@@ -246,6 +270,19 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 
             AActor* SpawnedMonster = World->SpawnActor<AActor>(BossOrc, spawnVec, SpawnRotation);
             Monsters.Add(SpawnedMonster);
+
+
+            for (int i = 0; i < spawnNum; i++)
+            {
+                spawnVec = loc;
+                spawnVec.X += FMath::RandRange(-200, 450);
+                spawnVec.Y += FMath::RandRange(-50, 150);
+                spawnVec.Z += 100;
+
+                AActor* SMonster = World->SpawnActor<AActor>(BaseOrc, spawnVec, SpawnRotation);
+                Monsters.Add(SMonster);
+
+            }
         }
 
 
