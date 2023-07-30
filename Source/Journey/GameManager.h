@@ -84,16 +84,20 @@ public:
 		float getHeroPower();
 	UFUNCTION(BlueprintCallable)
 		float getHeroArmor();
+
 	UFUNCTION(BlueprintCallable)
 		float getTankerPower();
 	UFUNCTION(BlueprintCallable)
 		float getTankerArmor();
+
 	UFUNCTION(BlueprintCallable)
 		float getArcherPower();
 	UFUNCTION(BlueprintCallable)
 		float getArcherArmor();
+
 	UFUNCTION(BlueprintCallable)
 		float getMagePower();
 	UFUNCTION(BlueprintCallable)
 		float getMageArmor();
+
 };

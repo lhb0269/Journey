@@ -128,6 +128,8 @@ float AGameManager::getHeroArmor()
 	return realHero->Armour;
 }
 
+
+
 float AGameManager::getTankerPower()
 {
 	return hero->power;
@@ -137,6 +139,7 @@ float AGameManager::getTankerArmor()
 {
 	return hero->Armour;
 }
+
 
 float AGameManager::getArcherPower()
 {
@@ -148,6 +151,8 @@ float AGameManager::getArcherArmor()
 	return archer->Armour;
 }
 
+
+
 float AGameManager::getMagePower()
 {
 	return maze->power;
@@ -157,3 +162,5 @@ float AGameManager::getMageArmor()
 {
 	return maze->Armour;
 }
+
+
