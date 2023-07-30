@@ -64,7 +64,7 @@ AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
     MapPos.Add(FVector(-58689.839353, -46396.097618, 200.000000));
     MapPos.Add(FVector(-60434.839353, -79441.097618, 200.000000));
     MapPos.Add(FVector(-59944.839353, -111341.097618, 200.000000));
-    MapPos.Add(FVector(8620.160647, -111201.097618, 200.000000));
+    MapPos.Add(FVector(8112.852285, -110539.925709, 200.000000));
     MapPos.Add(FVector(5360.160647, -79486.097618, 200.000000));
     MapPos.Add(FVector(5360.160647, -47226.097618, 200.000000));
     MapPos.Add(FVector(42035.160647, -46301.097618, 200.000000));
