@@ -18,6 +18,8 @@ ABattleSystem::ABattleSystem()
     heroVector = FVector(-14020.000000, 1560.000000,  403.299049);
 
     bossCount = 0;
+
+    isFinalBoss = false;
 }
 
 
@@ -266,6 +268,8 @@ void ABattleSystem::SpawnMonsterInWorld(UWorld* World, FVector SpawnLocation, FR
 
 void ABattleSystem::SpawnBossInWorld(UWorld* World, FVector SpawnLocation, FRotator SpawnRotation)
 {
+
+    isFinalBoss = true;
     FVector spawnVec = bossVector;
    //spawnVec.X += FMath::RandRange(-200, 450);
    //spawnVec.Y += FMath::RandRange(-50, 150);
@@ -275,12 +279,14 @@ void ABattleSystem::SpawnBossInWorld(UWorld* World, FVector SpawnLocation, FRota
    AActor* SpawnedMonster = World->SpawnActor<AActor>(FinalBoss, spawnVec, R);
    Monsters.Add(SpawnedMonster);
     
-
+   battleType = 12;
 
 }
 
 void ABattleSystem::settingBossField()
 {
+ 
+
     isBattleStart = true;
     // 배열 초기화
 
@@ -376,21 +382,43 @@ void ABattleSystem::ShowBattleEndWidget()
         {
             bossCount += 1;
         }
-        UWorld* World = GetWorld();
-        if (World)
+        if (!isFinalBoss)
         {
-            APlayerController* PlayerController = World->GetFirstPlayerController();
-            PlayerController->SetInputMode(FInputModeUIOnly());
-            PlayerController->bShowMouseCursor = true;
-            if (PlayerController)
+            UWorld* World = GetWorld();
+            if (World)
             {
-                UUserWidget* BattleEndWidget = CreateWidget<UUserWidget>(PlayerController, BattleEndWidgetClass);
-                if (BattleEndWidget)
+                APlayerController* PlayerController = World->GetFirstPlayerController();
+                PlayerController->SetInputMode(FInputModeUIOnly());
+                PlayerController->bShowMouseCursor = true;
+                if (PlayerController)
                 {
-                    BattleEndWidget->AddToViewport();
+                    UUserWidget* BattleEndWidget = CreateWidget<UUserWidget>(PlayerController, BattleEndWidgetClass);
+                    if (BattleEndWidget)
+                    {
+                        BattleEndWidget->AddToViewport();
+                    }
                 }
             }
         }
+        else
+        {
+            UWorld* World = GetWorld();
+            if (World)
+            {
+                APlayerController* PlayerController = World->GetFirstPlayerController();
+                PlayerController->SetInputMode(FInputModeUIOnly());
+                PlayerController->bShowMouseCursor = true;
+                if (PlayerController)
+                {
+                    UUserWidget* BattleEndWidget = CreateWidget<UUserWidget>(PlayerController, EndingWidgetClass);
+                    if (BattleEndWidget)
+                    {
+                        BattleEndWidget->AddToViewport();
+                    }
+                }
+            }
+        }
+      
     }
 
 }

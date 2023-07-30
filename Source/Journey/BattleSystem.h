@@ -17,6 +17,8 @@ public:
 	// Sets default values for this actor's properties
 	ABattleSystem();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
+	bool isFinalBoss;
 	int bossCount;
 
 	// ½£ = °íºí¸°, »ç¸· = ¿ÀÅ© , ¼³¿ø = °ñ·½
@@ -50,8 +52,12 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "BattleSystem")
 	TSubclassOf<class ATileInfo> TileInfo;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "UI")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
 	TSubclassOf<class UUserWidget> BattleEndWidgetClass;
+
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	TSubclassOf<class UUserWidget> EndingWidgetClass;
 
 	UPROPERTY()
 	TArray<AActor*> Heroes;

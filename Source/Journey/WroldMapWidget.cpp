@@ -9,9 +9,9 @@ void UWroldMapWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    UImage* BackgroundImage = NewObject<UImage>(this);
-    BackgroundImage->SetColorAndOpacity(FLinearColor::Black * 0.5f); 
-    RootPanel->AddChild(BackgroundImage);
+    //UImage* BackgroundImage = NewObject<UImage>(this);
+    //BackgroundImage->SetColorAndOpacity(FLinearColor::Black * 0.5f); 
+    //RootPanel->AddChild(BackgroundImage);
 
   
     AProceduralWorldMapGenerator* worldMap = Cast<AProceduralWorldMapGenerator>(UGameplayStatics::GetActorOfClass(GetWorld(), AProceduralWorldMapGenerator::StaticClass()));
@@ -35,15 +35,36 @@ void UWroldMapWidget::NativeConstruct()
                 VillageButton->WidgetStyle.Normal.SetResourceObject(nullptr);
                 UImage* ButtonImage = NewObject<UImage>(this);
                 ButtonImage->SetBrushFromTexture(TownTexture); 
-                ButtonImage->SetBrushFromTexture(TownTexture); 
-
-
                 VillageButton->AddChild(ButtonImage);
 
                  GridPanel->AddChildToGrid(VillageButton, j, i);
            
 
             }
+            if (WorldMapData[i][j].isBoss)
+            {
+                UButton* BossButton = NewObject<UButton>(this);
+                //BossButton->OnClicked.AddDynamic(this, &UWroldMapWidget::OnVillageButtonClicked);
+                BossButton->WidgetStyle.Normal.SetResourceObject(nullptr);
+                UImage* ButtonImage = NewObject<UImage>(this);
+                ButtonImage->SetBrushFromTexture(BossTexture);
+
+                BossButton->AddChild(ButtonImage);
+
+                GridPanel->AddChildToGrid(BossButton, j, i);
+            }
+            if (WorldMapData[i][j].isPortal)
+            {
+                UButton* PortalButton = NewObject<UButton>(this);
+               // VillageButton->OnClicked.AddDynamic(this, &UWroldMapWidget::OnVillageButtonClicked);
+                PortalButton->WidgetStyle.Normal.SetResourceObject(nullptr);
+                UImage* ButtonImage = NewObject<UImage>(this);
+                ButtonImage->SetBrushFromTexture(PortalTexture);
+                PortalButton->AddChild(ButtonImage);
+
+                GridPanel->AddChildToGrid(PortalButton, j, i);
+            }
+
 
             UImage* Image = NewObject<UImage>(this);
             if (WorldMapData[i][j].isWater)

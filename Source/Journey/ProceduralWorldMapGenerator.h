@@ -35,7 +35,10 @@ public:
     UPROPERTY()
         bool isWater = false;
     UPROPERTY()
-        bool isPortal;
+        bool isPortal = false;
+    UPROPERTY()
+        bool isBoss = false;
+
     UPROPERTY()
         FVector location;
 

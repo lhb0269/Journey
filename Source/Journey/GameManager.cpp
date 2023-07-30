@@ -108,3 +108,12 @@ void AGameManager::createPortal()
 void AGameManager::createBossWorld()
 {
 }
+
+void AGameManager::endingScene()
+{
+	FMovieSceneSequencePlaybackSettings Settings;
+	ALevelSequenceActor* OutActor;
+	ULevelSequencePlayer* SequencePlayer = ULevelSequencePlayer::CreateLevelSequencePlayer(GetWorld(), EndingSequence, Settings, OutActor);
+
+	SequencePlayer->Play();
+}

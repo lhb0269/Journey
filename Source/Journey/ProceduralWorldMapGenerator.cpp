@@ -15,6 +15,7 @@ AProceduralWorldMapGenerator::AProceduralWorldMapGenerator()
     isForestBoss = false;
     isSnowBoss = false;
 
+
     isPortal = false;
 
     bossCount = 0;
@@ -612,7 +613,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                             TimerDelegate.BindLambda([=, &wc]() {
                                 wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowGolemBase, location, FRotator::ZeroRotator);
                             wc->monsterLevel = 1;
-                            wc->tileType = 4;
+                            wc->tileType = 5;
                             wc->monsterType = 1;
                             wc->monsterPower = 1000;
                             wc->isKey = false;
@@ -627,7 +628,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                             TimerDelegate.BindLambda([=, &wc]() {
                                 wc = GetWorld()->SpawnActor<AWorldCubeBase>(SnowOrcBase, location, FRotator::ZeroRotator);
                             wc->monsterLevel = 1;
-                            wc->tileType = 5;
+                            wc->tileType = 4;
                             wc->monsterType = 1;
                             wc->monsterPower = 1000;
                             wc->isKey = false;
@@ -648,6 +649,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                 }
                 if ( heightMap[i][j].isPossible && heightMap[i][j].tileType == 0 && !isForestBoss)
                 {
+                    heightMap[i][j].isBoss = true;
                     isForestBoss = true;
                     FVector location;
                     if (j % 2 == 0)
@@ -681,7 +683,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                 if ( heightMap[i][j].isPossible && heightMap[i][j].tileType == 1 && !isDesertBoss)
                 {
                     isDesertBoss = true;
-
+                    heightMap[i][j].isBoss = true;
                     FVector location;
                     if (j % 2 == 0)
                         location = FVector(i * 180, j * 150, heightValue * heightVolume + 200);
@@ -713,6 +715,7 @@ void AProceduralWorldMapGenerator::GenerateMonsters()
                 }
                 if (heightMap[i][j].isPossible && heightMap[i][j].tileType == 2 && !isSnowBoss)
                 {
+                    heightMap[i][j].isBoss = true;
                     isSnowBoss = true;
                     FVector location;
                     if (j % 2 == 0)
