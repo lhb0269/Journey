@@ -85,7 +85,7 @@ AHeroCharacter::AHeroCharacter()
 	scrollUI = nullptr;
 
 	MinimapToggle = true;
-
+	RecentlytownName = nullptr;
 }
 
 void AHeroCharacter::UseItem(UItem* Item)
@@ -111,7 +111,7 @@ void AHeroCharacter::UseItem(UItem* Item)
 	}
 }
 
-void AHeroCharacter::UsePortal(FVector pos,FVector savedLoc)
+void AHeroCharacter::UsePortal(FString name, FVector pos,FVector savedLoc)
 {
 	SetActorLocation(pos);
 	FVector NewVector = pos;
@@ -119,6 +119,7 @@ void AHeroCharacter::UsePortal(FVector pos,FVector savedLoc)
 	SpringArm->SetWorldLocation(NewVector);
 	portalUI=nullptr;
 	SavedPos = savedLoc;
+	RecentlytownName = name;
 }
 
 // void AHeroCharacter::BuyItem(UItem* Item, UInventoryComponent* Inventory)
@@ -627,15 +628,13 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 		}
 
 		// �湮�ߴ������� üũ
-		if (!worldCube->isVisited)
-		{
 
 			//UGameDataSingleton::GetInstance()->TileInfos[worldCube->cubeNumber].isVisited = true;
 			SavedPos = FVector(worldCube->GetActorLocation().X, worldCube->GetActorLocation().Y,
 			                   worldCube->GetActorLocation().Z + 60);
 
 
-			if (worldCube->isTown)
+			if (worldCube->isTown && RecentlytownName != worldCube->townname)
 			{
 				//ChangeController(false);
 				worldCube->isVisited = true;
@@ -658,7 +657,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				townnamecnt++;
 				timeMinutes = 1;
 				timeSeconds = 59;
-
+				RecentlytownName = worldCube->townname;
 				//save visited town info
 				//savedTownInfo.push_back(make_tuple(worldCube->townname,worldCube->Location,SavedPos));
 				// FTimerHandle MyTimerHandle;
@@ -695,7 +694,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				// 	}), 1.0f,true);
 				//}
 			}
-			else
+			else if(!worldCube->isTown)
 			{
 				fatigue += 1;
 
@@ -723,7 +722,7 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 					SetActorRotation(FRotator(0, 0, 0));
 					//SetActorLocation(UGameDataSingleton::GetInstance()->BattleSpawnPos);
 
-
+					RecentlytownName = "sex";
 					FRotator CurrentRotation = GetActorRotation();
 					CurrentRotation.Yaw += 90.0f;
 					SetActorRotation(CurrentRotation);
@@ -753,7 +752,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 						SetActorLocation(desertVector);
 					}
 
-					
 					/*PlayerController->bEnableMouseOverEvents = true;
 					PlayerController->bShowMouseCursor = true;
 					bUseControllerRotationPitch = false;
@@ -795,7 +793,6 @@ void AHeroCharacter::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor*
 				//ToggleMiniMap();
 			}
 		}
-	}
 
 	if (OtherActor->ActorHasTag("FinalBossBox"))
 	{

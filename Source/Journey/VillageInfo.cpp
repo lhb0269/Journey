@@ -14,6 +14,7 @@ void UVillageInfo::NativeConstruct()
 void UVillageInfo::SetUpText(const FString& VillageName,const FVector& pos,const FVector& savedpos)
 {
 	FText village = FText::FromString(VillageName);
+	name = VillageName;
 	Location = pos;
 	SavedLocation = savedpos;
 	VillageNameBlock->SetText(village);

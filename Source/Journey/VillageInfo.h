@@ -29,6 +29,8 @@ public:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FVector SavedLocation;
 	void OnClicked();
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
+	FString name;
 private:
 	UPROPERTY(Meta = (BindWidget))
 	UCanvasPanel* RootPanel;

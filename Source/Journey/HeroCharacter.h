@@ -81,7 +81,7 @@ public:
 	void UseItem(class UItem* Item);
 
 	UFUNCTION(BlueprintCallable,Category="Portal")
-	void UsePortal(FVector pos,FVector savedLoc);
+	void UsePortal(FString name, FVector pos,FVector savedLoc);
 	UFUNCTION(BlueprintCallable, Category = "Movement")
 	void MoveToLocation(const FVector& DestLocation);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
@@ -168,7 +168,7 @@ public:
 	FVector foresetVector;
 	FVector snowVector;
 	FVector desertVector;
-
+	FString RecentlytownName;
 	// Camera 전환 함수
 	void ChangeToWorldMapCamera();
 	void ChangeToMiniMapCamera();
