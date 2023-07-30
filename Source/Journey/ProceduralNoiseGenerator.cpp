@@ -800,7 +800,7 @@ void AProceduralNoiseGenerator::CreateCastle()
 				SpawnLocation.X = i * 100 + GetActorLocation().X;
 				SpawnLocation.Y = j * 100 + GetActorLocation().Y;
 				//SpawnLocation.Z =  GetActorLocation().Z - 10;
-				SpawnLocation.Z = Zvalue[i][j] - 20;
+				SpawnLocation.Z = Zvalue[i][j] - 50;
 				//SpawnLocation.Z = Zvalue.Pop() + GetActorLocation().Z - 10;
 				rotator.Roll = 0;
 			
